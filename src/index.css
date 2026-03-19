@@ -1,0 +1,1135 @@
+/* ====================================================
+   Finch — Science Games & Magazine
+   라이트 에디토리얼 디자인 시스템
+   ==================================================== */
+
+:root {
+  /* 배경 — 따뜻한 종이 느낌 */
+  --bg-primary: #faf9f6;
+  --bg-secondary: #ffffff;
+  --bg-warm: #f4f1eb;
+  --bg-card: #ffffff;
+  --bg-dark: #1a1a2e;
+  --bg-game: #0d1117;
+  --border-light: #e8e5de;
+  --border-medium: #d4d0c8;
+
+  /* 포인트 컬러 — 절제된 단색 계열 */
+  --accent: #c0392b;
+  --accent-hover: #e74c3c;
+  --accent-light: rgba(192, 57, 43, 0.08);
+  --accent-blue: #2c5282;
+  --accent-blue-light: rgba(44, 82, 130, 0.08);
+
+  /* 텍스트 */
+  --text-primary: #1a1a1a;
+  --text-secondary: #555555;
+  --text-muted: #8a8a8a;
+  --text-light: #b0b0b0;
+  --text-white: #ffffff;
+  --text-link: #2c5282;
+
+  /* 카테고리 컬러 */
+  --cat-space: #1a365d;
+  --cat-bio: #22543d;
+  --cat-physics: #553c9a;
+  --cat-chem: #7b341e;
+  --cat-tech: #2a4365;
+
+  /* 모서리 */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* 그림자 */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.1);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+
+  /* 트랜지션 */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: all 0.2s var(--ease);
+  --transition-slow: all 0.35s var(--ease);
+
+  /* 레이아웃 */
+  --navbar-height: 60px;
+  --content-max: 1200px;
+}
+
+/* ---- Reset ---- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Sans KR', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--text-link);
+  text-decoration: none;
+  transition: var(--transition);
+}
+a:hover { color: var(--accent); }
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* ========================================
+   내비게이션 바
+   ======================================== */
+.navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--navbar-height);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-light);
+  transition: var(--transition);
+}
+
+.navbar--scrolled {
+  box-shadow: var(--shadow-sm);
+}
+
+.navbar__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.navbar__logo-icon {
+  font-size: 24px;
+}
+
+.navbar__logo-text {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.navbar__menu {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  list-style: none;
+}
+
+.navbar__menu-item {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+  border-radius: var(--radius-sm);
+  position: relative;
+}
+
+.navbar__menu-item:hover {
+  color: var(--text-primary);
+  background: var(--bg-warm);
+}
+
+.navbar__menu-item--active {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.navbar__menu-item--active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 16px; right: 16px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+}
+
+.navbar__points {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar__points-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  background: var(--bg-warm);
+  border: 1px solid var(--border-light);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.navbar__level-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  background: var(--accent-light);
+  border: 1px solid rgba(192, 57, 43, 0.12);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* ========================================
+   히어로 게임 섹션
+   ======================================== */
+.hero-game {
+  margin-top: var(--navbar-height);
+  padding: 24px 40px;
+  max-width: var(--content-max);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-game__container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background: var(--bg-game);
+  box-shadow: var(--shadow-lg);
+}
+
+.hero-game__canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  transition: filter 0.4s ease;
+}
+.hero-game__canvas--blur {
+  filter: blur(8px) brightness(0.4);
+}
+
+.hero-game__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(13, 17, 23, 0.65);
+  backdrop-filter: blur(4px);
+  transition: opacity 0.5s var(--ease);
+  z-index: 2;
+}
+
+.hero-game__overlay--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero-game__title {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 56px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.hero-game__title-main {
+  color: var(--text-white);
+}
+
+.hero-game__subtitle {
+  font-size: 16px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 32px;
+  font-weight: 400;
+  text-align: center;
+}
+
+.hero-game__play-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 36px;
+  background: var(--text-white);
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--bg-game);
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.hero-game__play-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.hero-game__play-btn:active {
+  transform: translateY(0);
+}
+
+.hero-game__score {
+  position: absolute;
+  top: 16px; right: 20px;
+  z-index: 3;
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 14px;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius-sm);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-white);
+}
+
+.hero-game__gameover {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: rgba(13, 17, 23, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 4;
+}
+
+.hero-game__gameover-title {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 48px; font-weight: 900;
+  color: var(--text-white);
+  margin-bottom: 8px;
+}
+
+.hero-game__gameover-score {
+  font-size: 18px;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 20px;
+}
+
+.hero-game__gameover-best {
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 24px;
+}
+
+/* ========================================
+   게임 캐러셀
+   ======================================== */
+.game-carousel {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 40px 8px;
+}
+
+.game-carousel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.game-carousel__arrows {
+  display: flex;
+  gap: 4px;
+}
+
+.game-carousel__arrow {
+  width: 32px; height: 32px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+  background: var(--bg-secondary);
+  color: var(--text-muted);
+  font-size: 11px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+
+.game-carousel__arrow:hover:not(:disabled) {
+  border-color: var(--text-secondary);
+  color: var(--text-primary);
+}
+
+.game-carousel__arrow--disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.game-carousel__track {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 4px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.game-carousel__track::-webkit-scrollbar { display: none; }
+
+.game-card {
+  flex: 0 0 200px;
+  scroll-snap-align: start;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  background: var(--bg-card);
+}
+
+.game-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-medium);
+}
+
+.game-card--selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.game-card--coming-soon {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.game-card--coming-soon:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--border-light);
+}
+
+.game-card__bg {
+  background: linear-gradient(135deg, var(--card-bg-1, #1a1a2e), var(--card-bg-2, #2d2d4e));
+  height: 80px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+
+.game-card__icon {
+  font-size: 32px; z-index: 1;
+  transition: transform 0.2s var(--ease);
+}
+
+.game-card:hover .game-card__icon { transform: scale(1.1); }
+
+.game-card__info { padding: 10px 14px 12px; }
+
+.game-card__title {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 13px; font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.game-card__subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.game-card__badge {
+  position: absolute;
+  top: 6px; right: 6px;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 9px; font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: rgba(0,0,0,0.4);
+  color: rgba(255,255,255,0.7);
+  backdrop-filter: blur(4px);
+  z-index: 2;
+}
+
+.game-card__badge--playing {
+  background: var(--accent);
+  color: var(--text-white);
+}
+
+.game-card__glow {
+  position: absolute; inset: -1px;
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--accent);
+  pointer-events: none;
+}
+
+/* ========================================
+   구분선
+   ======================================== */
+.divider {
+  max-width: var(--content-max);
+  margin: 16px auto;
+  padding: 0 40px;
+}
+
+.divider__line {
+  border: none;
+  border-top: 1px solid var(--border-light);
+}
+
+/* ========================================
+   섹션 공통
+   ======================================== */
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-family: 'Noto Sans KR', 'Inter', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-title__icon { font-size: 24px; }
+
+.section-title__accent { color: var(--text-primary); }
+
+/* ========================================
+   HeroGame 튜토리얼 라인 (A안)
+   ======================================== */
+.hero-game__tutorial {
+  display: inline-block;
+  margin: 12px 0 20px;
+  padding: 8px 16px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(6px);
+}
+
+/* ========================================
+   튜토리얼 상세 패널 (B안)
+   ======================================== */
+.tutorial-panel-wrap {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 40px 16px;
+}
+
+.tutorial-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: var(--transition);
+}
+.tutorial-toggle:hover {
+  background: var(--bg-warm);
+}
+.tutorial-toggle--open {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-color: transparent;
+}
+.tutorial-toggle__icon {
+  font-size: 18px;
+}
+.tutorial-toggle__arrow {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+}
+.tutorial-toggle__arrow--open {
+  transform: rotate(180deg);
+}
+
+.tutorial-detail {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-top: none;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  padding: 24px 28px 28px;
+  animation: tutorialSlideDown 0.25s ease;
+}
+@keyframes tutorialSlideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.tutorial-detail__content {
+  max-width: 600px;
+}
+.tutorial-detail__h2 {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+.tutorial-detail__h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 16px 0 8px;
+  color: var(--accent);
+}
+.tutorial-detail__li {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  padding-left: 8px;
+  margin-bottom: 4px;
+  list-style: none;
+}
+.tutorial-detail__li::before {
+  content: '•';
+  margin-right: 8px;
+  color: var(--accent);
+  font-weight: 700;
+}
+.tutorial-detail__p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+/* ========================================
+   SVG 웨이브 전환 (게임 → 매거진)
+   ======================================== */
+.wave-transition {
+  margin-top: -2px;
+  line-height: 0;
+  overflow: hidden;
+}
+.wave-transition svg {
+  width: 100%;
+  height: 80px;
+  display: block;
+}
+
+/* ========================================
+   매거진 — Rolling Stone 스타일
+   ======================================== */
+.rs-magazine {
+  background: linear-gradient(180deg, #dfe8df 0%, #e8f0e8 40%, #f5f5f0 100%);
+  padding: 0 40px 80px;
+}
+
+.rs-magazine__header {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 40px 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.rs-magazine__title {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 40px;
+  font-weight: 900;
+  color: #1a1a2e;
+  letter-spacing: -0.02em;
+}
+.rs-magazine__filters {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.rs-filter {
+  padding: 6px 16px;
+  border: none;
+  border-radius: 18px;
+  background: rgba(0,0,0,0.05);
+  color: #2d3a2e;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.rs-filter:hover { background: rgba(0,0,0,0.12); }
+.rs-filter--active { background: #1a1a2e; color: #fff; }
+
+/* ── Rolling Stone 3-Column Grid ── */
+.rs-grid {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 260px 1fr 260px;
+  gap: 32px;
+  align-items: start;
+}
+
+/* ── LEFT: 텍스트 리스트 + 소형 썸네일 ── */
+.rs-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.rs-text-item {
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.rs-text-item:first-child { padding-top: 0; }
+.rs-text-item:last-child { border-bottom: none; }
+.rs-text-item:hover { opacity: 0.8; }
+
+.rs-text-item__thumb {
+  width: 100%;
+  height: 120px;
+  border-radius: var(--radius-md);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.rs-text-item__thumb-icon {
+  font-size: 36px;
+  opacity: 0.5;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
+}
+
+.rs-text-item__title {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.45;
+  color: #1a1a2e;
+  margin-bottom: 6px;
+}
+.rs-text-item:hover .rs-text-item__title {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.rs-text-item__excerpt {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.rs-text-item__meta {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ── RIGHT: 소형 이미지 카드 스택 ── */
+.rs-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rs-card {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--bg-card);
+  transition: var(--transition);
+}
+.rs-card:hover {
+  box-shadow: var(--shadow-md);
+}
+.rs-card__img {
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rs-card__img-icon {
+  font-size: 32px;
+  opacity: 0.4;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.rs-card:hover .rs-card__img-icon {
+  transform: scale(1.15);
+  opacity: 0.55;
+}
+.rs-card__body {
+  padding: 14px 16px 16px;
+}
+.rs-card__cat {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  background: var(--accent-light);
+  margin-bottom: 6px;
+}
+.rs-card__title {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.rs-card__meta {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.rs-card:hover .rs-card__title {
+  color: var(--accent);
+}
+
+/* ── 특집 히어로 ── */
+.rs-hero {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  min-height: 420px;
+}
+.rs-hero__img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rs-hero__icon {
+  font-size: 80px;
+  opacity: 0.25;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.rs-hero:hover .rs-hero__icon {
+  transform: scale(1.1);
+  opacity: 0.35;
+}
+.rs-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.35) 45%, transparent 75%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 36px;
+}
+.rs-hero__cat {
+  display: inline-block;
+  width: fit-content;
+  padding: 4px 12px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(4px);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 12px;
+}
+.rs-hero__title {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.3;
+  color: #fff;
+  margin-bottom: 12px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+.rs-hero__excerpt {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.75);
+  max-width: 90%;
+  margin-bottom: 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.rs-hero__meta {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  font-style: italic;
+}
+.rs-hero:hover .rs-hero__title {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ========================================
+   사이드바 위젯
+   ======================================== */
+.sidebar {
+  position: sticky;
+  top: calc(var(--navbar-height) + 24px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.widget {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 20px;
+}
+
+.widget__title {
+  font-family: 'Noto Sans KR', 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-primary);
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.widget__title-icon { font-size: 16px; }
+
+/* 인기 기사 리스트 */
+.popular-list {
+  list-style: none;
+  counter-reset: popular;
+}
+
+.popular-item {
+  display: flex; align-items: flex-start;
+  gap: 12px; padding: 12px 0;
+  border-bottom: 1px solid var(--bg-warm);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.popular-item:last-child { border-bottom: none; }
+
+.popular-item:hover { background: var(--bg-warm); margin: 0 -12px; padding: 12px; border-radius: var(--radius-sm); }
+
+.popular-item__rank {
+  width: 24px; height: 24px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.popular-item__rank--1 { background: #fef3c7; color: #92400e; }
+.popular-item__rank--2 { background: #f1f5f9; color: #475569; }
+.popular-item__rank--3 { background: #fce7d6; color: #9a3412; }
+.popular-item__rank--4,
+.popular-item__rank--5 { background: var(--bg-warm); color: var(--text-muted); }
+
+.popular-item__info { flex: 1; min-width: 0; }
+
+.popular-item__title {
+  font-size: 13px; font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.45;
+  margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.popular-item__meta {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 11px; color: var(--text-muted);
+}
+
+.popular-item__cat {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.popular-item__views {
+  display: flex; align-items: center; gap: 3px;
+}
+
+/* ========================================
+   푸터
+   ======================================== */
+.footer {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 32px 40px;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer__brand {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.footer__links {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+}
+
+.footer__link {
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.footer__link:hover { color: var(--text-primary); }
+
+/* ========================================
+   유틸리티
+   ======================================== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-medium); }
+
+.spinner {
+  display: inline-block;
+  width: 16px; height: 16px;
+  border: 2px solid var(--border-light);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========================================
+   반응형
+   ======================================== */
+@media (max-width: 1024px) {
+  .game-card { flex: 0 0 180px; }
+
+  /* 매거진 — 태블릿: 2컬럼 */
+  .rs-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .rs-left { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; gap: 20px; }
+  .rs-text-item { flex: 1 1 45%; border-bottom: none; padding: 0; }
+  .rs-hero { grid-column: 1 / -1; min-height: 380px; }
+  .rs-right { grid-column: 1 / -1; flex-direction: row; gap: 12px; }
+  .rs-card { flex: 1; }
+
+  /* 튜토리얼 */
+  .tutorial-panel-wrap { padding: 0 24px 16px; }
+}
+
+@media (max-width: 768px) {
+  .navbar { padding: 0 20px; }
+  .navbar__menu { display: none; }
+
+  .hero-game { padding: 16px; }
+  .hero-game__title { font-size: 32px; }
+  .hero-game__subtitle { font-size: 14px; }
+  .hero-game__play-btn { padding: 12px 28px; font-size: 14px; }
+
+  .section-title { font-size: 22px; }
+
+  .game-carousel { padding: 0 16px 8px; }
+  .game-card { flex: 0 0 160px; }
+  .game-card__bg { height: 64px; }
+
+  /* 매거진 — 모바일: 1열 */
+  .rs-magazine { padding: 0 16px 60px; }
+  .rs-magazine__header { padding: 28px 0 20px; }
+  .rs-magazine__title { font-size: 28px; }
+  .rs-grid { grid-template-columns: 1fr; gap: 20px; }
+  .rs-left { flex-direction: column; }
+  .rs-text-item { flex: none; }
+  .rs-hero { min-height: 300px; grid-column: auto; }
+  .rs-hero__title { font-size: 24px; }
+  .rs-hero__overlay { padding: 24px; }
+  .rs-right { flex-direction: column; grid-column: auto; }
+  .rs-card { flex: none; }
+
+  /* 웨이브 */
+  .wave-transition svg { height: 50px; }
+
+  /* 튜토리얼 */
+  .tutorial-panel-wrap { padding: 0 16px 12px; }
+
+  .footer {
+    flex-direction: column; gap: 12px;
+    text-align: center; padding: 24px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-game__title { font-size: 24px; }
+  .hero-game__play-btn { padding: 10px 24px; font-size: 13px; }
+
+  .navbar__points-badge,
+  .navbar__level-badge { padding: 4px 10px; font-size: 11px; }
+
+  .game-card { flex: 0 0 140px; }
+  .rs-hero { min-height: 220px; }
+  .rs-hero__title { font-size: 18px; }
+}
