@@ -116,7 +116,7 @@ export default function App() {
               onClick={() => setTutorialOpen(!tutorialOpen)}
             >
               <span className="tutorial-toggle__icon">📖</span>
-              <span>{selectedGame.title} 상세 가이드</span>
+              <span>Fly Darwin 상세 가이드</span>
               <span className={`tutorial-toggle__arrow ${tutorialOpen ? 'tutorial-toggle__arrow--open' : ''}`}>▼</span>
             </button>
 
@@ -137,11 +137,11 @@ export default function App() {
         )}
       </div>
 
-      {/* ── SVG 웨이브 전환 (게임 → 매거진) ── */}
+      {/* ── 물결 전환 (게임 → 브레인픽) ── */}
       <div className="wave-transition">
-        <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-          <path d="M0,60 C360,120 720,0 1080,60 C1260,90 1380,80 1440,60 L1440,120 L0,120 Z" fill="#e8f0e8" />
-          <path d="M0,80 C240,40 480,100 720,80 C960,60 1200,90 1440,80 L1440,120 L0,120 Z" fill="#dfe8df" opacity="0.6" />
+        <svg viewBox="0 0 1440 140" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <path d="M0,40 C360,100 720,0 1080,40 C1260,60 1380,55 1440,40 L1440,100 C1380,115 1260,120 1080,100 C720,60 360,160 0,100 Z" fill="#F2F2F2" />
+          <path d="M0,60 C240,20 480,80 720,60 C960,40 1200,70 1440,60 L1440,110 C1200,120 960,90 720,110 C480,130 240,70 0,110 Z" fill="#E8E8E8" opacity="0.45" />
         </svg>
       </div>
 

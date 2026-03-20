@@ -6,7 +6,7 @@ import { useRef, useState, useCallback, useEffect } from 'react';
 export const GAME_LIST = [
   {
     id: 'cosmic-flight',
-    title: 'Cosmic Flight',
+    title: 'Fly Darwin',
     subtitle: '로켓 비행 어드벤처',
     description: '우주를 탐험하며 장애물을 피하고 별을 모으세요!',
     icon: '🚀',
@@ -14,7 +14,7 @@ export const GAME_LIST = [
     bgGradient: ['#0b1628', '#1a2d5a'],
     status: 'playable',
     tutorial: '↑↓ 또는 마우스로 로켓 조종 · 별 수집 · 장애물 회피',
-    tutorialDetail: `## 🚀 Cosmic Flight 가이드
+    tutorialDetail: `## 🚀 Fly Darwin 가이드
 
 ### 조작법
 - **키보드**: ↑/↓ 화살표 또는 W/S 키로 로켓을 위아래로 이동
@@ -119,7 +119,7 @@ export default function GameCarousel({ selectedGameId, onSelectGame }) {
       <div className="game-carousel__header">
         <h2 className="section-title">
           <span className="section-title__icon">🎮</span>
-          <span className="section-title__accent">게임 선택</span>
+          <span className="section-title__accent">Play Lab</span>
         </h2>
         <div className="game-carousel__arrows">
           <button

@@ -438,25 +438,23 @@ export default function HeroGame({ onScoreChange, tutorial }) {
   return (
     <section className="hero-game" id="hero-game">
       <div className="hero-game__container">
+        {/* Fly Darwin 스크린샷 배경 (idle 시) */}
+        {displayState === 'idle' && (
+          <img
+            src="/images/game screens/Fly Darwin/Fly Darwin screen.png"
+            alt="Fly Darwin"
+            className="hero-game__bg-img"
+          />
+        )}
         <canvas
           ref={canvasRef}
           className={`hero-game__canvas ${displayState !== 'playing' ? 'hero-game__canvas--blur' : ''}`}
+          style={displayState === 'idle' ? { opacity: 0 } : {}}
         />
 
-        {/* 대기 화면 오버레이 */}
+        {/* 대기 화면 — 플레이 버튼만 가운데 */}
         {displayState === 'idle' && (
-          <div className="hero-game__overlay">
-            <h1 className="hero-game__title">
-              <span className="hero-game__title-main">COSMIC FLIGHT</span>
-            </h1>
-            <p className="hero-game__subtitle">
-              우주를 탐험하며 별을 모아 포인트를 획득하세요
-            </p>
-            {tutorial && (
-              <p className="hero-game__tutorial">
-                {tutorial}
-              </p>
-            )}
+          <div className="hero-game__overlay hero-game__overlay--minimal">
             <button className="hero-game__play-btn" onClick={startGame}>
               🚀 지금 플레이하기
             </button>

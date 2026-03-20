@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 
 const MENU_ITEMS = [
   { id: 'home', label: '홈' },
-  { id: 'games', label: '게임' },
-  { id: 'magazine', label: '매거진' },
+  { id: 'games', label: 'Play Lab' },
+  { id: 'magazine', label: 'Brain Pick' },
 ];
 
 export default function Navbar({ activeSection, onSectionChange, points, level }) {
