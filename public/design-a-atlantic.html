@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Finch – 디자인 A (The Atlantic 스타일)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════ */
+    /*  Design A – The Atlantic 스타일 (에디토리얼)  */
+    /* ═══════════════════════════════════════════ */
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:       #FFFFFF;
+      --bg-warm:  #FAFAF8;
+      --text:     #1A1A1A;
+      --text-sub: #555555;
+      --accent:   #C02826;
+      --accent-hover: #A02020;
+      --border:   #E0E0E0;
+      --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+      --font-sans: 'Inter', 'Noto Sans KR', -apple-system, sans-serif;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── 헤더 / 내비게이션 ─── */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 40px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      letter-spacing: 0.6px;
+    }
+    .top-bar__left {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .top-bar__left a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 1.2px;
+      transition: color 0.2s;
+    }
+    .top-bar__left a:hover { color: var(--accent); }
+    .top-bar__icon {
+      cursor: pointer;
+      font-size: 18px;
+      color: var(--text-sub);
+    }
+    .top-bar__right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .top-bar__right a {
+      color: var(--text-sub);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: color 0.2s;
+    }
+    .top-bar__right a:hover { color: var(--text); }
+    .btn-subscribe {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 7px 18px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-subscribe:hover { background: var(--accent-hover); }
+
+    /* 로고 */
+    .logo-area {
+      text-align: center;
+      padding: 28px 0 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo-letter {
+      font-family: var(--font-serif);
+      font-size: 72px;
+      font-weight: 900;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .logo-name {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--text);
+      margin-top: 2px;
+      letter-spacing: 2px;
+    }
+
+    /* ─── 메인 콘텐츠 그리드 (3-칼럼) ─── */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 240px 1fr 320px;
+      gap: 0;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ─── 좌측 사이드 칼럼 ─── */
+    .side-left {
+      padding: 30px 20px 30px 0;
+      border-right: 1px solid var(--border);
+    }
+    .side-article {
+      margin-bottom: 30px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .side-article:last-child { border-bottom: none; }
+    .side-article__img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      border-radius: 2px;
+      margin-bottom: 10px;
+    }
+    .side-article__caption {
+      font-size: 10px;
+      color: #999;
+      margin-bottom: 6px;
+      font-style: italic;
+    }
+    .side-article__title {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 6px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .side-article__title:hover { color: var(--accent); }
+    .side-article__author {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      color: var(--text-sub);
+    }
+
+    /* ─── 중앙 메인 영역 ─── */
+    .center-main {
+      padding: 30px 32px;
+    }
+    .hero-img-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/10;
+      overflow: hidden;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    .hero-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .hero-img-wrap:hover img { transform: scale(1.03); }
+    .hero-caption {
+      font-size: 11px;
+      font-style: italic;
+      color: #999;
+      margin-top: 8px;
+    }
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: 38px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-top: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .hero-title:hover { color: var(--accent); }
+    .hero-excerpt {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-sub);
+      text-align: center;
+      max-width: 540px;
+      margin: 14px auto 0;
+    }
+    .hero-author {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* ─── 중앙 하단 2번째 기사 ─── */
+    .center-secondary {
+      margin-top: 40px;
+      padding-top: 36px;
+      border-top: 2px solid var(--text);
+    }
+    .center-secondary__img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      border-radius: 2px;
+    }
+    .center-secondary__title {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-top: 16px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .center-secondary__title:hover { color: var(--accent); }
+    .center-secondary__excerpt {
+      font-size: 15px;
+      color: var(--text-sub);
+      line-height: 1.7;
+      margin-top: 10px;
+    }
+    .center-secondary__author {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 10px;
+    }
+
+    /* ─── 우측 트렌딩 사이드바 ─── */
+    .side-right {
+      padding: 30px 0 30px 20px;
+      border-left: 1px solid var(--border);
+    }
+    .trending-item {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .trending-item:hover { background: var(--bg-warm); }
+    .trending-item:last-child { border-bottom: none; }
+    .trending-body {
+      flex: 1;
+    }
+    .trending-title {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 5px;
+      transition: color 0.2s;
+    }
+    .trending-item:hover .trending-title { color: var(--accent); }
+    .trending-author {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      color: var(--text-sub);
+    }
+    .trending-thumb {
+      width: 56px;
+      height: 56px;
+      border-radius: 2px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    /* ─── 트렌딩 하단 프로모 박스 ─── */
+    .promo-box {
+      margin-top: 28px;
+      padding: 20px;
+      background: var(--bg-warm);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+    .promo-box__title {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+    .promo-box__desc {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-sub);
+      margin-bottom: 14px;
+    }
+    .promo-box__btn {
+      display: block;
+      width: 100%;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.2s;
+    }
+    .promo-box__btn:hover { background: var(--accent-hover); }
+
+    /* ─── 시안 표시 배지 ─── */
+    .design-badge {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: var(--accent);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 999;
+      box-shadow: 0 4px 16px rgba(192,40,38,0.3);
+      letter-spacing: 0.5px;
+    }
+
+    /* ─── 반응형 ─── */
+    @media (max-width: 1024px) {
+      .main-grid {
+        grid-template-columns: 1fr 320px;
+      }
+      .side-left { display: none; }
+    }
+    @media (max-width: 768px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+      .side-right { border-left: none; border-top: 1px solid var(--border); padding-left: 0; }
+      .hero-title { font-size: 28px; }
+      .top-bar { padding: 10px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="design-badge">Design A – The Atlantic 스타일</div>
+
+  <!-- ═══ 상단 내비게이션 ═══ -->
+  <nav class="top-bar">
+    <div class="top-bar__left">
+      <span class="top-bar__icon">☰</span>
+      <span class="top-bar__icon">🔍</span>
+      <a href="#">인기</a>
+      <a href="#">최신</a>
+      <a href="#">뉴스레터</a>
+    </div>
+    <div class="top-bar__right">
+      <a href="#">저장한 기사</a>
+      <a href="#">내 계정</a>
+      <button class="btn-subscribe">구독하기</button>
+    </div>
+  </nav>
+
+  <!-- ═══ 로고 ═══ -->
+  <div class="logo-area">
+    <div class="logo-letter">F</div>
+    <div class="logo-name">The Finch</div>
+  </div>
+
+  <!-- ═══ 메인 3-칼럼 그리드 ═══ -->
+  <main class="main-grid">
+
+    <!-- ── 좌측: 사이드 기사 ── -->
+    <aside class="side-left">
+      <article class="side-article">
+        <img class="side-article__img" src="/images/articles/crispr_dna.png" alt="CRISPR"/>
+        <p class="side-article__caption">Science Illustration</p>
+        <h3 class="side-article__title">CRISPR 유전자 편집, 유전 질환 치료의 새 시대를 열다</h3>
+        <span class="side-article__author">김진호</span>
+      </article>
+
+      <article class="side-article">
+        <img class="side-article__img" src="/images/articles/mars_rover.png" alt="화성"/>
+        <p class="side-article__caption">JPL / NASA</p>
+        <h3 class="side-article__title">화성 토양에서 발견된 유기물, 생명체 흔적일까</h3>
+        <span class="side-article__author">이수아</span>
+      </article>
+    </aside>
+
+    <!-- ── 중앙: 메인 히어로 ── -->
+    <section class="center-main">
+      <div class="hero-img-wrap">
+        <img src="/images/articles/space_galaxy.png" alt="제임스 웹 망원경"/>
+      </div>
+      <p class="hero-caption">Illustration by Finch Science Lab</p>
+
+      <h1 class="hero-title">제임스 웹 망원경이 포착한<br>가장 먼 은하의 비밀</h1>
+      <p class="hero-excerpt">
+        NASA의 제임스 웹 우주 망원경이 빅뱅 직후 형성된 것으로 보이는 초기 은하를 발견했습니다. 이 발견은 우주의 기원에 대한 우리의 이해를 근본적으로 바꿀 수 있습니다.
+      </p>
+      <p class="hero-author">이수아</p>
+
+      <!-- 2번째 대형 기사 -->
+      <div class="center-secondary">
+        <img class="center-secondary__img" src="/images/articles/quantum_computer.png" alt="양자컴퓨터"/>
+        <h2 class="center-secondary__title">양자 컴퓨터, 1000큐비트 시대 돌입</h2>
+        <p class="center-secondary__excerpt">
+          차세대 양자 프로세서가 1000큐비트를 돌파하며 상업적 양자 컴퓨팅 시대가 한 발짝 더 가까워졌습니다. 이는 암호학, 신약 개발, 기후 모델링 등 다양한 분야에 혁명을 가져올 것으로 기대됩니다.
+        </p>
+        <p class="center-secondary__author">박정우</p>
+      </div>
+    </section>
+
+    <!-- ── 우측: 트렌딩 사이드바 ── -->
+    <aside class="side-right">
+      <div class="trending-item">
+        <div class="trending-body">
+          <h4 class="trending-title">GPT-5 등장: AI가 과학 연구를 직접 수행하는 시대</h4>
+          <span class="trending-author">정세훈</span>
+        </div>
+        <img class="trending-thumb" src="/images/articles/ai_research.png" alt="AI"/>
+      </div>
+
+      <div class="trending-item">
+        <div class="trending-body">
+          <h4 class="trending-title">그래핀 기반 해수 담수화 막, 물 위기의 해답?</h4>
+          <span class="trending-author">최윤진</span>
+        </div>
+        <img class="trending-thumb" src="/images/articles/graphene_water.png" alt="그래핀"/>
+      </div>
+
+      <div class="trending-item">
+        <div class="trending-body">
+          <h4 class="trending-title">인류의 달 귀환: 아르테미스 3호의 도전과 과제</h4>
+          <span class="trending-author">박정우</span>
+        </div>
+        <img class="trending-thumb" src="/images/articles/space_galaxy.png" alt="달"/>
+      </div>
+
+      <div class="trending-item">
+        <div class="trending-body">
+          <h4 class="trending-title">남극 빙하 붕괴 속도, 예측보다 2배 빨라</h4>
+          <span class="trending-author">최윤진</span>
+        </div>
+        <img class="trending-thumb" src="/images/articles/graphene_water.png" alt="빙하"/>
+      </div>
+
+      <div class="trending-item">
+        <div class="trending-body">
+          <h4 class="trending-title">새로운 항생제 후보 물질, 심해 미생물에서 발견</h4>
+          <span class="trending-author">김진호</span>
+        </div>
+        <img class="trending-thumb" src="/images/articles/crispr_dna.png" alt="미생물"/>
+      </div>
+
+      <!-- 프로모 박스 -->
+      <div class="promo-box">
+        <h4 class="promo-box__title">Finch의 매주 과학 뉴스레터를 받아보세요</h4>
+        <p class="promo-box__desc">매주 엄선된 과학 기사와 깊이 있는 분석을 무료로 보내드립니다.</p>
+        <button class="promo-box__btn">뉴스레터 구독</button>
+      </div>
+    </aside>
+
+  </main>
+</body>
+</html>
