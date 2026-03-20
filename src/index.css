@@ -261,7 +261,7 @@ img {
    ======================================== */
 .hero-game {
   margin-top: var(--navbar-height);
-  padding: 24px 40px;
+  padding: 24px 40px 0;
   max-width: var(--content-max);
   margin-left: auto;
   margin-right: auto;
@@ -270,48 +270,191 @@ img {
 .hero-game__container {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
-  border-radius: var(--radius-xl);
+  aspect-ratio: 16 / 8;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   overflow: hidden;
-  background: var(--bg-game);
+  background: #000;
   box-shadow: var(--shadow-lg);
 }
 
-.hero-game__bg-img {
+.hero-game__iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: none;
+}
+
+/* ── 게임 하단 컨트롤 바 ── */
+.game-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-top: none;
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  padding: 10px 20px;
+  max-width: var(--content-max);
+  margin: 0 auto;
+}
+
+.game-bar__info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.game-bar__icon {
+  width: 36px; height: 36px;
+  background: var(--bg-warm);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.game-bar__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.game-bar__title {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.game-bar__maker {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.game-bar__actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.game-bar__btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.game-bar__btn:hover {
+  background: var(--bg-warm);
+  color: var(--text-primary);
+}
+.game-bar__btn--active {
+  color: var(--accent);
+}
+.game-bar__btn--active:hover {
+  color: var(--accent);
+}
+.game-bar__btn svg {
+  flex-shrink: 0;
+}
+
+.game-bar__divider {
+  width: 1px;
+  height: 20px;
+  background: var(--border-light);
+  margin: 0 6px;
+}
+
+/* ── 전체화면: flex 컬럼으로 게임+바가 겹치지 않게 ── */
+.hero-game:fullscreen {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  padding: 0;
+  margin: 0;
+  background: #000;
+}
+.hero-game:fullscreen .hero-game__container {
+  flex: 1;
+  border-radius: 0;
+  aspect-ratio: auto;
+  width: 100%;
+}
+.hero-game:fullscreen .game-bar {
+  flex-shrink: 0;
+  max-width: none;
+  border-radius: 0;
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  background: #1a1a1a;
+  padding: 8px 24px;
+}
+.hero-game:fullscreen .game-bar__title,
+.hero-game:fullscreen .game-bar__btn,
+.hero-game:fullscreen .game-bar__maker {
+  color: rgba(255,255,255,0.8);
+}
+.hero-game:fullscreen .game-bar__btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+.hero-game:fullscreen .game-bar__btn--active {
+  color: var(--accent);
+}
+.hero-game:fullscreen .game-bar__icon {
+  background: rgba(255,255,255,0.1);
+}
+.hero-game:fullscreen .game-bar__divider {
+  background: rgba(255,255,255,0.15);
+}
+
+/* ── 플레이 전 대기 화면 ── */
+.hero-game__thumbnail {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: 1;
 }
 
-.hero-game__canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-  transition: filter 0.4s ease;
-}
-.hero-game__canvas--blur {
-  filter: blur(8px) brightness(0.4);
-}
-
-.hero-game__overlay {
+.hero-game__play-overlay {
   position: absolute;
   inset: 0;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(13, 17, 23, 0.65);
-  backdrop-filter: blur(4px);
-  transition: opacity 0.5s var(--ease);
-  z-index: 2;
+  background: rgba(0, 0, 0, 0.2);
+}
+.hero-game__play-overlay:hover {
+  background: rgba(0, 0, 0, 0.12);
 }
 
-.hero-game__overlay--minimal {
-  background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(2px);
+.hero-game__play-btn {
+  padding: 16px 36px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 20px rgba(192, 57, 43, 0.4);
+}
+.hero-game__play-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 28px rgba(192, 57, 43, 0.5);
 }
 
 .hero-game__overlay--hidden {
@@ -503,6 +646,18 @@ img {
   height: 120px;
   display: flex; align-items: center; justify-content: center;
   position: relative;
+  overflow: hidden;
+}
+
+.game-card__thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s var(--ease);
+}
+.game-card:hover .game-card__thumb {
+  transform: scale(1.06);
 }
 
 .game-card__icon {
@@ -670,13 +825,13 @@ img {
 .tutorial-detail__h2 {
   font-size: 20px;
   font-weight: 800;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   color: var(--text-primary);
 }
 .tutorial-detail__h3 {
   font-size: 15px;
   font-weight: 700;
-  margin: 16px 0 8px;
+  margin: 10px 0 4px;
   color: var(--accent);
 }
 .tutorial-detail__li {

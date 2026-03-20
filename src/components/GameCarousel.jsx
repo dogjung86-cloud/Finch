@@ -7,31 +7,39 @@ export const GAME_LIST = [
   {
     id: 'cosmic-flight',
     title: 'Fly Darwin',
-    subtitle: '로켓 비행 어드벤처',
+    subtitle: '비행 어드벤처',
     description: '우주를 탐험하며 장애물을 피하고 별을 모으세요!',
     icon: '🚀',
     accentColor: '#00e5ff',
     bgGradient: ['#0b1628', '#1a2d5a'],
+    thumbnail: '/images/game screens/Fly Darwin/Fly Darwin screen.png',
     status: 'playable',
-    tutorial: '↑↓ 또는 마우스로 로켓 조종 · 별 수집 · 장애물 회피',
-    tutorialDetail: `## 🚀 Fly Darwin 가이드
+    tutorial: '마우스/터치로 비행체 조종 · 에너지 코인 수집 · 장애물 회피',
+    tutorialDetail: `## 🦠 Fly Darwin
 
-### 조작법
-- **키보드**: ↑/↓ 화살표 또는 W/S 키로 로켓을 위아래로 이동
-- **마우스**: 마우스를 캔버스 위에서 움직이면 로켓이 따라갑니다
+### Fly Darwin 소개
+- Fly Darwin은 진화를 테마로 한 3D 비행 게임입니다.
+- 아메바(단세포 생물)에서 시작하여 비행 거리가 1,000m 늘어날 때마다 새로운 생명체(비행체)로 진화합니다.
+- 둔클레오스테우스, 틱타알릭, 다윈의 핀치새 등 어떤 형태까지 진화할 수 있는지 최대한 멀리 날아보세요!
 
-### 아이템
-- ⭐ **별**: 수집 시 **+20P** 획득
-- 💎 **다이아몬드**: 수집 시 **+50P** 획득 (드문 출현)
+### 조작
+- PC: 마우스를 움직여 비행체를 상하좌우로 조종
+- 모바일: 화면을 터치 & 드래그하여 조종
+- 일시정지: ESC / P 키 또는 ⏸ 버튼
 
-### 장애물
-- 위아래에서 좁아지는 통로를 통과해야 합니다
-- 점수가 올라갈수록 통로가 좁아지고 속도가 빨라집니다
+### 핵심 규칙
+- 에너지 코인 🥜 을 모아 에너지를 유지하세요 (에너지 0 = 게임 오버)
+- 장애물 💀 을 피하세요 (충돌 시 에너지 -10)
+- 무적 별 ⭐ 획득 시 5초간 무적 (장애물 파괴 가능)
 
-### 팁
-- 마우스 조작이 더 정밀합니다
-- 통로의 중앙을 노리세요
-- 별보다 다이아몬드를 우선 수집하세요`,
+### 게임 Tip
+- 에너지 관리가 핵심 — 코인을 적극적으로 수집하세요
+- 무적 별을 놓치지 마세요 — 800m마다 한 번 등장하는 희귀 아이템
+- 속도 조절 — 마우스를 왼쪽에 놓으면 느리게 날아 장애물을 피하기 쉬움
+- 레벨이 오를수록 장애물 증가 — 레벨 수 = 동시 장애물 수
+
+### 라이선스
+- 이 게임은 MIT License의 무료 오픈 코드를 기반으로 제작되었습니다. 라이선스 조건에 따라 자유롭게 수정 및 배포가 가능합니다.`,
   },
   {
     id: 'dna-puzzle',
@@ -41,6 +49,7 @@ export const GAME_LIST = [
     icon: '🧬',
     accentColor: '#00e676',
     bgGradient: ['#0b2818', '#1a5a2d'],
+
     status: 'coming_soon',
     tutorial: '염기쌍 A-T, G-C를 매칭하여 DNA를 완성하세요',
     tutorialDetail: '## 🧬 DNA Puzzle\n\n준비 중인 게임입니다. 곧 만나요!',
@@ -53,6 +62,7 @@ export const GAME_LIST = [
     icon: '⚛️',
     accentColor: '#8b5cf6',
     bgGradient: ['#1a0b28', '#3d1a5a'],
+
     status: 'coming_soon',
     tutorial: '양성자·중성자·전자를 드래그하여 원자를 조립하세요',
     tutorialDetail: '## ⚛️ Atom Builder\n\n준비 중인 게임입니다. 곧 만나요!',
@@ -65,6 +75,7 @@ export const GAME_LIST = [
     icon: '🌍',
     accentColor: '#ff6b35',
     bgGradient: ['#281a0b', '#5a3d1a'],
+
     status: 'coming_soon',
     tutorial: '타워를 배치하여 소행성을 파괴하세요',
     tutorialDetail: '## 🌍 Planet Defense\n\n준비 중인 게임입니다. 곧 만나요!',
@@ -77,6 +88,7 @@ export const GAME_LIST = [
     icon: '🧠',
     accentColor: '#ff4081',
     bgGradient: ['#280b1a', '#5a1a3d'],
+
     status: 'coming_soon',
     tutorial: '드래그로 뉴런 사이를 연결하여 회로를 완성하세요',
     tutorialDetail: '## 🧠 Neuron Connect\n\n준비 중인 게임입니다. 곧 만나요!',
@@ -159,13 +171,17 @@ export default function GameCarousel({ selectedGameId, onSelectGame }) {
             >
               {/* 배경 */}
               <div className="game-card__bg">
-                <span className="game-card__icon">{game.icon}</span>
+                {game.thumbnail ? (
+                  <img src={game.thumbnail} alt={game.title} className="game-card__thumb" />
+                ) : (
+                  <span className="game-card__icon">{game.icon}</span>
+                )}
               </div>
 
               {/* 정보 */}
               <div className="game-card__info">
-                <div className="game-card__title">{game.title}</div>
-                <div className="game-card__subtitle">{game.subtitle}</div>
+                <div className="game-card__title">{isComingSoon ? 'Coming Soon' : game.title}</div>
+                {!isComingSoon && <div className="game-card__subtitle">{game.subtitle}</div>}
               </div>
 
               {/* 상태 배지 */}

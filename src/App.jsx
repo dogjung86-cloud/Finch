@@ -228,8 +228,6 @@ export default function App() {
       <div ref={heroRef}>
         <HeroGame
           onScoreChange={handleScoreChange}
-          selectedGameId={selectedGameId}
-          tutorial={selectedGame?.tutorial}
         />
       </div>
 
