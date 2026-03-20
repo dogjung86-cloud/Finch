@@ -105,7 +105,7 @@ export default function HeroGame({ onScoreChange }) {
           /* 플레이 전 대기 화면 */
           <>
             <img
-              src="/images/game screens/Fly Darwin/Fly Darwin screen.png"
+              src="/images/game screens/Fly Darwin/Fly Darwin thumbs.jpg"
               alt="Fly Darwin"
               className="hero-game__thumbnail"
             />

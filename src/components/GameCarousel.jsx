@@ -12,7 +12,7 @@ export const GAME_LIST = [
     icon: '🚀',
     accentColor: '#00e5ff',
     bgGradient: ['#0b1628', '#1a2d5a'],
-    thumbnail: '/images/game screens/Fly Darwin/Fly Darwin screen.png',
+    thumbnail: '/images/game screens/Fly Darwin/Fly Darwin thumbs.jpg',
     status: 'playable',
     tutorial: '마우스/터치로 비행체 조종 · 에너지 코인 수집 · 장애물 회피',
     tutorialDetail: `## 🦠 Fly Darwin
