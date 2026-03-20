@@ -33,6 +33,7 @@ export default function App() {
   // ── 게임 선택 ──
   const [selectedGameId, setSelectedGameId] = useState('cosmic-flight');
   const [tutorialOpen, setTutorialOpen] = useState(false);
+  const [isGamePlaying, setIsGamePlaying] = useState(false);
 
   const selectedGame = GAME_LIST.find((g) => g.id === selectedGameId);
 
@@ -228,6 +229,8 @@ export default function App() {
       <div ref={heroRef}>
         <HeroGame
           onScoreChange={handleScoreChange}
+          isPlaying={isGamePlaying}
+          onPlayChange={setIsGamePlaying}
         />
       </div>
 
@@ -235,6 +238,7 @@ export default function App() {
         <GameCarousel
           selectedGameId={selectedGameId}
           onSelectGame={handleSelectGame}
+          isGamePlaying={isGamePlaying}
         />
 
         {/* ── 튜토리얼 상세 패널 ── */}

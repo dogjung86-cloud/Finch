@@ -6,7 +6,7 @@ import { useRef, useState, useCallback } from 'react';
 
 const GAME_URL = 'https://fly-darwin.vercel.app/';
 
-export default function HeroGame({ onScoreChange }) {
+export default function HeroGame({ onScoreChange, isPlaying, onPlayChange }) {
   const iframeRef = useRef(null);
   const containerRef = useRef(null);
   const [likes, setLikes] = useState(() =>
@@ -79,7 +79,7 @@ export default function HeroGame({ onScoreChange }) {
     return () => document.removeEventListener('fullscreenchange', onChange);
   });
 
-  const [isPlaying, setIsPlaying] = useState(false);
+
 
   // 숫자 포맷 (1000 → 1K)
   const formatCount = (n) => {
@@ -105,11 +105,11 @@ export default function HeroGame({ onScoreChange }) {
           /* 플레이 전 대기 화면 */
           <>
             <img
-              src="/images/game screens/Fly Darwin/Fly Darwin thumbs.jpg"
+              src="/images/game screens/Fly Darwin/Fly Darwin screen.png"
               alt="Fly Darwin"
               className="hero-game__thumbnail"
             />
-            <div className="hero-game__play-overlay" onClick={() => setIsPlaying(true)}>
+            <div className="hero-game__play-overlay" onClick={() => onPlayChange(true)}>
               <button className="hero-game__play-btn">
                 🚀 지금 플레이하기
               </button>

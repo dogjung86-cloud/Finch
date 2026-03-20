@@ -95,7 +95,7 @@ export const GAME_LIST = [
   },
 ];
 
-export default function GameCarousel({ selectedGameId, onSelectGame }) {
+export default function GameCarousel({ selectedGameId, onSelectGame, isGamePlaying }) {
   const scrollRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -188,8 +188,8 @@ export default function GameCarousel({ selectedGameId, onSelectGame }) {
               {isComingSoon && (
                 <div className="game-card__badge">COMING SOON</div>
               )}
-              {isSelected && !isComingSoon && (
-                <div className="game-card__badge game-card__badge--playing">▶ 플레이 중</div>
+              {isSelected && !isComingSoon && isGamePlaying && (
+                <div className="game-card__badge game-card__badge--playing">▶</div>
               )}
 
               {/* 선택 테두리 글로우 */}
