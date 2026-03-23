@@ -2092,7 +2092,7 @@ img {
 
 .article-page__body p {
   font-family: 'Noto Serif KR', serif;
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1.9;
   color: #333;
   margin-bottom: 20px;
@@ -2599,7 +2599,7 @@ img {
   .article-page__body div,
   .article-page__body span,
   .article-page__body li {
-    font-size: 16px !important;
+    font-size: 17px !important;
     line-height: 1.85 !important;
   }
   .article-page__body h1 { font-size: 22px !important; }
