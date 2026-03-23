@@ -91,7 +91,7 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
                 이 기사는 과학드림 멤버십 회원만 열람할 수 있습니다.
               </p>
               <a
-                href="https://www.youtube.com/@sciencedream"
+                href="https://www.youtube.com/@sciencedream/join"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="membership-lock__btn"
