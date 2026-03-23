@@ -2128,6 +2128,67 @@ img {
   margin: 40px 0;
 }
 
+/* ── 멤버십 잠금 ── */
+.article-page__body--preview {
+  position: relative;
+  max-height: 200px;
+  overflow: hidden;
+}
+.article-page__body--preview::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(transparent, var(--bg-primary));
+  pointer-events: none;
+}
+
+.membership-lock {
+  text-align: center;
+  padding: 48px 24px;
+  margin: -20px 0 40px;
+  border: 2px dashed #ddd;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.02);
+}
+.membership-lock__icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+.membership-lock__title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+.membership-lock__desc {
+  font-size: 15px;
+  color: #888;
+  margin-bottom: 24px;
+}
+.membership-lock__btn {
+  display: inline-block;
+  padding: 12px 28px;
+  background: #c04040;
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.membership-lock__btn:hover {
+  background: #a03030;
+}
+
+/* 어드민 멤버십 체크 라벨 */
+.admin-form__check-label--membership {
+  color: #c04040;
+  font-weight: 600;
+}
+
 /* ── 댓글 섹션 ── */
 .comments-section {
   margin-top: 8px;

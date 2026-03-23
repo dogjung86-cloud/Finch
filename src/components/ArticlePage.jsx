@@ -68,22 +68,55 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
         </div>
 
         {/* 본문 */}
-        <div className="article-page__body">
-          {(() => {
-            const content = article.fullContent || article.full_content || '';
-            // HTML 태그가 포함되어 있으면 HTML로 렌더링 (리치 에디터)
-            if (content.includes('<')) {
-              return <div dangerouslySetInnerHTML={{ __html: content }} />;
-            }
-            // 평문이면 줄바꿈으로 나눠서 렌더링
-            return content.split('\n\n').map((para, i) => (
-              <p key={i}>{para}</p>
-            ));
-          })()}
-        </div>
+        {article.is_membership ? (
+          /* ── 멤버십 전용: 미리보기 + 잠금 ── */
+          <>
+            <div className="article-page__body article-page__body--preview">
+              {(() => {
+                const content = article.fullContent || article.full_content || '';
+                if (content.includes('<')) {
+                  // HTML 본문의 앞 300자만 표시
+                  const truncated = content.substring(0, 300);
+                  return <div dangerouslySetInnerHTML={{ __html: truncated }} />;
+                }
+                return content.split('\n\n').slice(0, 2).map((para, i) => (
+                  <p key={i}>{para}</p>
+                ));
+              })()}
+            </div>
+            <div className="membership-lock">
+              <div className="membership-lock__icon">🔒</div>
+              <h3 className="membership-lock__title">멤버십 전용 콘텐츠</h3>
+              <p className="membership-lock__desc">
+                이 기사는 과학드림 멤버십 회원만 열람할 수 있습니다.
+              </p>
+              <a
+                href="https://www.youtube.com/@sciencedream"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="membership-lock__btn"
+              >
+                멤버십 가입하기 →
+              </a>
+            </div>
+          </>
+        ) : (
+          /* ── 일반 기사: 전체 본문 ── */
+          <>
+            <div className="article-page__body">
+              {(() => {
+                const content = article.fullContent || article.full_content || '';
+                if (content.includes('<')) {
+                  return <div dangerouslySetInnerHTML={{ __html: content }} />;
+                }
+                return content.split('\n\n').map((para, i) => (
+                  <p key={i}>{para}</p>
+                ));
+              })()}
+            </div>
 
-        {/* 구분선 */}
-        <hr className="article-page__divider" />
+            {/* 구분선 */}
+            <hr className="article-page__divider" />
 
         {/* ── 댓글 섹션 ── */}
         <section className="comments-section">
@@ -159,6 +192,8 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
             )}
           </div>
         </section>
+          </>
+        )}
       </div>
     </div>
   );

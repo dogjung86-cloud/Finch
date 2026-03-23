@@ -35,6 +35,7 @@ export default function AdminPage({ onBack }) {
     thumbnail: '',
     display_order: 0,
     is_published: true,
+    is_membership: false,
   });
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -75,6 +76,7 @@ export default function AdminPage({ onBack }) {
       thumbnail: '',
       display_order: 0,
       is_published: true,
+      is_membership: false,
     });
     setEditing(null);
     setError('');
@@ -91,6 +93,7 @@ export default function AdminPage({ onBack }) {
       thumbnail: article.thumbnail || '',
       display_order: article.display_order || 0,
       is_published: article.is_published ?? true,
+      is_membership: article.is_membership ?? false,
     });
     setEditing(article);
     setError('');
@@ -219,6 +222,7 @@ export default function AdminPage({ onBack }) {
       thumbnail: formData.thumbnail,
       display_order: formData.display_order,
       is_published: formData.is_published,
+      is_membership: formData.is_membership,
       updated_at: new Date().toISOString(),
     };
 
@@ -414,7 +418,7 @@ export default function AdminPage({ onBack }) {
             </div>
           </div>
 
-          {/* 공개 여부 */}
+          {/* 공개 여부 + 멤버십 */}
           <div className="admin-form__field">
             <label className="admin-form__check-label">
               <input
@@ -425,6 +429,18 @@ export default function AdminPage({ onBack }) {
                 }
               />
               공개 (체크 해제 시 비공개)
+            </label>
+          </div>
+          <div className="admin-form__field">
+            <label className="admin-form__check-label admin-form__check-label--membership">
+              <input
+                type="checkbox"
+                checked={formData.is_membership}
+                onChange={(e) =>
+                  setFormData({ ...formData, is_membership: e.target.checked })
+                }
+              />
+              🔒 멤버십 전용 기사 (일반 사용자에게 본문 잠금)
             </label>
           </div>
 
