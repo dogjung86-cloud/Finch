@@ -31,7 +31,7 @@ export default function AboutPage() {
             </div>
             <div className="about-feature-card">
               <span className="about-feature-card__icon">📰</span>
-              <h3 className="about-feature-card__title">Brain Pick</h3>
+              <h3 className="about-feature-card__title">The Finch</h3>
               <p className="about-feature-card__desc">
                 깊이 있는 과학 기사와 최신 뉴스를 엄선하여 제공합니다.
                 우주, 생명과학, 기술 등 다양한 분야를 아우릅니다.

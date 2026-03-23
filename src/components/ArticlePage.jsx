@@ -59,7 +59,7 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
         {/* 메타 정보 */}
         <div className="article-page__meta">
           <span className="article-page__author">{article.author}</span>
-          <span className="article-page__date">{article.date}</span>
+          <span className="article-page__date">{article.date || (article.created_at ? new Date(article.created_at).toLocaleDateString('ko-KR') : '')}</span>
         </div>
 
         {/* 히어로 이미지 */}
@@ -69,9 +69,17 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
 
         {/* 본문 */}
         <div className="article-page__body">
-          {article.fullContent.split('\n\n').map((para, i) => (
-            <p key={i}>{para}</p>
-          ))}
+          {(() => {
+            const content = article.fullContent || article.full_content || '';
+            // HTML 태그가 포함되어 있으면 HTML로 렌더링 (리치 에디터)
+            if (content.includes('<')) {
+              return <div dangerouslySetInnerHTML={{ __html: content }} />;
+            }
+            // 평문이면 줄바꿈으로 나눠서 렌더링
+            return content.split('\n\n').map((para, i) => (
+              <p key={i}>{para}</p>
+            ));
+          })()}
         </div>
 
         {/* 구분선 */}

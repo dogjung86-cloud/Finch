@@ -3,11 +3,11 @@ import { useState, useEffect } from 'react';
 const MENU_ITEMS = [
   { id: 'home', label: '홈' },
   { id: 'games', label: 'Play Lab' },
-  { id: 'magazine', label: 'Brain Pick' },
+  { id: 'magazine', label: 'The Finch' },
   { id: 'about', label: 'About' },
 ];
 
-export default function Navbar({ activeSection, onSectionChange, points, level, user, onLoginClick, onLogout }) {
+export default function Navbar({ activeSection, onSectionChange, user, onLoginClick, onSignupClick, onLogout, onAdminClick, isAdmin }) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -36,20 +36,20 @@ export default function Navbar({ activeSection, onSectionChange, points, level, 
       </ul>
 
       <div className="navbar__right">
-        <div className="navbar__points">
-          <div className="navbar__level-badge">
-            Lv.{level}
-          </div>
-          <div className="navbar__points-badge">
-            {points.toLocaleString()} P
-          </div>
-        </div>
-
         {user ? (
           <div className="navbar__user-area">
-            <div className="navbar__user-avatar">
-              {user.name.charAt(0).toUpperCase()}
-            </div>
+            {isAdmin && (
+              <button className="navbar__admin-btn" onClick={onAdminClick} title="기사 관리">
+                ✏️
+              </button>
+            )}
+            {user.avatar ? (
+              <img className="navbar__user-avatar-img" src={user.avatar} alt={user.name} />
+            ) : (
+              <div className="navbar__user-avatar">
+                {user.name.charAt(0).toUpperCase()}
+              </div>
+            )}
             <span className="navbar__user-name">{user.name}</span>
             <button className="navbar__logout-btn" onClick={onLogout}>로그아웃</button>
           </div>

@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { supabase } from './lib/supabase';
 
 // 컴포넌트
 import Navbar from './components/Navbar';
@@ -9,18 +10,50 @@ import Footer from './components/Footer';
 import ArticlePage from './components/ArticlePage';
 import AboutPage from './components/AboutPage';
 import LoginModal from './components/LoginModal';
+import AdminPage from './components/AdminPage';
+import TermsPage from './components/TermsPage';
+import PrivacyPage from './components/PrivacyPage';
 
 export default function App() {
   // ── 페이지 라우팅 ──
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedArticle, setSelectedArticle] = useState(null);
 
-  // ── 인증 ──
-  const [user, setUser] = useState(() => {
-    const stored = localStorage.getItem('finch_current_user');
-    return stored ? JSON.parse(stored) : null;
-  });
+  // ── 인증 (Supabase Auth) ──
+  const [user, setUser] = useState(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
+
+  const ADMIN_EMAIL = 'sciencegive@gmail.com';
+  const isAdmin = user?.email === ADMIN_EMAIL;
+
+  useEffect(() => {
+    // 초기 세션 확인
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUser({
+          email: session.user.email,
+          name: session.user.user_metadata?.full_name || session.user.email.split('@')[0],
+          avatar: session.user.user_metadata?.avatar_url,
+        });
+      }
+    });
+
+    // 세션 변경 감지
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setUser({
+          email: session.user.email,
+          name: session.user.user_metadata?.full_name || session.user.email.split('@')[0],
+          avatar: session.user.user_metadata?.avatar_url,
+        });
+        setShowLoginModal(false);
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   // ── 포인트 / 레벨 ──
   const [points, setPoints] = useState(() =>
@@ -147,16 +180,41 @@ export default function App() {
     }, 100);
   };
 
-  // 로그인/로그아웃
-  const handleLogin = (userData) => {
-    setUser(userData);
-    setShowLoginModal(false);
+  // 로그아웃
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
   };
 
-  const handleLogout = () => {
-    setUser(null);
-    localStorage.removeItem('finch_current_user');
-  };
+  // ── 관리자 페이지 ──
+  if (currentPage === 'admin') {
+    return (
+      <>
+        <Navbar
+          activeSection="admin"
+          onSectionChange={handleSectionChange}
+          user={user}
+          onLoginClick={() => setShowLoginModal(true)}
+          onSignupClick={() => setShowLoginModal(true)}
+          onLogout={handleLogout}
+          onAdminClick={() => setCurrentPage('admin')}
+          isAdmin={isAdmin}
+        />
+        <AdminPage
+          onBack={() => {
+            setCurrentPage('home');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+        />
+      <Footer onNavigate={setCurrentPage} />
+        {showLoginModal && (
+          <LoginModal
+            onClose={() => setShowLoginModal(false)}
+          />
+        )}
+      </>
+    );
+  }
 
   // ── 기사 상세 페이지 ──
   if (currentPage === 'article' && selectedArticle) {
@@ -165,11 +223,12 @@ export default function App() {
         <Navbar
           activeSection={activeSection}
           onSectionChange={handleSectionChange}
-          points={points}
-          level={level}
           user={user}
           onLoginClick={() => setShowLoginModal(true)}
+          onSignupClick={() => setShowLoginModal(true)}
           onLogout={handleLogout}
+          onAdminClick={() => setCurrentPage('admin')}
+          isAdmin={isAdmin}
         />
         <ArticlePage
           article={selectedArticle}
@@ -177,11 +236,10 @@ export default function App() {
           user={user}
           onLoginRequest={() => setShowLoginModal(true)}
         />
-        <Footer />
+      <Footer onNavigate={setCurrentPage} />
         {showLoginModal && (
           <LoginModal
             onClose={() => setShowLoginModal(false)}
-            onLogin={handleLogin}
           />
         )}
       </>
@@ -195,20 +253,40 @@ export default function App() {
         <Navbar
           activeSection="about"
           onSectionChange={handleSectionChange}
-          points={points}
-          level={level}
           user={user}
           onLoginClick={() => setShowLoginModal(true)}
+          onSignupClick={() => setShowLoginModal(true)}
           onLogout={handleLogout}
+          onAdminClick={() => setCurrentPage('admin')}
+          isAdmin={isAdmin}
         />
         <AboutPage />
-        <Footer />
+        <Footer onNavigate={setCurrentPage} />
         {showLoginModal && (
           <LoginModal
             onClose={() => setShowLoginModal(false)}
-            onLogin={handleLogin}
           />
         )}
+      </>
+    );
+  }
+
+  // ── 이용약관 페이지 ──
+  if (currentPage === 'terms') {
+    return (
+      <>
+        <TermsPage onBack={() => { setCurrentPage('home'); window.scrollTo(0, 0); }} />
+        <Footer onNavigate={setCurrentPage} />
+      </>
+    );
+  }
+
+  // ── 개인정보처리방침 페이지 ──
+  if (currentPage === 'privacy') {
+    return (
+      <>
+        <PrivacyPage onBack={() => { setCurrentPage('home'); window.scrollTo(0, 0); }} />
+        <Footer onNavigate={setCurrentPage} />
       </>
     );
   }
@@ -219,11 +297,12 @@ export default function App() {
       <Navbar
         activeSection={activeSection}
         onSectionChange={handleSectionChange}
-        points={points}
-        level={level}
         user={user}
         onLoginClick={() => setShowLoginModal(true)}
+        onSignupClick={() => setShowLoginModal(true)}
         onLogout={handleLogout}
+        onAdminClick={() => setCurrentPage('admin')}
+        isAdmin={isAdmin}
       />
 
       <div ref={heroRef}>
@@ -282,12 +361,11 @@ export default function App() {
         <MagazineGrid onArticleClick={handleArticleClick} />
       </div>
 
-      <Footer />
+      <Footer onNavigate={setCurrentPage} />
 
       {showLoginModal && (
         <LoginModal
           onClose={() => setShowLoginModal(false)}
-          onLogin={handleLogin}
         />
       )}
     </>
