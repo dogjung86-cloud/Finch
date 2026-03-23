@@ -1064,14 +1064,14 @@ img {
 }
 
 .atlantic-hero-title {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 32px;
-  font-weight: 700;
-  line-height: 1.2;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.35;
   margin-top: 16px;
-  text-align: center;
   color: #1a1a1a;
   transition: color 0.2s;
+  word-break: keep-all;
 }
 .atlantic-center:hover .atlantic-hero-title {
   color: var(--accent);
@@ -1081,13 +1081,10 @@ img {
   font-size: 15px;
   line-height: 1.7;
   color: #666;
-  text-align: center;
-  max-width: 480px;
-  margin: 12px auto 0;
+  margin-top: 12px;
 }
 
 .atlantic-hero-author {
-  text-align: center;
   margin-top: 10px;
   font-size: 12px;
   text-transform: uppercase;
@@ -2099,6 +2096,11 @@ img {
   line-height: 1.9;
   color: #333;
   margin-bottom: 20px;
+}
+
+.article-page__body div,
+.article-page__body span {
+  background: transparent !important;
 }
 
 .article-page__divider {

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { supabase } from './lib/supabase';
 
 // 컴포넌트
@@ -14,10 +14,22 @@ import AdminPage from './components/AdminPage';
 import TermsPage from './components/TermsPage';
 import PrivacyPage from './components/PrivacyPage';
 
+/* ── URL → 페이지 상태 파싱 ── */
+function parseUrl(path = window.location.pathname) {
+  if (path.startsWith('/article/')) return { page: 'article', articleId: path.split('/article/')[1] };
+  if (path === '/about') return { page: 'about' };
+  if (path === '/admin') return { page: 'admin' };
+  if (path === '/terms') return { page: 'terms' };
+  if (path === '/privacy') return { page: 'privacy' };
+  return { page: 'home' };
+}
+
 export default function App() {
-  // ── 페이지 라우팅 ──
-  const [currentPage, setCurrentPage] = useState('home');
+  // ── 페이지 라우팅 (URL 기반) ──
+  const initialRoute = useMemo(() => parseUrl(), []);
+  const [currentPage, setCurrentPage] = useState(initialRoute.page);
   const [selectedArticle, setSelectedArticle] = useState(null);
+  const [pendingArticleId, setPendingArticleId] = useState(initialRoute.articleId || null);
 
   // ── 인증 (Supabase Auth) ──
   const [user, setUser] = useState(null);
@@ -54,6 +66,56 @@ export default function App() {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // ── URL 변경 함수 ──
+  const navigateTo = useCallback((page, data = {}) => {
+    let path = '/';
+    if (page === 'article' && data.article) path = `/article/${data.article.id}`;
+    else if (page === 'about') path = '/about';
+    else if (page === 'admin') path = '/admin';
+    else if (page === 'terms') path = '/terms';
+    else if (page === 'privacy') path = '/privacy';
+
+    window.history.pushState({ page, ...data }, '', path);
+    setCurrentPage(page);
+    if (data.article) setSelectedArticle(data.article);
+  }, []);
+
+  // ── 브라우저 뒤로/앞으로 버튼 ──
+  useEffect(() => {
+    const handlePopState = (e) => {
+      const route = parseUrl();
+      setCurrentPage(route.page);
+      if (route.page === 'article' && route.articleId) {
+        setPendingArticleId(route.articleId);
+      } else {
+        setSelectedArticle(null);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // ── URL에서 직접 기사 접근 시 로드 ──
+  useEffect(() => {
+    if (!pendingArticleId || selectedArticle) return;
+    const fetchArticle = async () => {
+      const { data } = await supabase
+        .from('articles')
+        .select('*')
+        .eq('id', pendingArticleId)
+        .single();
+      if (data) {
+        setSelectedArticle(data);
+        setCurrentPage('article');
+      } else {
+        setCurrentPage('home');
+        window.history.replaceState({}, '', '/');
+      }
+      setPendingArticleId(null);
+    };
+    fetchArticle();
+  }, [pendingArticleId, selectedArticle]);
 
   // ── 포인트 / 레벨 ──
   const [points, setPoints] = useState(() =>
@@ -121,7 +183,7 @@ export default function App() {
   // 네비게이션
   const handleSectionChange = (section) => {
     if (section === 'about') {
-      setCurrentPage('about');
+      navigateTo('about');
       setActiveSection('about');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
@@ -129,7 +191,7 @@ export default function App() {
 
     // 다른 페이지에서 홈으로
     if (currentPage !== 'home') {
-      setCurrentPage('home');
+      navigateTo('home');
       setSelectedArticle(null);
       setActiveSection(section);
       // 약간의 지연 후 스크롤 (렌더링 대기)
@@ -163,13 +225,13 @@ export default function App() {
   // 기사 클릭
   const handleArticleClick = (article) => {
     setSelectedArticle(article);
-    setCurrentPage('article');
+    navigateTo('article', { article });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // 기사 → 홈 돌아가기
   const handleBackFromArticle = () => {
-    setCurrentPage('home');
+    navigateTo('home');
     setSelectedArticle(null);
     setTimeout(() => {
       if (magazineRef.current) {
@@ -197,16 +259,16 @@ export default function App() {
           onLoginClick={() => setShowLoginModal(true)}
           onSignupClick={() => setShowLoginModal(true)}
           onLogout={handleLogout}
-          onAdminClick={() => setCurrentPage('admin')}
+          onAdminClick={() => navigateTo('admin')}
           isAdmin={isAdmin}
         />
         <AdminPage
           onBack={() => {
-            setCurrentPage('home');
+            navigateTo('home');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
         />
-      <Footer onNavigate={setCurrentPage} />
+      <Footer onNavigate={(page) => navigateTo(page)} />
         {showLoginModal && (
           <LoginModal
             onClose={() => setShowLoginModal(false)}
@@ -227,7 +289,7 @@ export default function App() {
           onLoginClick={() => setShowLoginModal(true)}
           onSignupClick={() => setShowLoginModal(true)}
           onLogout={handleLogout}
-          onAdminClick={() => setCurrentPage('admin')}
+          onAdminClick={() => navigateTo('admin')}
           isAdmin={isAdmin}
         />
         <ArticlePage
@@ -236,7 +298,7 @@ export default function App() {
           user={user}
           onLoginRequest={() => setShowLoginModal(true)}
         />
-      <Footer onNavigate={setCurrentPage} />
+      <Footer onNavigate={(page) => navigateTo(page)} />
         {showLoginModal && (
           <LoginModal
             onClose={() => setShowLoginModal(false)}
@@ -257,11 +319,11 @@ export default function App() {
           onLoginClick={() => setShowLoginModal(true)}
           onSignupClick={() => setShowLoginModal(true)}
           onLogout={handleLogout}
-          onAdminClick={() => setCurrentPage('admin')}
+          onAdminClick={() => navigateTo('admin')}
           isAdmin={isAdmin}
         />
         <AboutPage />
-        <Footer onNavigate={setCurrentPage} />
+        <Footer onNavigate={(page) => navigateTo(page)} />
         {showLoginModal && (
           <LoginModal
             onClose={() => setShowLoginModal(false)}
@@ -275,8 +337,8 @@ export default function App() {
   if (currentPage === 'terms') {
     return (
       <>
-        <TermsPage onBack={() => { setCurrentPage('home'); window.scrollTo(0, 0); }} />
-        <Footer onNavigate={setCurrentPage} />
+        <TermsPage onBack={() => { navigateTo('home'); window.scrollTo(0, 0); }} />
+        <Footer onNavigate={(page) => navigateTo(page)} />
       </>
     );
   }
@@ -285,8 +347,8 @@ export default function App() {
   if (currentPage === 'privacy') {
     return (
       <>
-        <PrivacyPage onBack={() => { setCurrentPage('home'); window.scrollTo(0, 0); }} />
-        <Footer onNavigate={setCurrentPage} />
+        <PrivacyPage onBack={() => { navigateTo('home'); window.scrollTo(0, 0); }} />
+        <Footer onNavigate={(page) => navigateTo(page)} />
       </>
     );
   }
@@ -301,7 +363,7 @@ export default function App() {
         onLoginClick={() => setShowLoginModal(true)}
         onSignupClick={() => setShowLoginModal(true)}
         onLogout={handleLogout}
-        onAdminClick={() => setCurrentPage('admin')}
+        onAdminClick={() => navigateTo('admin')}
         isAdmin={isAdmin}
       />
 
@@ -361,7 +423,7 @@ export default function App() {
         <MagazineGrid onArticleClick={handleArticleClick} />
       </div>
 
-      <Footer onNavigate={setCurrentPage} />
+      <Footer onNavigate={(page) => navigateTo(page)} />
 
       {showLoginModal && (
         <LoginModal
