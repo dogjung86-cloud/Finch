@@ -89,7 +89,7 @@ function formatDate(dateStr) {
 
 export default function MagazineGrid({ onArticleClick }) {
   const [activeTab, setActiveTab] = useState('main');
-  const [articles, setArticles] = useState(FALLBACK_ARTICLES);
+  const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // ── Supabase에서 기사 로드 ──
@@ -107,7 +107,8 @@ export default function MagazineGrid({ onArticleClick }) {
           setArticles(data);
         }
       } catch {
-        // 네트워크 에러 → 폴백 유지
+        // 네트워크 에러 → 폴백 사용
+        setArticles(FALLBACK_ARTICLES);
       }
       setLoading(false);
     };
