@@ -2588,8 +2588,23 @@ img {
     order: 2;
   }
   .atlantic-hero-title { font-size: 24px; }
-  .article-page__title { font-size: 26px; }
+  .article-page__title { font-size: 22px; }
   .about-page__title { font-size: 40px; }
+
+  /* 기사 상세 — 모바일 본문 가독성 */
+  .article-page__container {
+    padding: 20px 16px 60px;
+  }
+  .article-page__body p,
+  .article-page__body div,
+  .article-page__body span,
+  .article-page__body li {
+    font-size: 15px !important;
+    line-height: 1.85 !important;
+  }
+  .article-page__body h1 { font-size: 22px !important; }
+  .article-page__body h2 { font-size: 19px !important; }
+  .article-page__body h3 { font-size: 17px !important; }
 }
 
 /* ══════════════════════════
