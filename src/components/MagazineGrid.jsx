@@ -127,6 +127,20 @@ export default function MagazineGrid({ onArticleClick }) {
   // 탭 필터링
   const filteredArticles = articles.filter((a) => a.category === activeTab);
 
+  if (loading || articles.length === 0) {
+    return (
+      <section className="kq-section" id="magazine-section">
+        <div className="kq-header">
+          <h2 className="kq-header__title">The Finch</h2>
+          <p className="kq-header__sub">과학은 세상을 보는 창</p>
+        </div>
+        <div style={{ textAlign: 'center', padding: '60px 0', color: '#999' }}>
+          기사를 불러오는 중...
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="kq-section" id="magazine-section">
       {/* 헤더 */}
