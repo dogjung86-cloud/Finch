@@ -2051,12 +2051,13 @@ img {
 }
 
 .article-page__title {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 36px;
-  font-weight: 800;
-  line-height: 1.25;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1.35;
   color: var(--text-primary);
   margin-bottom: 16px;
+  word-break: keep-all;
 }
 
 .article-page__meta {
