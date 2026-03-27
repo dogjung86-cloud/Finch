@@ -1,14 +1,36 @@
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 
 // ═══════════════════════════════════════════════
 //  Fly Darwin 게임 (Vercel iframe 임베드)
 // ═══════════════════════════════════════════════
 
-const GAME_URL = 'https://fly-darwin.vercel.app/';
+const GAME_BASE_URL = 'https://fly-darwin.vercel.app/';
 
-export default function HeroGame({ onScoreChange, isPlaying, onPlayChange }) {
+export default function HeroGame({ onScoreChange }) {
   const iframeRef = useRef(null);
   const containerRef = useRef(null);
+  const [gameUrl, setGameUrl] = useState(GAME_BASE_URL);
+
+  // Supabase 세션 토큰을 iframe URL에 전달
+  useEffect(() => {
+    async function passToken() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.access_token) {
+        setGameUrl(GAME_BASE_URL + '?access_token=' + session.access_token + '&refresh_token=' + session.refresh_token);
+      }
+    }
+    passToken();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.access_token) {
+        setGameUrl(GAME_BASE_URL + '?access_token=' + session.access_token + '&refresh_token=' + session.refresh_token);
+      } else {
+        setGameUrl(GAME_BASE_URL);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, []);
   const [likes, setLikes] = useState(() =>
     parseInt(localStorage.getItem('finch_flydarwin_likes') || '0', 10)
   );
@@ -90,32 +112,15 @@ export default function HeroGame({ onScoreChange, isPlaying, onPlayChange }) {
   return (
     <section className="hero-game" id="hero-game" ref={containerRef}>
       <div className="hero-game__container">
-        {isPlaying ? (
-          /* 게임 iframe */
-          <iframe
-            ref={iframeRef}
-            src={GAME_URL}
-            className="hero-game__iframe"
-            title="Fly Darwin"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
-            allowFullScreen
-            frameBorder="0"
-          />
-        ) : (
-          /* 플레이 전 대기 화면 */
-          <>
-            <img
-              src="/images/game screens/Fly Darwin/Fly Darwin screen.png"
-              alt="Fly Darwin"
-              className="hero-game__thumbnail"
-            />
-            <div className="hero-game__play-overlay" onClick={() => onPlayChange(true)}>
-              <button className="hero-game__play-btn">
-                🚀 지금 플레이하기
-              </button>
-            </div>
-          </>
-        )}
+        <iframe
+          ref={iframeRef}
+          src={gameUrl}
+          className="hero-game__iframe"
+          title="Fly Darwin"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
+          allowFullScreen
+          frameBorder="0"
+        />
       </div>
 
       {/* ── 게임 하단 컨트롤 바 ── */}
