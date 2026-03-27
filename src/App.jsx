@@ -33,7 +33,9 @@ export default function App() {
 
   // ── 인증 (Supabase Auth) ──
   const [user, setUser] = useState(null);
-  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(() => {
+    return new URLSearchParams(window.location.search).get('login') === 'true';
+  });
 
   const ADMIN_EMAIL = 'sciencegive@gmail.com';
   const isAdmin = user?.email === ADMIN_EMAIL;
