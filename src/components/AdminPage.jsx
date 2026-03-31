@@ -228,19 +228,34 @@ export default function AdminPage({ onBack }) {
 
     let result;
     if (editing === 'new') {
-      result = await supabase.from('articles').insert([payload]);
+      result = await supabase.from('articles').insert([payload]).select();
     } else {
       result = await supabase
         .from('articles')
         .update(payload)
-        .eq('id', editing.id);
+        .eq('id', editing.id)
+        .select();
     }
 
     if (result.error) {
       setError('저장 실패: ' + result.error.message);
     } else {
+      // RLS가 비공개 기사 조회를 차단할 수 있으므로,
+      // 반환된 데이터를 로컬 상태에 직접 반영
+      const saved = result.data?.[0];
+      if (saved) {
+        if (editing === 'new') {
+          setArticles(prev => [...prev, saved].sort((a, b) =>
+            a.display_order - b.display_order || new Date(b.created_at) - new Date(a.created_at)
+          ));
+        } else {
+          setArticles(prev => prev.map(a => a.id === saved.id ? saved : a));
+        }
+      } else {
+        // fallback: 전체 다시 조회
+        fetchArticles();
+      }
       resetForm();
-      fetchArticles();
     }
     setSaving(false);
   };
@@ -253,21 +268,25 @@ export default function AdminPage({ onBack }) {
     if (error) {
       setError('삭제 실패: ' + error.message);
     } else {
-      fetchArticles();
+      setArticles(prev => prev.filter(a => a.id !== id));
     }
   };
 
   // ── 공개/비공개 토글 ──
   const togglePublish = async (article) => {
+    const newStatus = !article.is_published;
     const { error } = await supabase
       .from('articles')
-      .update({ is_published: !article.is_published })
+      .update({ is_published: newStatus })
       .eq('id', article.id);
 
     if (error) {
       setError('상태 변경 실패: ' + error.message);
     } else {
-      fetchArticles();
+      // RLS가 비공개 기사 조회를 차단할 수 있으므로 로컬 상태 직접 갱신
+      setArticles(prev => prev.map(a =>
+        a.id === article.id ? { ...a, is_published: newStatus } : a
+      ));
     }
   };
 
