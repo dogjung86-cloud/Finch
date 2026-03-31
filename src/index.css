@@ -122,6 +122,11 @@ img {
   font-size: 24px;
 }
 
+.navbar__logo-icon-img {
+  width: 28px;
+  height: auto;
+}
+
 .navbar__logo-text {
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 26px;
@@ -1016,9 +1021,9 @@ img {
 }
 
 .atlantic-side-article__title {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.35;
   color: #1a1a1a;
   margin-bottom: 6px;
@@ -1121,9 +1126,9 @@ img {
 .atlantic-trending-body { flex: 1; }
 
 .atlantic-trending-title {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.35;
   color: #1a1a1a;
   margin-bottom: 5px;
@@ -2397,6 +2402,41 @@ img {
   margin-bottom: 40px;
 }
 
+.about-page__logo {
+  width: 90px;
+  height: auto;
+  margin-bottom: 16px;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1));
+}
+
+/* ── 날개짓 애니메이션 ── */
+@keyframes flapLeft {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-25deg); }
+  50% { transform: rotate(10deg); }
+  75% { transform: rotate(-15deg); }
+}
+@keyframes flapRight {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(20deg); }
+  50% { transform: rotate(-12deg); }
+  75% { transform: rotate(15deg); }
+}
+.about-bird__wing-left {
+  transform-origin: 48px 50px;
+  animation: flapLeft 0.4s ease-in-out infinite;
+}
+.about-bird__wing-right {
+  transform-origin: 48px 50px;
+  animation: flapRight 0.35s ease-in-out infinite;
+}
+.about-pretext__bird--dragging .about-bird__wing-left {
+  animation-duration: 0.2s;
+}
+.about-pretext__bird--dragging .about-bird__wing-right {
+  animation-duration: 0.18s;
+}
+
 .about-page__label {
   font-size: 11px;
   text-transform: uppercase;
@@ -2407,20 +2447,84 @@ img {
   margin-bottom: 8px;
 }
 
-.about-page__title {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 64px;
-  font-weight: 900;
-  color: var(--text-primary);
-  margin-bottom: 8px;
+.about-page__title-logo {
+  max-width: 280px;
+  height: auto;
+  margin: 0 auto 2px;
+  display: block;
 }
 
 .about-page__subtitle {
   font-size: 18px;
   color: var(--text-secondary);
   font-weight: 400;
+  margin-top: -20px;
 }
 
+/* ── Pretext 인터랙티브 영역 ── */
+.about-pretext-section {
+  margin-bottom: 48px;
+}
+
+.about-pretext__hint {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  animation: hintPulse 2s ease-in-out infinite;
+}
+
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+.about-pretext__area {
+  position: relative;
+  min-height: 280px;
+  background: linear-gradient(135deg, #fdfbf7 0%, #f8f4ee 100%);
+  border: 1px solid #e8e0d4;
+  border-radius: 16px;
+  padding: 28px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.04), 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.about-pretext__canvas {
+  display: block;
+  pointer-events: none;
+}
+
+.about-pretext__bird {
+  position: absolute;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  animation: birdFloat 3s ease-in-out infinite;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15));
+  transition: filter 0.2s;
+  z-index: 2;
+}
+
+.about-pretext__bird:hover {
+  filter: drop-shadow(0 6px 20px rgba(0,0,0,0.25));
+}
+
+.about-pretext__bird--dragging {
+  animation: none;
+  cursor: grabbing;
+  filter: drop-shadow(0 10px 30px rgba(0,0,0,0.3));
+}
+
+@keyframes birdFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  30% { transform: translateY(-6px) rotate(-2deg); }
+  70% { transform: translateY(3px) rotate(1deg); }
+}
+
+/* ── 섹션 공통 ── */
 .about-section {
   margin-bottom: 40px;
 }
@@ -2439,11 +2543,12 @@ img {
   color: var(--text-secondary);
 }
 
+/* ── 피처 카드 ── */
 .about-features {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  margin-bottom: 40px;
+  margin-bottom: 48px;
 }
 
 .about-feature-card {
@@ -2477,6 +2582,66 @@ img {
   font-size: 13px;
   line-height: 1.7;
   color: var(--text-secondary);
+  text-align: justify;
+  word-break: keep-all;
+}
+
+.about-feature-card__desc--coming {
+  font-style: italic;
+  color: var(--text-muted);
+  font-size: 15px;
+  padding: 20px 0;
+}
+
+/* ── 과학드림 섹션 ── */
+.about-sciencedream {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 20px 24px;
+  margin-bottom: 40px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+}
+
+.about-sciencedream__logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.about-sciencedream__text {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.about-sciencedream__text a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.about-sciencedream__text a:hover {
+  text-decoration: underline;
+}
+
+/* ── Contact ── */
+.about-contact {
+  text-align: center;
+  padding: 32px;
+  border-top: 1px solid var(--border-light);
+}
+
+.about-contact .about-section__title {
+  font-size: 22px;
+}
+
+.about-contact .about-section__text strong {
+  color: var(--accent);
 }
 
 /* ========================================
