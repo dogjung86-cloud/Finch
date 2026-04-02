@@ -69,6 +69,17 @@ export default function App() {
     return () => subscription.unsubscribe();
   }, []);
 
+  // 게임 iframe에서 로그아웃 메시지 수신
+  useEffect(() => {
+    function handleMessage(e) {
+      if (e.data && e.data.type === 'flydarwin-logout') {
+        supabase.auth.signOut();
+      }
+    }
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
   // ── URL 변경 함수 ──
   const navigateTo = useCallback((page, data = {}) => {
     let path = '/';
