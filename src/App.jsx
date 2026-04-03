@@ -73,9 +73,9 @@ export default function App() {
           avatar: session.user.user_metadata?.avatar_url,
         });
         setShowLoginModal(false);
-        // 앱에서 열린 경우 딥링크로 토큰 전달 후 리다이렉트
+        // 앱에서 열린 경우 딥링크로 토큰 전달 (실제 로그인 시에만, 기존 세션 로드 시 무시)
         const params = new URLSearchParams(window.location.search);
-        if (params.get('app') === 'flydarwin') {
+        if (params.get('app') === 'flydarwin' && _event === 'SIGNED_IN') {
           const deepLink = 'com.flydarwin.app://auth?access_token=' + session.access_token + '&refresh_token=' + session.refresh_token;
           window.location.href = deepLink;
         }
