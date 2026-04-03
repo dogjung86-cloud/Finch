@@ -73,14 +73,11 @@ export default function App() {
           avatar: session.user.user_metadata?.avatar_url,
         });
         setShowLoginModal(false);
-        // 앱 내 iframe에서 열린 경우 부모(게임)에 토큰 전달
+        // 앱에서 열린 경우 딥링크로 토큰 전달 후 리다이렉트
         const params = new URLSearchParams(window.location.search);
-        if (params.get('app') === 'flydarwin' && window.parent && window.parent !== window) {
-          window.parent.postMessage({
-            type: 'flydarwin-auth',
-            access_token: session.access_token,
-            refresh_token: session.refresh_token,
-          }, '*');
+        if (params.get('app') === 'flydarwin') {
+          const deepLink = 'com.flydarwin.app://auth?access_token=' + session.access_token + '&refresh_token=' + session.refresh_token;
+          window.location.href = deepLink;
         }
       } else {
         setUser(null);
