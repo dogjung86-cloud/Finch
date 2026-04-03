@@ -13,6 +13,7 @@ import LoginModal from './components/LoginModal';
 import AdminPage from './components/AdminPage';
 import TermsPage from './components/TermsPage';
 import PrivacyPage from './components/PrivacyPage';
+import DeleteAccountModal from './components/DeleteAccountModal';
 
 /* ── URL → 페이지 상태 파싱 ── */
 function parseUrl(path = window.location.pathname) {
@@ -21,6 +22,7 @@ function parseUrl(path = window.location.pathname) {
   if (path === '/admin') return { page: 'admin' };
   if (path === '/terms') return { page: 'terms' };
   if (path === '/privacy') return { page: 'privacy' };
+  if (path === '/delete-account') return { page: 'delete-account' };
   return { page: 'home' };
 }
 
@@ -36,6 +38,16 @@ export default function App() {
   const [showLoginModal, setShowLoginModal] = useState(() => {
     return new URLSearchParams(window.location.search).get('login') === 'true';
   });
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  // /delete-account URL 직접 접근 시 모달 표시
+  useEffect(() => {
+    if (initialRoute.page === 'delete-account') {
+      setCurrentPage('home');
+      window.history.replaceState({}, '', '/');
+      setShowDeleteModal(true);
+    }
+  }, []);
 
   const ADMIN_EMAIL = 'sciencegive@gmail.com';
   const isAdmin = user?.email === ADMIN_EMAIL;
@@ -88,6 +100,7 @@ export default function App() {
     else if (page === 'admin') path = '/admin';
     else if (page === 'terms') path = '/terms';
     else if (page === 'privacy') path = '/privacy';
+    else if (page === 'delete-account') path = '/delete-account';
 
     window.history.pushState({ page, ...data }, '', path);
     setCurrentPage(page);
@@ -261,6 +274,32 @@ export default function App() {
     setUser(null);
   };
 
+  // 회원 탈퇴
+  const handleDeleteAccount = () => {
+    if (!user) {
+      setShowLoginModal(true);
+      return;
+    }
+    setShowDeleteModal(true);
+  };
+
+  const handleAccountDeleted = () => {
+    // localStorage 정리
+    ['scidream_points', 'scidream_level',
+     'finch_flydarwin_likes', 'finch_flydarwin_dislikes', 'finch_flydarwin_vote',
+     'totalCoins', 'flyDarwinShop', 'flyDarwinRankings', 'DAILY_STORAGE_KEY',
+    ].forEach((key) => localStorage.removeItem(key));
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith('finch_comments_')) localStorage.removeItem(key);
+    });
+
+    supabase.auth.signOut();
+    setUser(null);
+    setShowDeleteModal(false);
+    navigateTo('home');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // ── 관리자 페이지 ──
   if (currentPage === 'admin') {
     return (
@@ -274,6 +313,7 @@ export default function App() {
           onLogout={handleLogout}
           onAdminClick={() => navigateTo('admin')}
           isAdmin={isAdmin}
+          onDeleteAccount={handleDeleteAccount}
         />
         <AdminPage
           onBack={() => {
@@ -285,6 +325,13 @@ export default function App() {
         {showLoginModal && (
           <LoginModal
             onClose={() => setShowLoginModal(false)}
+          />
+        )}
+        {showDeleteModal && (
+          <DeleteAccountModal
+            user={user}
+            onClose={() => setShowDeleteModal(false)}
+            onDeleted={handleAccountDeleted}
           />
         )}
       </>
@@ -304,6 +351,7 @@ export default function App() {
           onLogout={handleLogout}
           onAdminClick={() => navigateTo('admin')}
           isAdmin={isAdmin}
+          onDeleteAccount={handleDeleteAccount}
         />
         <ArticlePage
           article={selectedArticle}
@@ -315,6 +363,13 @@ export default function App() {
         {showLoginModal && (
           <LoginModal
             onClose={() => setShowLoginModal(false)}
+          />
+        )}
+        {showDeleteModal && (
+          <DeleteAccountModal
+            user={user}
+            onClose={() => setShowDeleteModal(false)}
+            onDeleted={handleAccountDeleted}
           />
         )}
       </>
@@ -334,12 +389,20 @@ export default function App() {
           onLogout={handleLogout}
           onAdminClick={() => navigateTo('admin')}
           isAdmin={isAdmin}
+          onDeleteAccount={handleDeleteAccount}
         />
         <AboutPage />
         <Footer onNavigate={(page) => navigateTo(page)} />
         {showLoginModal && (
           <LoginModal
             onClose={() => setShowLoginModal(false)}
+          />
+        )}
+        {showDeleteModal && (
+          <DeleteAccountModal
+            user={user}
+            onClose={() => setShowDeleteModal(false)}
+            onDeleted={handleAccountDeleted}
           />
         )}
       </>
@@ -439,6 +502,13 @@ export default function App() {
       {showLoginModal && (
         <LoginModal
           onClose={() => setShowLoginModal(false)}
+        />
+      )}
+      {showDeleteModal && (
+        <DeleteAccountModal
+          user={user}
+          onClose={() => setShowDeleteModal(false)}
+          onDeleted={handleAccountDeleted}
         />
       )}
     </>
