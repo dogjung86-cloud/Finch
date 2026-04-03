@@ -441,6 +441,7 @@ export default function App() {
         onLogout={handleLogout}
         onAdminClick={() => navigateTo('admin')}
         isAdmin={isAdmin}
+        onDeleteAccount={handleDeleteAccount}
       />
 
       <div ref={heroRef}>
