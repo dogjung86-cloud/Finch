@@ -2042,6 +2042,42 @@ img {
   color: var(--text-primary);
 }
 
+/* 플로팅 목록 버튼 — 스크롤 중에도 항상 보이는 좌상단 고정 버튼 */
+.article-page__floating-back {
+  position: fixed;
+  top: 80px;
+  left: 24px;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border-light);
+  padding: 10px 18px;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  transition: var(--transition);
+}
+.article-page__floating-back:hover {
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+@media (max-width: 768px) {
+  .article-page__floating-back {
+    top: 70px;
+    left: 12px;
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+}
+
 .article-page__category {
   display: inline-block;
   padding: 3px 12px;
@@ -2613,6 +2649,7 @@ img {
   color: var(--text-muted);
   font-size: 15px;
   padding: 20px 0;
+  text-align: center;
 }
 
 /* ── 과학드림 섹션 ── */

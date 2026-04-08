@@ -44,6 +44,14 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
 
   return (
     <div className="article-page">
+      {/* 플로팅 목록 버튼 — 스크롤 중에도 항상 보임 */}
+      <button
+        className="article-page__floating-back"
+        onClick={onBack}
+        aria-label="목록으로 돌아가기"
+      >
+        ← 목록
+      </button>
       <div className="article-page__container">
         {/* 뒤로 가기 */}
         <button className="article-page__back" onClick={onBack}>

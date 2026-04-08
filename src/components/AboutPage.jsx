@@ -56,10 +56,8 @@ const INTRO_TEXT =
   'Finch는 바로 그 핀치새의 이름을 빌려왔습니다. ' +
   '작은 관찰 하나가 세상을 바꾸는 영감이 되었듯, ' +
   '이 플랫폼도 일상 속에서 과학적 호기심과 영감을 만나는 공간이 되길 바라는 마음으로 만들었습니다. ' +
-  'Finch는 유튜브 과학드림 채널의 서브 프로젝트로, ' +
-  '과학드림만의 개성과 취향이 듬뿍 담겨 있는 플랫폼입니다. ' +
-  '가볍게 즐기는 과학 게임부터 깊이 있는 기초과학 기사까지, ' +
-  '과학을 좋아하는 사람이라면 누구나 편하게 즐길 수 있는 놀이터를 꿈꾸고 있습니다.';
+  'Finch는 유튜브 채널 과학드림의 서브 프로젝트로 해당 채널의 취향이 묻어 있는 공간입니다. ' +
+  '가볍게 즐기는 과학 게임부터 깊이 있는 기초과학 기사까지, 과학이 재미있어지는 순간을 즐겨보세요!';
 
 /* ── 상수 ── */
 const BIRD_W = 130;
@@ -311,22 +309,20 @@ export default function AboutPage() {
             <span className="about-feature-card__icon">🎮</span>
             <h3 className="about-feature-card__title">Play Lab</h3>
             <p className="about-feature-card__desc">
-              요즘 게임은 조작이 복잡하고 진입 장벽이 높습니다. 저는 옛날
-              아케이드 게임처럼 누구나 바로 플레이할 수 있는 가벼운 게임을
-              좋아합니다. 그래서 Play Lab에는 단순하면서도 중독성 있는 게임들로
-              채워나갈 예정입니다. 물론 과학적 상상력이 한 스푼 곁들여져 있으니,
-              과학 편향 주의!
+              때로는 옛날 아케이드 게임처럼 쉽고, 가볍게 플레이할 수 있는 게임이
+              그리울 때가 있습니다. Play Lab은 접근성이 높고 쉬우면서도 중독성 있는
+              게임들로 채워나갈 예정입니다. 물론 과학적 상상력이 곁들여져 있으니,
+              과학 편향을 주의!
             </p>
           </div>
           <div className="about-feature-card">
             <span className="about-feature-card__icon">📰</span>
             <h3 className="about-feature-card__title">The Finch</h3>
             <p className="about-feature-card__desc">
-              우리나라 과학 뉴스는 IT 기기, AI 같은 기술과학이 대부분이고,
-              언론에서는 공공기관 포럼이나 행사 소식이 주를 이룹니다.
-              생물학, 고생물학, 천문학 같은 기초과학 이야기를 만나기가 쉽지 않죠.
-              그래서 직접 쓰기로 했습니다. The Finch는 순수한 기초과학의 재미와
-              발견을 전하는 매거진입니다.
+              우리나라의 과학 기사는 대체로 IT 기기나 AI 같은 기술 과학이 대부분을
+              차지합니다. 생물학, 고생물학, 천문학 같은 기초과학 이야기를 만나기가
+              쉽지 않죠. 그래서 The Finch에서는 일상에 별반 도움되진 않지만, 재미있는
+              기초과학 이야기들을 준비했습니다.
             </p>
           </div>
           <div className="about-feature-card">
@@ -341,7 +337,7 @@ export default function AboutPage() {
         {/* ── 과학드림 ── */}
         <section className="about-sciencedream">
           <img
-            src="/images/sciencedream_logo.png"
+            src="https://yt3.ggpht.com/ytc/AIdro_kPatsMrZvvlPanQbTpBowpmbg-1BaDwtIf_2bCBchWpBk=s176-c-k-c0x00ffffff-no-rj"
             alt="과학드림"
             className="about-sciencedream__logo"
           />
