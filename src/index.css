@@ -2104,6 +2104,21 @@ img {
   line-height: 1.7;
   color: #333;
   margin-bottom: 20px;
+  text-align: justify;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* 사진 캡션: 본문보다 작게, 회색, 가운데 정렬 */
+.article-page__body p em {
+  display: block;
+  font-size: 0.8em;
+  color: #666;
+  text-align: center;
+  font-style: italic;
+  line-height: 1.6;
+  margin-top: -0.3em;
+  margin-bottom: 1.6em;
 }
 
 .article-page__body h1 {
@@ -3027,6 +3042,10 @@ img {
   .article-page__body li {
     font-size: 20px !important;
     line-height: 1.7 !important;
+  }
+  .article-page__body p em {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
   }
   .article-page__body h1 { font-size: 28px !important; }
   .article-page__body h2 { font-size: 24px !important; }
