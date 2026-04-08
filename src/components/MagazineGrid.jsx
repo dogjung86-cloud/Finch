@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 
 /* ── 폴백 기사 데이터 (DB가 비어있을 때 사용) ── */
@@ -88,7 +88,6 @@ function formatDate(dateStr) {
 }
 
 export default function MagazineGrid({ onArticleClick }) {
-  const [activeTab, setActiveTab] = useState('main');
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -116,16 +115,11 @@ export default function MagazineGrid({ onArticleClick }) {
     fetchArticles();
   }, []);
 
-  // 기획 기사(가운데+왼쪽), 뉴스 기사(오른쪽)
-  const featureArticles = articles.filter((a) => a.category === '기획');
-  const newsArticles = articles.filter((a) => a.category === '뉴스');
-
-  const heroArticle = featureArticles[0] || articles[0];
-  const sideLeftArticles = featureArticles.slice(1, 3);
-  const trendingArticles = newsArticles.slice(0, 4);
-
-  // 탭 필터링
-  const filteredArticles = articles.filter((a) => a.category === activeTab);
+  // display_order 순서대로 위치 배치
+  // 0번: 중앙 히어로, 1·2번: 좌측, 3·4·5번: 우측
+  const heroArticle = articles[0];
+  const sideLeftArticles = articles.slice(1, 3);
+  const trendingArticles = articles.slice(3, 6);
 
   if (loading || articles.length === 0) {
     return (
@@ -149,119 +143,76 @@ export default function MagazineGrid({ onArticleClick }) {
         <p className="kq-header__sub">과학은 세상을 보는 창</p>
       </div>
 
-      {/* ── 탭 네비게이션 ── */}
-      <div className="kq-tabs">
-        {['main', '기획', '뉴스'].map((tab) => (
-          <button
-            key={tab}
-            className={`kq-tabs__btn ${activeTab === tab ? 'kq-tabs__btn--active' : ''}`}
-            onClick={() => setActiveTab(tab)}
-          >
-            {tab === 'main' ? '메인' : tab}
-          </button>
-        ))}
-      </div>
+      {/* ── Atlantic 스타일 3-칼럼 (display_order 기반 배치) ── */}
+      <div className="atlantic-grid">
+        {/* 좌측: 1·2번 기사 */}
+        <aside className="atlantic-side-left">
+          {sideLeftArticles.map((a) => (
+            <article
+              key={a.id}
+              className="atlantic-side-article"
+              onClick={() => onArticleClick?.(a)}
+            >
+              <div className="atlantic-side-article__img">
+                <img src={a.thumbnail} alt={a.title} />
+              </div>
+              <h3 className="atlantic-side-article__title">{a.title}</h3>
+              <span className="atlantic-side-article__author">{a.author} · {formatDate(a.created_at)}</span>
+            </article>
+          ))}
+        </aside>
 
-      {activeTab === 'main' ? (
-        /* ── Atlantic 스타일 3-칼럼 ── */
-        <div className="atlantic-grid">
-          {/* 좌측: 사이드 기사 2개 */}
-          <aside className="atlantic-side-left">
-            {sideLeftArticles.map((a) => (
-              <article
-                key={a.id}
-                className="atlantic-side-article"
-                onClick={() => onArticleClick?.(a)}
-              >
-                <div className="atlantic-side-article__img">
-                  <img src={a.thumbnail} alt={a.title} />
-                </div>
-                <span className="atlantic-side-article__caption">{a.category}</span>
-                <h3 className="atlantic-side-article__title">{a.title}</h3>
-                <span className="atlantic-side-article__author">{a.author} · {formatDate(a.created_at)}</span>
-              </article>
-            ))}
-          </aside>
-
-          {/* 중앙: 히어로 기사 1개 */}
+        {/* 중앙: 0번 히어로 기사 */}
+        {heroArticle && (
           <section className="atlantic-center" onClick={() => onArticleClick?.(heroArticle)}>
             <div className="atlantic-hero-img">
               <img src={heroArticle.thumbnail} alt={heroArticle.title} />
             </div>
-            <p className="atlantic-hero-caption">기획</p>
             <h1 className="atlantic-hero-title">{heroArticle.title}</h1>
             <p className="atlantic-hero-excerpt">{heroArticle.excerpt}</p>
             <p className="atlantic-hero-author">{heroArticle.author}</p>
           </section>
+        )}
 
-          {/* 우측: 뉴스 기사 4개 + 뉴스레터 */}
-          <aside className="atlantic-side-right">
-            <span className="atlantic-side-article__caption">뉴스</span>
-            {trendingArticles.map((a) => (
-              <div
-                key={a.id}
-                className="atlantic-trending-item"
-                onClick={() => onArticleClick?.(a)}
-              >
-                <div className="atlantic-trending-body">
-                  <h4 className="atlantic-trending-title">{a.title}</h4>
-                  <span className="atlantic-trending-author">{a.author} · {formatDate(a.created_at)}</span>
-                </div>
-                <img
-                  className="atlantic-trending-thumb"
-                  src={a.thumbnail}
-                  alt={a.title}
-                />
+        {/* 우측: 3·4·5번 기사 + 뉴스레터 */}
+        <aside className="atlantic-side-right">
+          {trendingArticles.map((a) => (
+            <div
+              key={a.id}
+              className="atlantic-trending-item"
+              onClick={() => onArticleClick?.(a)}
+            >
+              <div className="atlantic-trending-body">
+                <h4 className="atlantic-trending-title">{a.title}</h4>
+                <span className="atlantic-trending-author">{a.author} · {formatDate(a.created_at)}</span>
               </div>
-            ))}
-
-            {/* 뉴스레터 구독 */}
-            <div className="atlantic-newsletter">
-              <h4 className="atlantic-newsletter__title">
-                Finch의 매주 과학 뉴스레터를 받아보세요
-              </h4>
-              <p className="atlantic-newsletter__desc">
-                매주 엄선된 과학 기사와 깊이 있는 분석을 무료로 보내드립니다.
-              </p>
-              <div className="atlantic-newsletter__form">
-                <input
-                  type="email"
-                  className="atlantic-newsletter__input"
-                  placeholder="이메일 주소"
-                />
-                <button className="atlantic-newsletter__btn">구독</button>
-              </div>
+              <img
+                className="atlantic-trending-thumb"
+                src={a.thumbnail}
+                alt={a.title}
+              />
             </div>
-          </aside>
-        </div>
-      ) : (
-        /* ── 기획 / 뉴스 리스트 뷰 ── */
-        <div className="all-articles-wrap">
-          <div className="all-articles">
-            <div className="all-articles__list">
-              {filteredArticles.map((a) => (
-                <article
-                  key={a.id}
-                  className="all-articles__item"
-                  onClick={() => onArticleClick?.(a)}
-                >
-                  <img
-                    className="all-articles__thumb"
-                    src={a.thumbnail}
-                    alt={a.title}
-                  />
-                  <div className="all-articles__body">
-                    <span className="all-articles__category">{a.category}</span>
-                    <h4 className="all-articles__title">{a.title}</h4>
-                    <p className="all-articles__excerpt">{a.excerpt}</p>
-                    <span className="all-articles__meta">{a.author} · {formatDate(a.created_at)}</span>
-                  </div>
-                </article>
-              ))}
+          ))}
+
+          {/* 뉴스레터 구독 */}
+          <div className="atlantic-newsletter">
+            <h4 className="atlantic-newsletter__title">
+              Finch의 매주 과학 뉴스레터를 받아보세요
+            </h4>
+            <p className="atlantic-newsletter__desc">
+              매주 엄선된 과학 기사와 깊이 있는 분석을 무료로 보내드립니다.
+            </p>
+            <div className="atlantic-newsletter__form">
+              <input
+                type="email"
+                className="atlantic-newsletter__input"
+                placeholder="이메일 주소"
+              />
+              <button className="atlantic-newsletter__btn">구독</button>
             </div>
           </div>
-        </div>
-      )}
+        </aside>
+      </div>
     </section>
   );
 }

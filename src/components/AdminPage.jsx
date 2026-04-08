@@ -31,7 +31,7 @@ export default function AdminPage({ onBack }) {
     excerpt: '',
     full_content: '',
     author: 'The Finch',
-    category: '기획',
+    category: '미분류',
     thumbnail: '',
     display_order: 0,
     is_published: true,
@@ -89,7 +89,7 @@ export default function AdminPage({ onBack }) {
       excerpt: article.excerpt || '',
       full_content: article.full_content || '',
       author: article.author || 'The Finch',
-      category: article.category || '기획',
+      category: article.category || '미분류',
       thumbnail: article.thumbnail || '',
       display_order: article.display_order || 0,
       is_published: article.is_published ?? true,
@@ -320,7 +320,7 @@ export default function AdminPage({ onBack }) {
             />
           </div>
 
-          {/* 카테고리 + 순서 */}
+          {/* 카테고리 + 순서 + 작성자 */}
           <div className="admin-form__row">
             <div className="admin-form__field">
               <label className="admin-form__label">카테고리</label>
@@ -329,8 +329,12 @@ export default function AdminPage({ onBack }) {
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
               >
-                <option value="기획">기획</option>
-                <option value="뉴스">뉴스</option>
+                <option value="미분류">미분류</option>
+                <option value="천문우주">천문우주</option>
+                <option value="생명진화">생명진화</option>
+                <option value="뇌심리">뇌심리</option>
+                <option value="지구환경">지구환경</option>
+                <option value="물리화학">물리화학</option>
               </select>
             </div>
             <div className="admin-form__field">
@@ -521,7 +525,6 @@ export default function AdminPage({ onBack }) {
             <thead>
               <tr>
                 <th>순서</th>
-                <th>카테고리</th>
                 <th>제목</th>
                 <th>작성자</th>
                 <th>상태</th>
@@ -533,11 +536,6 @@ export default function AdminPage({ onBack }) {
               {articles.map((a) => (
                 <tr key={a.id} className={!a.is_published ? 'admin-table__row--draft' : ''}>
                   <td>{a.display_order}</td>
-                  <td>
-                    <span className={`admin-badge admin-badge--${a.category === '기획' ? 'feature' : 'news'}`}>
-                      {a.category}
-                    </span>
-                  </td>
                   <td className="admin-table__title-cell">{a.title}</td>
                   <td>{a.author}</td>
                   <td>

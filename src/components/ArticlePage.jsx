@@ -50,9 +50,6 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
           ← 목록으로
         </button>
 
-        {/* 카테고리 */}
-        <span className="article-page__category">{article.category}</span>
-
         {/* 제목 */}
         <h1 className="article-page__title">{article.title}</h1>
 
