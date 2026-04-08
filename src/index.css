@@ -2104,7 +2104,7 @@ img {
   line-height: 1.7;
   color: #333;
   margin-bottom: 20px;
-  text-align: justify;
+  text-align: left;
   word-break: keep-all;
   overflow-wrap: break-word;
 }
