@@ -2109,17 +2109,22 @@ img {
   overflow-wrap: break-word;
 }
 
-/* 사진 캡션: 본문보다 작게, 회색, 가운데 정렬 */
-.article-page__body p em,
-.article-page__body em {
-  display: block !important;
-  font-size: 15px !important;
-  color: #666 !important;
-  text-align: center !important;
-  font-style: italic;
-  line-height: 1.6 !important;
+/* 사진 캡션: <em>이 단독으로 들어있는 문단만 캡션 스타일 */
+.article-page__body p:has(> em:only-child) {
+  text-align: center;
   margin-top: -0.3em;
   margin-bottom: 1.6em;
+}
+.article-page__body p > em:only-child {
+  display: block;
+  font-size: 15px;
+  color: #666;
+  font-style: italic;
+  line-height: 1.6;
+}
+/* 인라인 <em>(학명 등)은 보통 이탤릭으로 */
+.article-page__body p em {
+  font-style: italic;
 }
 
 .article-page__body h1 {
@@ -3044,7 +3049,7 @@ img {
     font-size: 20px !important;
     line-height: 1.7 !important;
   }
-  .article-page__body p em {
+  .article-page__body p > em:only-child {
     font-size: 16px !important;
     line-height: 1.6 !important;
   }
