@@ -2142,7 +2142,7 @@ img {
   margin-bottom: 20px;
   text-align: left;
   word-break: keep-all;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 /* 사진 캡션: ql-align-center 클래스가 붙은 문단의 em만 캡션 스타일 */
