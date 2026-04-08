@@ -2110,13 +2110,14 @@ img {
 }
 
 /* 사진 캡션: 본문보다 작게, 회색, 가운데 정렬 */
-.article-page__body p em {
-  display: block;
-  font-size: 0.8em;
-  color: #666;
-  text-align: center;
+.article-page__body p em,
+.article-page__body em {
+  display: block !important;
+  font-size: 15px !important;
+  color: #666 !important;
+  text-align: center !important;
   font-style: italic;
-  line-height: 1.6;
+  line-height: 1.6 !important;
   margin-top: -0.3em;
   margin-bottom: 1.6em;
 }
