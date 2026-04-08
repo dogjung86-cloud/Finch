@@ -2109,13 +2109,13 @@ img {
   overflow-wrap: break-word;
 }
 
-/* 사진 캡션: <em>이 단독으로 들어있는 문단만 캡션 스타일 */
-.article-page__body p:has(> em:only-child) {
+/* 사진 캡션: ql-align-center 클래스가 붙은 문단의 em만 캡션 스타일 */
+.article-page__body p.ql-align-center {
   text-align: center;
   margin-top: -0.3em;
   margin-bottom: 1.6em;
 }
-.article-page__body p > em:only-child {
+.article-page__body p.ql-align-center > em {
   display: block;
   font-size: 15px;
   color: #666;
@@ -3049,7 +3049,7 @@ img {
     font-size: 20px !important;
     line-height: 1.7 !important;
   }
-  .article-page__body p > em:only-child {
+  .article-page__body p.ql-align-center > em {
     font-size: 16px !important;
     line-height: 1.6 !important;
   }
