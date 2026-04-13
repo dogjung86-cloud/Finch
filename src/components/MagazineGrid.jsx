@@ -96,11 +96,11 @@ export default function MagazineGrid({ articles: initialArticles }) {
       </div>
 
       {/* ── 100년 전 과학 배너 ── */}
-      <Link href="#" className="vintage-banner">
+      <Link href="/history" className="vintage-banner">
         <span className="vintage-banner__label">100년 전 과학은 어땠을까?</span>
         <span className="vintage-banner__divider">|</span>
         <span className="vintage-banner__title">슈뢰딩거, 파동방정식으로 양자역학의 새 장을 열다</span>
-        <span className="vintage-banner__cta">기사 읽기 &rarr;</span>
+        <span className="vintage-banner__cta">더 보기 &rarr;</span>
       </Link>
 
       <div className="atlantic-grid">
@@ -141,23 +141,7 @@ export default function MagazineGrid({ articles: initialArticles }) {
             </Link>
           ))}
 
-          {/* 뉴스레터 / 추후 AdSense 영역 */}
-          <div className="atlantic-newsletter">
-            <h4 className="atlantic-newsletter__title">
-              Finch의 매주 과학 뉴스레터를 받아보세요
-            </h4>
-            <p className="atlantic-newsletter__desc">
-              매주 엄선된 과학 기사와 깊이 있는 분석을 무료로 보내드립니다.
-            </p>
-            <div className="atlantic-newsletter__form">
-              <input
-                type="email"
-                className="atlantic-newsletter__input"
-                placeholder="이메일 주소"
-              />
-              <button className="atlantic-newsletter__btn">구독</button>
-            </div>
-          </div>
+          {/* 추후 AdSense 영역 */}
         </aside>
       </div>
 

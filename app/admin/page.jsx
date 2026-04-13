@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AdminPage from '../../src/components/AdminPage';
 import HistoryAdmin from '../../src/components/HistoryAdmin';
+import StatsAdmin from '../../src/components/StatsAdmin';
 
 export default function Admin() {
   const router = useRouter();
@@ -29,12 +30,20 @@ export default function Admin() {
         >
           100년 전 과학
         </button>
+        <button
+          className={`admin-tabs__btn ${tab === 'stats' ? 'admin-tabs__btn--active' : ''}`}
+          onClick={() => setTab('stats')}
+        >
+          통계
+        </button>
       </div>
 
       {tab === 'articles' ? (
         <AdminPage onBack={handleBack} />
-      ) : (
+      ) : tab === 'history' ? (
         <HistoryAdmin onBack={handleBack} />
+      ) : (
+        <StatsAdmin />
       )}
     </div>
   );

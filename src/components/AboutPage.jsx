@@ -311,20 +311,18 @@ export default function AboutPage() {
             <span className="about-feature-card__icon">🎮</span>
             <h3 className="about-feature-card__title">Play Lab</h3>
             <p className="about-feature-card__desc">
-              때로는 옛날 아케이드 게임처럼 쉽고, 가볍게 플레이할 수 있는 게임이
-              그리울 때가 있습니다. Play Lab은 접근성이 높고 쉬우면서도 중독성 있는
-              게임들로 채워나갈 예정입니다. 물론 과학적 상상력이 곁들여져 있으니,
-              과학 편향을 주의!
+              과학적 상상력이 더해진 게임들을 만들어보고 싶었습니다. 누구나 쉽게
+              조작하고, 가볍게 플레이하는 게임들로 채워나갈 예정입니다. 요즘 게임들은
+              너무 복잡한 요소들이 많은 것 같아요 😢
             </p>
           </div>
           <div className="about-feature-card">
             <span className="about-feature-card__icon">📰</span>
             <h3 className="about-feature-card__title">The Finch</h3>
             <p className="about-feature-card__desc">
-              우리나라의 과학 기사는 대체로 IT 기기나 AI 같은 기술 과학이 대부분을
-              차지합니다. 생물학, 고생물학, 천문학 같은 기초과학 이야기를 만나기가
-              쉽지 않죠. 그래서 The Finch에서는 일상에 별반 도움되진 않지만, 재미있는
-              기초과학 이야기들을 준비했습니다.
+              AI나 IT 같은 기술과학보다는 자연과학 기사들을 씁니다. 기술은 유행을
+              타지만, 자연과학은 100년이 지나도 여전히 매력적이잖아요. 솔직히 챗봇보다는
+              티라노가 더 흥미롭지 않나요?
             </p>
           </div>
           <div className="about-feature-card">

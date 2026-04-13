@@ -1762,6 +1762,170 @@ img {
 }
 
 /* ══════════════════════════
+   100년 전 과학 목록 (/history)
+   ══════════════════════════ */
+.history-page {
+  margin-top: var(--navbar-height);
+  min-height: calc(100vh - var(--navbar-height));
+  background: linear-gradient(180deg, #f5f0e8 0%, #fff 300px);
+}
+
+.history-page__container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 40px 80px;
+}
+
+.history-page__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: 1px solid #d4c9b0;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #8b7750;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  margin-bottom: 24px;
+}
+.history-page__back:hover {
+  border-color: #8b7750;
+  color: #5a4a30;
+}
+
+.history-page__header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.history-page__title {
+  font-family: 'Playfair Display', Georgia, 'Noto Serif KR', serif;
+  font-size: 36px;
+  font-weight: 700;
+  font-style: italic;
+  color: #4a3f2f;
+}
+
+.history-page__sub {
+  font-family: 'Noto Serif KR', Georgia, serif;
+  font-size: 14px;
+  color: #a08c6a;
+  margin-top: 8px;
+  letter-spacing: 0.1em;
+}
+
+.history-page__empty {
+  text-align: center;
+  padding: 60px 0;
+  color: #a08c6a;
+  font-size: 15px;
+  font-style: italic;
+}
+
+.history-page__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.history-card {
+  display: flex;
+  gap: 20px;
+  padding: 24px 0;
+  border-bottom: 1px solid #e0d8c8;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.history-card:first-child {
+  padding-top: 0;
+}
+.history-card:last-child {
+  border-bottom: none;
+}
+.history-card:hover {
+  background: rgba(139, 119, 80, 0.04);
+  margin: 0 -16px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border-radius: 6px;
+}
+
+.history-card__img {
+  width: 160px;
+  aspect-ratio: 16/9;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.history-card__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.history-card__body {
+  flex: 1;
+}
+
+.history-card__date {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 13px;
+  font-weight: 700;
+  font-style: italic;
+  color: #a08c6a;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.history-card__title {
+  font-family: 'Noto Serif KR', Georgia, serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #4a3f2f;
+  line-height: 1.4;
+  word-break: keep-all;
+  margin-bottom: 8px;
+  transition: color 0.2s;
+}
+.history-card:hover .history-card__title {
+  color: #8b7750;
+}
+
+.history-card__excerpt {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #888;
+  word-break: keep-all;
+  margin-bottom: 6px;
+}
+
+.history-card__source {
+  font-size: 11px;
+  color: #b0a080;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .history-page__container {
+    padding: 24px 16px 60px;
+  }
+  .history-page__title {
+    font-size: 28px;
+  }
+  .history-card {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .history-card__img {
+    width: 100%;
+  }
+}
+
+/* ══════════════════════════
    카드 공통
    ══════════════════════════ */
 .kq-card__img {
@@ -3723,6 +3887,163 @@ img {
 .admin-empty p { margin-bottom: 16px; }
 
 /* 테이블 */
+/* ── 통계 대시보드 ── */
+.stats-period {
+  display: flex;
+  gap: 4px;
+}
+.stats-period__btn {
+  padding: 6px 16px;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  background: none;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.stats-period__btn:hover { border-color: #1a1a1a; color: #1a1a1a; }
+.stats-period__btn--active { background: #1a1a1a; border-color: #1a1a1a; color: #fff; }
+
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.stats-card {
+  background: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+}
+.stats-card__label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #999;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.stats-card__value {
+  font-family: 'Inter', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: #1a1a1a;
+}
+
+.stats-section {
+  margin-bottom: 32px;
+}
+.stats-section__title {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #1a1a1a;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+.stats-section--half { margin-bottom: 0; }
+
+.stats-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  padding: 16px 0;
+  overflow-x: auto;
+}
+.stats-chart__bar-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  min-width: 32px;
+}
+.stats-chart__bar {
+  width: 100%;
+  max-width: 40px;
+  background: var(--accent, #c0392b);
+  border-radius: 4px 4px 0 0;
+  transition: height 0.3s ease;
+}
+.stats-chart__bar-value {
+  font-size: 10px;
+  font-weight: 700;
+  color: #666;
+}
+.stats-chart__bar-label {
+  font-size: 10px;
+  color: #999;
+}
+
+.stats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.stats-list__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.stats-list__item:last-child { border-bottom: none; }
+.stats-list__rank {
+  font-size: 14px;
+  font-weight: 800;
+  color: #ddd;
+  width: 24px;
+  text-align: center;
+}
+.stats-list__name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.stats-list__count {
+  font-size: 13px;
+  font-weight: 700;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .stats-cards { grid-template-columns: repeat(2, 1fr); }
+  .stats-row { grid-template-columns: 1fr; }
+}
+
+.admin-bulk-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #991b1b;
+}
+
 .admin-table-wrap {
   overflow-x: auto;
 }
@@ -3911,7 +4232,7 @@ img {
 }
 .admin-form__dropzone-preview img {
   width: 100%;
-  max-height: 240px;
+  aspect-ratio: 16/9;
   object-fit: cover;
   display: block;
 }

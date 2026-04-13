@@ -7,8 +7,8 @@ export default async function HomePage() {
     .from('articles')
     .select('*')
     .eq('is_published', true)
-    .order('display_order', { ascending: true })
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
+    .limit(6);
 
   return <HomePageClient articles={articles || []} />;
 }

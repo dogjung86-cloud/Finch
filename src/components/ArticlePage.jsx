@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { supabase } from '../lib/supabase';
 
 // 기사 본문 렌더링 직전 줄바꿈 보정.
 // word-break: keep-all 환경에서 발생하는 대표적인 어색한 줄바꿈들을 후처리한다.
@@ -25,6 +26,14 @@ const fixLineBreaks = (html) =>
 export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
+  const viewCounted = useRef(false);
+
+  // 조회수 증가 (페이지당 1회)
+  useEffect(() => {
+    if (viewCounted.current || !article?.id) return;
+    viewCounted.current = true;
+    supabase.rpc('increment_view_count', { article_id: article.id });
+  }, [article?.id]);
 
   // localStorage에서 댓글 로드
   useEffect(() => {
@@ -66,14 +75,6 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
 
   return (
     <div className="article-page">
-      {/* 플로팅 목록 버튼 — 스크롤 중에도 항상 보임 */}
-      <button
-        className="article-page__floating-back"
-        onClick={onBack}
-        aria-label="목록으로 돌아가기"
-      >
-        ← 목록
-      </button>
       <div className="article-page__container">
         {/* 뒤로 가기 */}
         <button className="article-page__back" onClick={onBack}>

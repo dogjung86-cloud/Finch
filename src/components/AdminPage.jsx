@@ -45,6 +45,7 @@ export default function AdminPage({ onBack }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [thumbDragOver, setThumbDragOver] = useState(false);
+  const [selected, setSelected] = useState([]);
 
   const quillRef = useRef(null);
 
@@ -273,6 +274,34 @@ export default function AdminPage({ onBack }) {
       setError('삭제 실패: ' + error.message);
     } else {
       setArticles(prev => prev.filter(a => a.id !== id));
+    }
+  };
+
+  // ── 일괄 삭제 ──
+  const handleBulkDelete = async () => {
+    if (selected.length === 0) return;
+    if (!confirm(`선택한 ${selected.length}개의 기사를 삭제하시겠습니까?`)) return;
+
+    const { error } = await supabase.from('articles').delete().in('id', selected);
+    if (error) {
+      setError('일괄 삭제 실패: ' + error.message);
+    } else {
+      setArticles((prev) => prev.filter((a) => !selected.includes(a.id)));
+      setSelected([]);
+    }
+  };
+
+  const toggleSelect = (id) => {
+    setSelected((prev) =>
+      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selected.length === articles.length) {
+      setSelected([]);
+    } else {
+      setSelected(articles.map((a) => a.id));
     }
   };
 
@@ -524,10 +553,25 @@ export default function AdminPage({ onBack }) {
           </button>
         </div>
       ) : (
+        {selected.length > 0 && (
+          <div className="admin-bulk-bar">
+            <span>{selected.length}개 선택됨</span>
+            <button className="admin-btn admin-btn--small admin-btn--danger" onClick={handleBulkDelete}>
+              선택 삭제
+            </button>
+          </div>
+        )}
         <div className="admin-table-wrap">
           <table className="admin-table">
             <thead>
               <tr>
+                <th style={{width: '40px'}}>
+                  <input
+                    type="checkbox"
+                    checked={articles.length > 0 && selected.length === articles.length}
+                    onChange={toggleSelectAll}
+                  />
+                </th>
                 <th>순서</th>
                 <th>제목</th>
                 <th>작성자</th>
@@ -539,6 +583,13 @@ export default function AdminPage({ onBack }) {
             <tbody>
               {articles.map((a) => (
                 <tr key={a.id} className={!a.is_published ? 'admin-table__row--draft' : ''}>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(a.id)}
+                      onChange={() => toggleSelect(a.id)}
+                    />
+                  </td>
                   <td>{a.display_order}</td>
                   <td className="admin-table__title-cell">{a.title}</td>
                   <td>{a.author}</td>
