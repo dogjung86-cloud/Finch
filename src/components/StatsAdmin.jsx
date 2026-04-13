@@ -81,10 +81,13 @@ export default function StatsAdmin() {
         .map(([date, set]) => ({ date, uv: set.size }))
         .sort((a, b) => a.date.localeCompare(b.date));
 
-      // 인기 페이지
+      // 인기 페이지 (기사 URL → 제목 변환)
+      const titleMap = {};
+      if (arts) arts.forEach((a) => { titleMap[`/article/${a.id}`] = a.title; });
       const pages = {};
       views.forEach((v) => {
-        pages[v.page] = (pages[v.page] || 0) + 1;
+        const label = titleMap[v.page] || (v.page === '/' ? '홈' : v.page);
+        pages[label] = (pages[label] || 0) + 1;
       });
       const topPages = Object.entries(pages)
         .sort((a, b) => b[1] - a[1])

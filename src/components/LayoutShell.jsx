@@ -32,11 +32,13 @@ export default function LayoutShell({ children }) {
     if (pathname === lastPath.current) return;
     lastPath.current = pathname;
 
-    supabase.from('page_views').insert({
+    supabase.from('page_views').insert([{
       page: pathname,
       visitor_id: getVisitorId(),
       device: getDevice(),
       referrer: document.referrer || null,
+    }]).then(({ error }) => {
+      if (error) console.error('page_views insert error:', error);
     });
   }, [pathname]);
   const {

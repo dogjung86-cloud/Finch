@@ -62,7 +62,10 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
   useEffect(() => {
     if (viewCounted.current || !article?.id) return;
     viewCounted.current = true;
-    supabase.rpc('increment_view_count', { article_id: article.id });
+    supabase.rpc('increment_view_count', { article_id: article.id })
+      .then(({ error }) => {
+        if (error) console.error('increment_view_count error:', error);
+      });
   }, [article?.id]);
 
   // Supabase에서 댓글 로드
