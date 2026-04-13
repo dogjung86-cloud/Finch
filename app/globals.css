@@ -2763,6 +2763,14 @@ img {
   display: block;
 }
 
+.article-page__body img {
+  display: block;
+  margin: 24px auto;
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
 .article-page__body p {
   font-family: 'Noto Serif KR', serif;
   font-size: 20px;
