@@ -23,10 +23,29 @@ const fixLineBreaks = (html) =>
     // 5) 닫는 `)` 와 바로 뒤 한글 사이에도 WORD JOINER → `(Araceae)식물` 같은 경계 끊김 방지
     .replace(/\)([가-힣])/g, ')\u2060$1');
 
+const FONT_SIZES = [18, 20, 22, 24];
+
 export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
+  const [fontSizeIdx, setFontSizeIdx] = useState(1);
   const viewCounted = useRef(false);
+
+  const cycleFontSize = () => {
+    setFontSizeIdx((prev) => (prev + 1) % FONT_SIZES.length);
+  };
+
+  const handleShare = async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: article.title, url });
+      } catch { /* 사용자 취소 */ }
+    } else {
+      await navigator.clipboard.writeText(url);
+      alert('링크가 복사되었습니다.');
+    }
+  };
 
   // 조회수 증가 (페이지당 1회)
   useEffect(() => {
@@ -75,6 +94,22 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
 
   return (
     <div className="article-page">
+      {/* 데스크톱 사이드 툴바 */}
+      <div className="article-toolbar">
+        <button className="article-toolbar__btn" onClick={cycleFontSize} title="글자 크기">
+          <span className="article-toolbar__icon">가</span>
+          <span className="article-toolbar__label">{FONT_SIZES[fontSizeIdx]}px</span>
+        </button>
+        <button className="article-toolbar__btn" onClick={handleShare} title="공유하기">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/>
+            <polyline points="16 6 12 2 8 6"/>
+            <line x1="12" y1="2" x2="12" y2="15"/>
+          </svg>
+          <span className="article-toolbar__label">공유</span>
+        </button>
+      </div>
+
       <div className="article-page__container">
         {/* 뒤로 가기 */}
         <button className="article-page__back" onClick={onBack}>
@@ -83,6 +118,16 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
 
         {/* 제목 */}
         <h1 className="article-page__title">{article.title}</h1>
+
+        {/* 모바일 툴바 */}
+        <div className="article-toolbar-mobile">
+          <button className="article-toolbar-mobile__btn" onClick={cycleFontSize}>
+            가 {FONT_SIZES[fontSizeIdx]}px
+          </button>
+          <button className="article-toolbar-mobile__btn" onClick={handleShare}>
+            공유하기
+          </button>
+        </div>
 
         {/* 메타 정보 */}
         <div className="article-page__meta">
@@ -135,7 +180,7 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
         ) : (
           /* ── 일반 기사: 전체 본문 ── */
           <>
-            <div className="article-page__body">
+            <div className="article-page__body" style={{ fontSize: FONT_SIZES[fontSizeIdx] + 'px' }}>
               {(() => {
                 const content = article.fullContent || article.full_content || '';
                 if (content.includes('<')) {

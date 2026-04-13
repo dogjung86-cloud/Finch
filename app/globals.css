@@ -2672,6 +2672,79 @@ img {
   color: var(--text-primary);
 }
 
+/* ── 데스크톱 사이드 툴바 ── */
+.article-toolbar {
+  position: fixed;
+  left: calc(50% - 420px);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 50;
+}
+
+.article-toolbar__btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.article-toolbar__btn:hover {
+  border-color: #999;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+}
+
+.article-toolbar__icon {
+  font-size: 18px;
+  font-weight: 800;
+  color: #333;
+}
+
+.article-toolbar__label {
+  font-size: 10px;
+  color: #999;
+  font-weight: 600;
+}
+
+/* ── 모바일 툴바 ── */
+.article-toolbar-mobile {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .article-toolbar {
+    display: none;
+  }
+  .article-toolbar-mobile {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .article-toolbar-mobile__btn {
+    padding: 6px 14px;
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .article-toolbar-mobile__btn:active {
+    background: #eee;
+  }
+}
+
 /* 플로팅 목록 버튼 — 스크롤 중에도 항상 보이는 좌상단 고정 버튼 */
 .article-page__floating-back {
   position: fixed;
@@ -2780,7 +2853,7 @@ img {
 
 .article-page__body p {
   font-family: 'Noto Serif KR', serif;
-  font-size: 20px;
+  font-size: inherit;
   line-height: 1.7;
   color: #333;
   margin-bottom: 20px;
