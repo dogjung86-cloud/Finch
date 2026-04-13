@@ -3823,9 +3823,18 @@ img {
   .article-page__body div,
   .article-page__body span:not(.ql-size-small),
   .article-page__body li {
-    font-size: 20px !important;
     line-height: 1.7 !important;
   }
+  .article-page__body:not([data-fontsize]) p,
+  .article-page__body:not([data-fontsize]) div,
+  .article-page__body:not([data-fontsize]) span:not(.ql-size-small),
+  .article-page__body:not([data-fontsize]) li {
+    font-size: 20px !important;
+  }
+  .article-page__body[data-fontsize="18"] p { font-size: 18px !important; }
+  .article-page__body[data-fontsize="20"] p { font-size: 20px !important; }
+  .article-page__body[data-fontsize="22"] p { font-size: 22px !important; }
+  .article-page__body[data-fontsize="24"] p { font-size: 24px !important; }
   .article-page__body .ql-size-small,
   .article-page__body .ql-size-small em,
   .article-page__body .ql-size-small span {
