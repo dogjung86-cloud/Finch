@@ -3,6 +3,24 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 
+/* ── 이미지 업로드 헬퍼 ── */
+async function uploadImage(file, folder = 'history') {
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${folder}/${Date.now()}_${Math.random().toString(36).slice(2)}.${fileExt}`;
+
+  const { error } = await supabase.storage
+    .from('article-thumbnails')
+    .upload(fileName, file, { upsert: true });
+
+  if (error) throw error;
+
+  const { data } = supabase.storage
+    .from('article-thumbnails')
+    .getPublicUrl(fileName);
+
+  return data.publicUrl;
+}
+
 export default function HistoryAdmin({ onBack }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,14 +28,14 @@ export default function HistoryAdmin({ onBack }) {
   const [formData, setFormData] = useState({
     title: '',
     content: '',
-    date_original: '',
-    month_day: '',
-    source: '',
     thumbnail: '',
     is_published: true,
+    is_membership: false,
   });
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
+  const [thumbDragOver, setThumbDragOver] = useState(false);
 
   // ── 목록 로드 ──
   const fetchItems = async () => {
@@ -25,7 +43,7 @@ export default function HistoryAdmin({ onBack }) {
     const { data, error } = await supabase
       .from('history_science')
       .select('*')
-      .order('date_original', { ascending: true });
+      .order('created_at', { ascending: false });
 
     if (error) {
       setError('불러오기 실패: ' + error.message);
@@ -39,22 +57,14 @@ export default function HistoryAdmin({ onBack }) {
     fetchItems();
   }, []);
 
-  // ── date_original에서 month_day 자동 추출 ──
-  const updateDateOriginal = (val) => {
-    const md = val ? val.slice(5) : '';
-    setFormData((prev) => ({ ...prev, date_original: val, month_day: md }));
-  };
-
   // ── 폼 초기화 ──
   const resetForm = () => {
     setFormData({
       title: '',
       content: '',
-      date_original: '',
-      month_day: '',
-      source: '',
       thumbnail: '',
       is_published: true,
+      is_membership: false,
     });
     setEditing(null);
     setError('');
@@ -65,20 +75,42 @@ export default function HistoryAdmin({ onBack }) {
     setFormData({
       title: item.title || '',
       content: item.content || '',
-      date_original: item.date_original || '',
-      month_day: item.month_day || '',
-      source: item.source || '',
       thumbnail: item.thumbnail || '',
       is_published: item.is_published ?? true,
+      is_membership: item.is_membership ?? false,
     });
     setEditing(item);
     setError('');
   };
 
+  // ── 썸네일 업로드 ──
+  const handleThumbnailFile = async (file) => {
+    if (!file || !file.type.startsWith('image/')) return;
+    setUploading(true);
+    setError('');
+    try {
+      const url = await uploadImage(file);
+      setFormData((prev) => ({ ...prev, thumbnail: url }));
+    } catch (err) {
+      setError('이미지 업로드 실패: ' + err.message);
+    }
+    setUploading(false);
+  };
+
+  const handleThumbnailUpload = (e) => {
+    handleThumbnailFile(e.target.files?.[0]);
+  };
+
+  const handleThumbDrop = (e) => {
+    e.preventDefault();
+    setThumbDragOver(false);
+    handleThumbnailFile(e.dataTransfer.files?.[0]);
+  };
+
   // ── 저장 ──
   const handleSave = async () => {
-    if (!formData.title.trim() || !formData.date_original) {
-      setError('제목과 날짜를 입력해주세요.');
+    if (!formData.title.trim()) {
+      setError('제목을 입력해주세요.');
       return;
     }
 
@@ -88,11 +120,9 @@ export default function HistoryAdmin({ onBack }) {
     const payload = {
       title: formData.title,
       content: formData.content,
-      date_original: formData.date_original,
-      month_day: formData.month_day,
-      source: formData.source,
       thumbnail: formData.thumbnail,
       is_published: formData.is_published,
+      is_membership: formData.is_membership,
     };
 
     let result;
@@ -155,47 +185,51 @@ export default function HistoryAdmin({ onBack }) {
             />
           </div>
 
-          <div className="admin-form__row">
-            <div className="admin-form__field">
-              <label className="admin-form__label">원래 날짜 *</label>
-              <input
-                className="admin-form__input"
-                type="date"
-                value={formData.date_original}
-                onChange={(e) => updateDateOriginal(e.target.value)}
-              />
-            </div>
-            <div className="admin-form__field">
-              <label className="admin-form__label">매칭 (월-일)</label>
-              <input
-                className="admin-form__input"
-                type="text"
-                value={formData.month_day}
-                readOnly
-                placeholder="자동 생성"
-              />
-            </div>
-            <div className="admin-form__field">
-              <label className="admin-form__label">출처</label>
-              <input
-                className="admin-form__input"
-                type="text"
-                value={formData.source}
-                onChange={(e) => setFormData({ ...formData, source: e.target.value })}
-                placeholder="예: Nature, Science 등"
-              />
-            </div>
-          </div>
-
+          {/* 썸네일 - 드래그앤드롭 */}
           <div className="admin-form__field">
-            <label className="admin-form__label">썸네일 URL</label>
-            <input
-              className="admin-form__input"
-              type="text"
-              value={formData.thumbnail}
-              onChange={(e) => setFormData({ ...formData, thumbnail: e.target.value })}
-              placeholder="https://..."
-            />
+            <label className="admin-form__label">썸네일 이미지</label>
+            <div
+              className={`admin-form__dropzone ${thumbDragOver ? 'admin-form__dropzone--active' : ''} ${formData.thumbnail ? 'admin-form__dropzone--has-image' : ''}`}
+              onDragOver={(e) => { e.preventDefault(); setThumbDragOver(true); }}
+              onDragLeave={() => setThumbDragOver(false)}
+              onDrop={handleThumbDrop}
+              onClick={() => document.getElementById('history-thumb-input').click()}
+            >
+              {formData.thumbnail ? (
+                <div className="admin-form__dropzone-preview">
+                  <img src={formData.thumbnail} alt="썸네일 미리보기" />
+                  <div className="admin-form__dropzone-overlay">
+                    <span>클릭하거나 새 이미지를 드래그하여 변경</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="admin-form__dropzone-empty">
+                  <span className="admin-form__dropzone-icon">🖼️</span>
+                  <span className="admin-form__dropzone-text">
+                    {uploading ? '업로드 중...' : '이미지를 드래그하거나 클릭하여 업로드'}
+                  </span>
+                  <span className="admin-form__dropzone-hint">JPG, PNG, WebP (최대 5MB)</span>
+                </div>
+              )}
+              <input
+                id="history-thumb-input"
+                type="file"
+                accept="image/*"
+                onChange={handleThumbnailUpload}
+                disabled={uploading}
+                style={{ display: 'none' }}
+              />
+            </div>
+            <div className="admin-form__url-input">
+              <span className="admin-form__hint">또는 URL 직접 입력:</span>
+              <input
+                className="admin-form__input"
+                type="text"
+                value={formData.thumbnail}
+                onChange={(e) => setFormData({ ...formData, thumbnail: e.target.value })}
+                placeholder="https://..."
+              />
+            </div>
           </div>
 
           <div className="admin-form__field">
@@ -216,7 +250,17 @@ export default function HistoryAdmin({ onBack }) {
                 checked={formData.is_published}
                 onChange={(e) => setFormData({ ...formData, is_published: e.target.checked })}
               />
-              공개
+              공개 (체크 해제 시 비공개)
+            </label>
+          </div>
+          <div className="admin-form__field">
+            <label className="admin-form__check-label admin-form__check-label--membership">
+              <input
+                type="checkbox"
+                checked={formData.is_membership}
+                onChange={(e) => setFormData({ ...formData, is_membership: e.target.checked })}
+              />
+              🔒 멤버십 전용 (일반 사용자에게 본문 잠금)
             </label>
           </div>
 
@@ -273,10 +317,7 @@ export default function HistoryAdmin({ onBack }) {
           <table className="admin-table">
             <thead>
               <tr>
-                <th>날짜</th>
-                <th>매칭</th>
                 <th>제목</th>
-                <th>출처</th>
                 <th>상태</th>
                 <th>관리</th>
               </tr>
@@ -284,10 +325,7 @@ export default function HistoryAdmin({ onBack }) {
             <tbody>
               {items.map((item) => (
                 <tr key={item.id} className={!item.is_published ? 'admin-table__row--draft' : ''}>
-                  <td>{item.date_original}</td>
-                  <td>{item.month_day}</td>
                   <td className="admin-table__title-cell">{item.title}</td>
-                  <td>{item.source || '-'}</td>
                   <td>
                     <span className={`admin-status ${item.is_published ? 'admin-status--published' : 'admin-status--draft'}`}>
                       {item.is_published ? '공개' : '비공개'}

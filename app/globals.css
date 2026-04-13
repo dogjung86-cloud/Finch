@@ -2763,15 +2763,15 @@ img {
   display: block;
 }
 
+.article-page__body .ql-size-small {
+  font-size: 0.75em;
+}
+
 .article-page__body img {
+  display: block;
   max-width: 100%;
   height: auto;
   border-radius: 4px;
-  margin: 16px 0;
-}
-
-.article-page__body p.ql-align-center img {
-  display: block;
   margin: 24px auto;
 }
 

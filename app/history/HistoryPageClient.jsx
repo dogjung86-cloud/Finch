@@ -2,11 +2,6 @@
 
 import Link from 'next/link';
 
-function formatOriginalDate(dateStr) {
-  if (!dateStr) return '';
-  const d = new Date(dateStr + 'T00:00:00');
-  return `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
-}
 
 export default function HistoryPageClient({ items }) {
   return (
@@ -33,7 +28,7 @@ export default function HistoryPageClient({ items }) {
                   </div>
                 )}
                 <div className="history-card__body">
-                  <span className="history-card__date">{formatOriginalDate(item.date_original)}</span>
+                  {item.date_original && <span className="history-card__date">{item.date_original}</span>}
                   <h3 className="history-card__title">{item.title}</h3>
                   {item.content && (
                     <p className="history-card__excerpt">
