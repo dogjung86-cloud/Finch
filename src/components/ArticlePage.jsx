@@ -90,11 +90,6 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
           <span className="article-page__date">{article.date || (article.created_at ? new Date(article.created_at).toLocaleDateString('ko-KR') : '')}</span>
         </div>
 
-        {/* 히어로 이미지 */}
-        <div className="article-page__hero-img">
-          <img src={article.thumbnail} alt={article.title} />
-        </div>
-
         {/* 본문 */}
         {article.is_membership ? (
           /* ── 멤버십 전용: 미리보기 + 잠금 ── */
