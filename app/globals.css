@@ -3821,16 +3821,14 @@ img {
   }
   .article-page__body p,
   .article-page__body div,
-  .article-page__body span,
+  .article-page__body span:not(.ql-size-small),
   .article-page__body li {
     font-size: 20px !important;
     line-height: 1.7 !important;
   }
-  .article-page__body span.ql-size-small,
-  .article-page__body em.ql-size-small,
-  .article-page__body p .ql-size-small,
-  .article-page__body p .ql-size-small em,
-  .article-page__body p .ql-size-small span {
+  .article-page__body .ql-size-small,
+  .article-page__body .ql-size-small em,
+  .article-page__body .ql-size-small span {
     font-size: 14px !important;
     line-height: 1.5 !important;
   }
