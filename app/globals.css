@@ -948,17 +948,7 @@ img {
   overflow: hidden;
 }
 .vintage-banner::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 28px,
-    rgba(139, 119, 80, 0.04) 28px,
-    rgba(139, 119, 80, 0.04) 29px
-  );
-  pointer-events: none;
+  display: none;
 }
 .vintage-banner:hover {
   background: linear-gradient(135deg, #f0e9dc 0%, #e5dcc8 100%);
