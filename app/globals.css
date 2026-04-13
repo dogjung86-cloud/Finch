@@ -1140,7 +1140,7 @@ img {
 
 .atlantic-hero__img {
   width: 100%;
-  aspect-ratio: 2/1;
+  aspect-ratio: 16/9;
   border-radius: 4px;
   overflow: hidden;
 }
