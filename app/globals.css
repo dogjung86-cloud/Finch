@@ -2838,7 +2838,12 @@ img {
 
 .article-page__body .ql-size-small,
 .article-page__body .ql-size-small em,
-.article-page__body .ql-size-small span {
+.article-page__body .ql-size-small span,
+.article-page__body p .ql-size-small,
+.article-page__body p .ql-size-small em,
+.article-page__body p .ql-size-small span,
+.article-page__body p span.ql-size-small,
+.article-page__body p em.ql-size-small {
   font-size: 14px !important;
   line-height: 1.5 !important;
 }
