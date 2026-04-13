@@ -940,7 +940,7 @@ img {
   align-items: center;
   gap: 12px;
   background: linear-gradient(135deg, #f5f0e8 0%, #ebe4d6 100%);
-  border: none;
+  border: 1px solid #d4c9b0;
   border-radius: 3px;
   cursor: pointer;
   transition: all 0.3s ease;
