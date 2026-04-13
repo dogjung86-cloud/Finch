@@ -2547,6 +2547,10 @@ img {
   .navbar { padding: 0 20px; }
   .navbar__menu { display: none; }
   .navbar__hamburger { display: block; }
+  .navbar__logo { min-width: 0; flex-shrink: 0; }
+  .navbar__right { flex-shrink: 0; }
+  .navbar__user-name { display: none; }
+  .navbar__chevron { display: none; }
   .navbar__mobile-menu {
     display: flex;
     flex-direction: column;
