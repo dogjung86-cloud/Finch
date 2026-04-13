@@ -90,10 +90,12 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
           <span className="article-page__date">{article.date || (article.created_at ? new Date(article.created_at).toLocaleDateString('ko-KR') : '')}</span>
         </div>
 
-        {/* 히어로 이미지 — 본문에 같은 이미지가 없을 때만 표시 */}
+        {/* 본문에 썸네일이 없으면 본문 앞에 원본 비율로 삽입 */}
         {article.thumbnail && !(article.full_content || '').includes(article.thumbnail) && (
-          <div className="article-page__hero-img">
-            <img src={article.thumbnail} alt={article.title} referrerPolicy="no-referrer" />
+          <div className="article-page__body">
+            <p className="ql-align-center">
+              <img src={article.thumbnail} alt={article.title} referrerPolicy="no-referrer" />
+            </p>
           </div>
         )}
 
