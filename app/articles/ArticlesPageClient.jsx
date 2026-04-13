@@ -61,7 +61,7 @@ export default function ArticlesPageClient({ articles }) {
             {filtered.map((a) => (
               <Link key={a.id} href={`/article/${a.id}`} className="articles-page__card">
                 <div className="articles-page__card-img">
-                  <img src={a.thumbnail} alt={a.title} />
+                  <img src={a.thumbnail} alt={a.title} referrerPolicy="no-referrer" />
                 </div>
                 <div className="articles-page__card-body">
                   {a.category && (

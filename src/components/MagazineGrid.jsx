@@ -109,7 +109,7 @@ export default function MagazineGrid({ articles: initialArticles }) {
           {leftArticles.map((a) => (
             <Link key={a.id} href={`/article/${a.id}`} className="atlantic-md-card">
               <div className="atlantic-md-card__img">
-                <img src={a.thumbnail} alt={a.title} />
+                <img src={a.thumbnail} alt={a.title} referrerPolicy="no-referrer" />
               </div>
               <h3 className="atlantic-md-card__title">{a.title}</h3>
               <span className="atlantic-md-card__author">{a.author} · {formatDate(a.created_at)}</span>
@@ -121,7 +121,7 @@ export default function MagazineGrid({ articles: initialArticles }) {
         {heroArticle && (
           <Link href={`/article/${heroArticle.id}`} className="atlantic-hero">
             <div className="atlantic-hero__img">
-              <img src={heroArticle.thumbnail} alt={heroArticle.title} />
+              <img src={heroArticle.thumbnail} alt={heroArticle.title} referrerPolicy="no-referrer" />
             </div>
             <h1 className="atlantic-hero__title">{heroArticle.title}</h1>
             <p className="atlantic-hero__excerpt">{heroArticle.excerpt}</p>
@@ -133,7 +133,7 @@ export default function MagazineGrid({ articles: initialArticles }) {
         <aside className="atlantic-col-right">
           {rightArticles.map((a) => (
             <Link key={a.id} href={`/article/${a.id}`} className="atlantic-sm-card">
-              <img className="atlantic-sm-card__img" src={a.thumbnail} alt={a.title} />
+              <img className="atlantic-sm-card__img" src={a.thumbnail} alt={a.title} referrerPolicy="no-referrer" />
               <div className="atlantic-sm-card__body">
                 <h4 className="atlantic-sm-card__title">{a.title}</h4>
                 <span className="atlantic-sm-card__author">{a.author} · {formatDate(a.created_at)}</span>
