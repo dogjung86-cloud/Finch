@@ -27,6 +27,8 @@ function timeAgo(dateStr) {
   return `${Math.floor(diff / 31536000)}년 전`;
 }
 
+const ADMIN_EMAIL = 'sciencegive@gmail.com';
+
 export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
@@ -355,9 +357,11 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
                           /* 보기 모드 */
                           <>
                             <p className="comment-item__text">{c.text}</p>
-                            {user && c.user_email === user.email && (
+                            {user && (c.user_email === user.email || user.email === ADMIN_EMAIL) && (
                               <div className="comment-item__actions">
-                                <button onClick={() => handleStartEdit(c)}>수정</button>
+                                {c.user_email === user.email && (
+                                  <button onClick={() => handleStartEdit(c)}>수정</button>
+                                )}
                                 <button onClick={() => handleDeleteComment(c.id)}>삭제</button>
                               </div>
                             )}
