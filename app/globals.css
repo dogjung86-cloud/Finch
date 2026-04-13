@@ -2753,14 +2753,13 @@ img {
 
 .article-page__hero-img {
   width: 100%;
-  aspect-ratio: 16/9;
   border-radius: var(--radius-md);
   overflow: hidden;
   margin-bottom: 32px;
 }
 .article-page__hero-img img {
-  width: 100%; height: 100%;
-  object-fit: cover;
+  width: 100%;
+  height: auto;
   display: block;
 }
 
