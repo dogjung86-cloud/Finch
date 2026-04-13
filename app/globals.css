@@ -2763,8 +2763,11 @@ img {
   display: block;
 }
 
-.article-page__body .ql-size-small {
-  font-size: 0.75em;
+.article-page__body .ql-size-small,
+.article-page__body .ql-size-small em,
+.article-page__body .ql-size-small span {
+  font-size: 14px !important;
+  line-height: 1.5 !important;
 }
 
 .article-page__body img {
@@ -3734,6 +3737,11 @@ img {
   .article-page__body li {
     font-size: 20px !important;
     line-height: 1.7 !important;
+  }
+  .article-page__body .ql-size-small,
+  .article-page__body .ql-size-small em,
+  .article-page__body .ql-size-small span {
+    font-size: 14px !important;
   }
   .article-page__body p.ql-align-center > em {
     font-size: 16px !important;
