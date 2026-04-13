@@ -3831,10 +3831,18 @@ img {
   .article-page__body:not([data-fontsize]) li {
     font-size: 20px !important;
   }
-  .article-page__body[data-fontsize="18"] p { font-size: 18px !important; }
-  .article-page__body[data-fontsize="20"] p { font-size: 20px !important; }
-  .article-page__body[data-fontsize="22"] p { font-size: 22px !important; }
-  .article-page__body[data-fontsize="24"] p { font-size: 24px !important; }
+  .article-page__body[data-fontsize="18"] p,
+  .article-page__body[data-fontsize="18"] span:not(.ql-size-small),
+  .article-page__body[data-fontsize="18"] li { font-size: 18px !important; }
+  .article-page__body[data-fontsize="20"] p,
+  .article-page__body[data-fontsize="20"] span:not(.ql-size-small),
+  .article-page__body[data-fontsize="20"] li { font-size: 20px !important; }
+  .article-page__body[data-fontsize="22"] p,
+  .article-page__body[data-fontsize="22"] span:not(.ql-size-small),
+  .article-page__body[data-fontsize="22"] li { font-size: 22px !important; }
+  .article-page__body[data-fontsize="24"] p,
+  .article-page__body[data-fontsize="24"] span:not(.ql-size-small),
+  .article-page__body[data-fontsize="24"] li { font-size: 24px !important; }
   .article-page__body .ql-size-small,
   .article-page__body .ql-size-small em,
   .article-page__body .ql-size-small span {
