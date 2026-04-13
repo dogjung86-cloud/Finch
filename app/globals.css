@@ -2547,8 +2547,9 @@ img {
   .navbar { padding: 0 20px; }
   .navbar__menu { display: none; }
   .navbar__hamburger { display: block; }
-  .navbar__logo { min-width: 0; flex-shrink: 0; }
-  .navbar__right { flex-shrink: 0; }
+  .navbar__logo { flex-shrink: 0; }
+  .navbar__right { flex-shrink: 0; order: 2; }
+  .navbar__hamburger { order: 3; }
   .navbar__user-name { display: none; }
   .navbar__chevron { display: none; }
   .navbar__mobile-menu {
@@ -2990,96 +2991,128 @@ img {
   font-weight: 600;
 }
 
-/* ── 댓글 섹션 ── */
+/* ── 댓글 섹션 (YouTube 스타일) ── */
 .comments-section {
   margin-top: 8px;
 }
 
-.comments-section__title {
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--text-primary);
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.comments-section__count {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
-/* 댓글 입력 폼 */
-.comment-form {
-  background: var(--bg-card);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
-  padding: 20px;
+.comments-section__header {
   margin-bottom: 24px;
 }
 
-.comment-form__user {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
+.comments-section__count {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
-.comment-form__avatar {
-  width: 32px; height: 32px;
+/* ── 댓글 입력 (YouTube 스타일) ── */
+.comment-input {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+  align-items: flex-start;
+}
+
+.comment-input__avatar {
+  width: 40px; height: 40px;
   border-radius: 50%;
   background: var(--accent);
   color: #fff;
   display: flex; align-items: center; justify-content: center;
-  font-size: 14px; font-weight: 700;
+  font-size: 16px; font-weight: 700;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.comment-input__avatar img {
+  width: 100%; height: 100%; object-fit: cover;
 }
 
-.comment-form__name {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-primary);
+.comment-input__field {
+  flex: 1;
+  min-width: 0;
 }
 
-.comment-form__textarea {
+.comment-input__textarea {
   width: 100%;
-  padding: 12px;
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-sm);
+  padding: 4px 0;
+  border: none;
+  border-bottom: 1px solid var(--border-light);
   font-family: 'Noto Sans KR', sans-serif;
   font-size: 14px;
-  line-height: 1.6;
-  resize: vertical;
-  min-height: 80px;
+  line-height: 1.5;
+  resize: none;
   outline: none;
-  transition: border-color 0.2s;
+  background: transparent;
+  color: var(--text-primary);
+  min-height: 26px;
+  overflow: hidden;
 }
-.comment-form__textarea:focus {
-  border-color: var(--accent);
+.comment-input__textarea::placeholder {
+  color: var(--text-muted);
+}
+.comment-input__textarea:focus {
+  border-bottom-color: transparent;
 }
 
-.comment-form__actions {
+.comment-input__underline {
+  height: 2px;
+  background: var(--text-primary);
+  transform: scaleX(0);
+  transition: transform 0.2s ease;
+  transform-origin: center;
+}
+.comment-input__textarea:focus ~ .comment-input__underline {
+  transform: scaleX(1);
+}
+
+.comment-input__actions {
   display: flex;
   justify-content: flex-end;
-  margin-top: 10px;
+  gap: 8px;
+  margin-top: 8px;
 }
 
-.comment-form__submit {
-  padding: 8px 20px;
+.comment-input__cancel,
+.comment-edit__cancel {
+  padding: 8px 16px;
+  background: none;
+  border: none;
+  border-radius: 18px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.comment-input__cancel:hover,
+.comment-edit__cancel:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+.comment-input__submit,
+.comment-edit__save {
+  padding: 8px 16px;
   background: var(--accent);
   color: #fff;
   border: none;
-  border-radius: 20px;
-  font-size: 13px;
+  border-radius: 18px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: var(--transition);
+  transition: opacity 0.15s;
 }
-.comment-form__submit:hover { background: var(--accent-hover); }
-.comment-form__submit:disabled {
-  opacity: 0.4;
+.comment-input__submit:hover,
+.comment-edit__save:hover {
+  opacity: 0.85;
+}
+.comment-input__submit:disabled,
+.comment-edit__save:disabled {
+  background: var(--border-light);
+  color: var(--text-muted);
   cursor: not-allowed;
 }
 
@@ -3110,8 +3143,9 @@ img {
 }
 .comment-login-prompt__btn:hover { background: var(--accent-hover); }
 
-/* 댓글 목록 */
-.comments-list__empty {
+/* ── 댓글 목록 ── */
+.comments-list__empty,
+.comments-list__loading {
   text-align: center;
   padding: 32px;
   color: var(--text-muted);
@@ -3120,29 +3154,35 @@ img {
 
 .comment-item {
   display: flex;
-  gap: 12px;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--border-light);
+  gap: 16px;
+  padding: 12px 0;
+  align-items: flex-start;
 }
-.comment-item:last-child { border-bottom: none; }
 
 .comment-item__avatar {
-  width: 36px; height: 36px;
+  width: 40px; height: 40px;
   border-radius: 50%;
-  background: var(--bg-warm);
-  color: var(--text-secondary);
+  background: #e0e0e0;
+  color: #606060;
   display: flex; align-items: center; justify-content: center;
-  font-size: 14px; font-weight: 700;
+  font-size: 16px; font-weight: 700;
   flex-shrink: 0;
+  overflow: hidden;
+}
+.comment-item__avatar img {
+  width: 100%; height: 100%; object-fit: cover;
 }
 
-.comment-item__body { flex: 1; }
+.comment-item__body {
+  flex: 1;
+  min-width: 0;
+}
 
-.comment-item__header {
+.comment-item__meta {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 4px;
+  gap: 8px;
+  margin-bottom: 2px;
 }
 
 .comment-item__author {
@@ -3152,26 +3192,78 @@ img {
 }
 
 .comment-item__date {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-muted);
 }
-
-.comment-item__delete {
-  background: none;
-  border: none;
-  font-size: 11px;
-  color: var(--text-muted);
-  cursor: pointer;
-  margin-left: auto;
-  transition: color 0.2s;
-}
-.comment-item__delete:hover { color: var(--accent); }
 
 .comment-item__text {
   font-size: 14px;
-  line-height: 1.7;
-  color: var(--text-secondary);
+  line-height: 1.6;
+  color: var(--text-primary);
   white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.comment-item__actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+}
+.comment-item__actions button {
+  background: none;
+  border: none;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 14px;
+  transition: background 0.15s, color 0.15s;
+}
+.comment-item__actions button:hover {
+  background: rgba(0,0,0,0.05);
+  color: var(--text-primary);
+}
+
+/* ── 댓글 수정 ── */
+.comment-edit {
+  margin-top: 4px;
+}
+
+.comment-edit__textarea {
+  width: 100%;
+  padding: 4px 0;
+  border: none;
+  border-bottom: 1px solid var(--border-light);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-primary);
+}
+.comment-edit__textarea:focus {
+  border-bottom-color: transparent;
+}
+
+.comment-edit__underline {
+  height: 2px;
+  background: var(--text-primary);
+  transform: scaleX(0);
+  transition: transform 0.2s ease;
+  transform-origin: center;
+}
+.comment-edit__textarea:focus ~ .comment-edit__underline {
+  transform: scaleX(1);
+}
+
+.comment-edit__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
 }
 
 /* ========================================

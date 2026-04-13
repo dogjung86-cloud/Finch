@@ -81,10 +81,6 @@ export default function AuthProvider({ children }) {
      'finch_flydarwin_likes', 'finch_flydarwin_dislikes', 'finch_flydarwin_vote',
      'totalCoins', 'flyDarwinShop', 'flyDarwinRankings', 'DAILY_STORAGE_KEY',
     ].forEach((key) => localStorage.removeItem(key));
-    Object.keys(localStorage).forEach((key) => {
-      if (key.startsWith('finch_comments_')) localStorage.removeItem(key);
-    });
-
     supabase.auth.signOut();
     setUser(null);
     setShowDeleteModal(false);
