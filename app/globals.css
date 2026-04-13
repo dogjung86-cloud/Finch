@@ -935,7 +935,7 @@ img {
 /* ── 100년 전 과학 배너 ── */
 .vintage-banner {
   max-width: var(--content-max);
-  margin: 0 auto 0;
+  margin: 0 auto 20px;
   padding: 14px 24px;
   display: flex;
   align-items: center;
