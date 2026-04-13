@@ -95,6 +95,14 @@ export default function MagazineGrid({ articles: initialArticles }) {
         <p className="kq-header__sub">과학은 세상을 보는 창</p>
       </div>
 
+      {/* ── 100년 전 과학 배너 ── */}
+      <Link href="#" className="vintage-banner">
+        <span className="vintage-banner__label">100년 전 과학은 어땠을까?</span>
+        <span className="vintage-banner__divider">|</span>
+        <span className="vintage-banner__title">슈뢰딩거, 파동방정식으로 양자역학의 새 장을 열다</span>
+        <span className="vintage-banner__cta">기사 읽기 &rarr;</span>
+      </Link>
+
       <div className="atlantic-grid">
         {/* 좌측: 중형 썸네일 기사 2개 */}
         <aside className="atlantic-col-left">
