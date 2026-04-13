@@ -55,7 +55,6 @@ export default function AdminPage({ onBack }) {
     const { data, error } = await supabase
       .from('articles')
       .select('*')
-      .order('display_order', { ascending: true })
       .order('created_at', { ascending: false });
 
     if (error) {
