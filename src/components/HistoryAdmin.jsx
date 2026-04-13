@@ -1,7 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
+import dynamic from 'next/dynamic';
+
+const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
+import 'react-quill-new/dist/quill.snow.css';
 
 /* ── 이미지 업로드 헬퍼 ── */
 async function uploadImage(file, folder = 'history') {
@@ -36,6 +40,83 @@ export default function HistoryAdmin({ onBack }) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   const [thumbDragOver, setThumbDragOver] = useState(false);
+  const quillRef = useRef(null);
+
+  // ── Quill 이미지 핸들러 ──
+  const imageHandler = useCallback(() => {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+      try {
+        const url = await uploadImage(file);
+        const editor = quillRef.current?.getEditor();
+        if (editor) {
+          const range = editor.getSelection(true);
+          editor.insertEmbed(range.index, 'image', url);
+          editor.setSelection(range.index + 1);
+        }
+      } catch (err) {
+        setError('본문 이미지 업로드 실패: ' + err.message);
+      }
+    };
+  }, []);
+
+  // ── Quill 모듈 설정 ──
+  const modules = useMemo(() => ({
+    toolbar: {
+      container: [
+        [{ header: [1, 2, 3, false] }],
+        [{ font: [] }],
+        [{ size: ['small', false, 'large', 'huge'] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ color: [] }, { background: [] }],
+        [{ align: [] }],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['blockquote'],
+        ['link', 'image'],
+        ['clean'],
+      ],
+      handlers: {
+        image: imageHandler,
+      },
+    },
+    clipboard: { matchVisual: false },
+  }), [imageHandler]);
+
+  const formats = [
+    'header', 'font', 'size',
+    'bold', 'italic', 'underline', 'strike',
+    'color', 'background',
+    'align',
+    'list', 'bullet',
+    'blockquote',
+    'link', 'image',
+  ];
+
+  // ── 에디터에 이미지 드래그앤드롭 ──
+  const handleEditorDrop = async (e) => {
+    const files = e.dataTransfer?.files;
+    if (!files || files.length === 0) return;
+    const file = files[0];
+    if (!file.type.startsWith('image/')) return;
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      const url = await uploadImage(file);
+      const editor = quillRef.current?.getEditor();
+      if (editor) {
+        const range = editor.getSelection(true);
+        editor.insertEmbed(range.index, 'image', url);
+        editor.setSelection(range.index + 1);
+      }
+    } catch (err) {
+      setError('이미지 업로드 실패: ' + err.message);
+    }
+  };
 
   // ── 목록 로드 ──
   const fetchItems = async () => {
@@ -234,13 +315,17 @@ export default function HistoryAdmin({ onBack }) {
 
           <div className="admin-form__field">
             <label className="admin-form__label">본문</label>
-            <textarea
-              className="admin-form__textarea"
-              value={formData.content}
-              onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-              placeholder="100년 전 과학 이야기를 작성하세요..."
-              rows={10}
-            />
+            <div onDrop={handleEditorDrop} onDragOver={(e) => e.preventDefault()}>
+              <ReactQuill
+                ref={quillRef}
+                theme="snow"
+                value={formData.content}
+                onChange={(val) => setFormData((prev) => ({ ...prev, content: val }))}
+                modules={modules}
+                formats={formats}
+                placeholder="100년 전 과학 이야기를 작성하세요..."
+              />
+            </div>
           </div>
 
           <div className="admin-form__field">
