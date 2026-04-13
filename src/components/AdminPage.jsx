@@ -553,6 +553,7 @@ export default function AdminPage({ onBack }) {
           </button>
         </div>
       ) : (
+        <>
         {selected.length > 0 && (
           <div className="admin-bulk-bar">
             <span>{selected.length}개 선택됨</span>
@@ -623,6 +624,7 @@ export default function AdminPage({ onBack }) {
             </tbody>
           </table>
         </div>
+        </>
       )}
     </div>
   );
