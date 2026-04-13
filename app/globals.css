@@ -1262,6 +1262,47 @@ img {
   color: #777;
 }
 
+/* ── 과학드림 유튜브 링크 ── */
+.atlantic-yt-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 14px;
+  border-top: 1px solid #e8e5de;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-radius: 4px;
+}
+.atlantic-yt-link:hover {
+  background: rgba(0,0,0,0.03);
+}
+
+.atlantic-yt-link__logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.atlantic-yt-link__body {
+  display: flex;
+  flex-direction: column;
+}
+
+.atlantic-yt-link__name {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  color: #1a1a1a;
+}
+
+.atlantic-yt-link__sub {
+  font-size: 11px;
+  color: #999;
+  margin-top: 1px;
+}
+
 /* ── 뉴스레터 구독 ── */
 .atlantic-newsletter {
   margin-top: 16px;

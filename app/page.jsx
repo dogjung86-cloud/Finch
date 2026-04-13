@@ -1,6 +1,8 @@
 import { createServerSupabase } from '../src/lib/supabase-server';
 import HomePageClient from './HomePageClient';
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   const supabase = createServerSupabase();
   // display_order 기준 정렬, 같은 순서면 최신 우선

@@ -1,6 +1,8 @@
 import { createServerSupabase } from '../../src/lib/supabase-server';
 import HistoryPageClient from './HistoryPageClient';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: '100년 전 과학 – Finch',
   description: '100년 전, 과학은 어땠을까? 과거의 과학 이야기를 되짚어봅니다.',
