@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 
 // 기사 본문 렌더링 직전 줄바꿈 보정.

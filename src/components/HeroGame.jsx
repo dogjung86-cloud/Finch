@@ -1,3 +1,5 @@
+'use client';
+
 import { useRef, useState, useCallback, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 
@@ -31,15 +33,15 @@ export default function HeroGame({ onScoreChange }) {
     });
     return () => subscription.unsubscribe();
   }, []);
-  const [likes, setLikes] = useState(() =>
-    parseInt(localStorage.getItem('finch_flydarwin_likes') || '0', 10)
-  );
-  const [dislikes, setDislikes] = useState(() =>
-    parseInt(localStorage.getItem('finch_flydarwin_dislikes') || '0', 10)
-  );
-  const [userVote, setUserVote] = useState(() =>
-    localStorage.getItem('finch_flydarwin_vote') || null
-  );
+  const [likes, setLikes] = useState(0);
+  const [dislikes, setDislikes] = useState(0);
+  const [userVote, setUserVote] = useState(null);
+
+  useEffect(() => {
+    setLikes(parseInt(localStorage.getItem('finch_flydarwin_likes') || '0', 10));
+    setDislikes(parseInt(localStorage.getItem('finch_flydarwin_dislikes') || '0', 10));
+    setUserVote(localStorage.getItem('finch_flydarwin_vote') || null);
+  }, []);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   // 좋아요
@@ -93,13 +95,13 @@ export default function HeroGame({ onScoreChange }) {
   }, []);
 
   // 전체화면 변경 감지
-  useState(() => {
+  useEffect(() => {
     const onChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
     };
     document.addEventListener('fullscreenchange', onChange);
     return () => document.removeEventListener('fullscreenchange', onChange);
-  });
+  }, []);
 
 
 
@@ -126,7 +128,7 @@ export default function HeroGame({ onScoreChange }) {
       {/* ── 게임 하단 컨트롤 바 ── */}
       <div className="game-bar">
         <div className="game-bar__info">
-          <div className="game-bar__icon">🐦</div>
+          <div className="game-bar__icon"><img src="/images/favicon/favicon-32x32.png" alt="Finch" style={{width:'20px',height:'20px'}} /></div>
           <div className="game-bar__text">
             <span className="game-bar__title">Fly Darwin</span>
             <span className="game-bar__maker">제작: Finch Lab</span>

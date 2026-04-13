@@ -1,24 +1,22 @@
 {
   "name": "science-dream-hub",
   "private": true,
-  "version": "2.0.0",
-  "type": "module",
+  "version": "3.0.0",
   "scripts": {
-    "dev": "vite",
-    "build": "npx vite build",
-    "preview": "vite preview"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "dependencies": {
     "@chenglou/pretext": "^0.0.3",
     "@supabase/supabase-js": "^2.100.1",
+    "next": "^15.3.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-quill-new": "^3.8.3"
   },
   "devDependencies": {
     "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "^4.3.4",
-    "vite": "^6.0.1"
+    "@types/react-dom": "^18.3.1"
   }
 }

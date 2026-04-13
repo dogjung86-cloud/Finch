@@ -1,6 +1,10 @@
+'use client';
+
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
-import ReactQuill from 'react-quill-new';
+import dynamic from 'next/dynamic';
+
+const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 import 'react-quill-new/dist/quill.snow.css';
 
 /* ── 이미지 업로드 헬퍼 ── */

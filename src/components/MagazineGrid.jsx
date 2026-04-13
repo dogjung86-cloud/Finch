@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
+'use client';
+
+import Link from 'next/link';
 
 /* ── 폴백 기사 데이터 (DB가 비어있을 때 사용) ── */
 const FALLBACK_ARTICLES = [
@@ -7,7 +8,6 @@ const FALLBACK_ARTICLES = [
     id: 1,
     title: '제임스 웹 망원경이 포착한 가장 먼 은하의 비밀',
     excerpt: 'NASA의 제임스 웹 우주 망원경이 빅뱅 직후 형성된 것으로 보이는 초기 은하를 발견했습니다.',
-    full_content: 'NASA의 제임스 웹 우주 망원경(JWST)이 빅뱅 직후 형성된 것으로 보이는 초기 은하를 발견했습니다.\n\n이번에 포착된 은하는 빅뱅 이후 약 3억 년 만에 형성된 것으로 추정되며, 기존에 알려진 가장 오래된 은하보다 약 1억 년 더 앞선 시기에 존재했습니다.\n\n연구팀은 "이 은하의 존재는 우주 초기에 별과 은하가 기존 이론보다 훨씬 빠르게 형성되었음을 시사한다"고 밝혔습니다.\n\n이번 발견은 현재의 우주론 모델에 중대한 도전을 제기합니다.',
     author: 'The Finch',
     category: '기획',
     thumbnail: '/images/articles/space_galaxy.png',
@@ -17,7 +17,6 @@ const FALLBACK_ARTICLES = [
     id: 2,
     title: 'CRISPR 유전자 편집, 유전 질환 치료의 새 시대를 열다',
     excerpt: 'CRISPR-Cas9 기반의 유전자 치료가 겸상적혈구병 환자에게 최초로 승인되었습니다.',
-    full_content: 'CRISPR-Cas9 기반의 유전자 치료가 겸상적혈구병 환자에게 최초로 승인되며, 유전 질환 치료의 패러다임이 바뀌고 있습니다.\n\nFDA는 Casgevy를 겸상적혈구병 치료제로 승인했습니다. 이는 CRISPR 기술을 활용한 최초의 유전자 치료제입니다.',
     author: 'The Finch',
     category: '기획',
     thumbnail: '/images/articles/crispr_dna.png',
@@ -27,7 +26,6 @@ const FALLBACK_ARTICLES = [
     id: 3,
     title: '양자 컴퓨터, 1000큐비트 시대 돌입',
     excerpt: '차세대 양자 프로세서가 1000큐비트를 돌파하며 상업적 양자 컴퓨팅 시대가 한 발짝 더 가까워졌습니다.',
-    full_content: '차세대 양자 프로세서가 1000큐비트를 돌파하며 상업적 양자 컴퓨팅 시대가 한 발짝 더 가까워졌습니다.\n\nIBM의 새로운 양자 프로세서 Condor는 1,121개의 큐비트를 탑재하여 역대 가장 큰 규모의 양자 칩으로 기록되었습니다.',
     author: 'The Finch',
     category: '기획',
     thumbnail: '/images/articles/quantum_computer.png',
@@ -37,7 +35,6 @@ const FALLBACK_ARTICLES = [
     id: 4,
     title: '그래핀 기반 해수 담수화 막, 물 위기의 해답?',
     excerpt: '그래핀 산화물 기반의 새로운 담수화 막이 기존 기술보다 효율이 10배 높다는 연구 결과가 발표되었습니다.',
-    full_content: '그래핀 산화물 기반의 새로운 담수화 막이 기존 기술보다 효율이 10배 높다는 연구 결과가 발표되었습니다.\n\n맨체스터 대학교 연구팀이 개발한 이 그래핀 막은 나노미터 수준의 미세한 구멍을 통해 물 분자만 선택적으로 통과시킵니다.',
     author: 'The Finch',
     category: '뉴스',
     thumbnail: '/images/articles/graphene_water.png',
@@ -47,7 +44,6 @@ const FALLBACK_ARTICLES = [
     id: 5,
     title: 'GPT-5 등장: AI가 과학 연구를 직접 수행하는 시대',
     excerpt: '인공지능이 실험 설계부터 논문 작성까지 독립적으로 수행할 수 있는 수준에 도달했습니다.',
-    full_content: '인공지능이 실험 설계부터 논문 작성까지 독립적으로 수행할 수 있는 수준에 도달했습니다.\n\nOpenAI가 공개한 GPT-5는 과학 논문을 읽고 가설을 세우며, 실험을 설계하고 데이터를 분석하는 것까지 가능합니다.',
     author: 'The Finch',
     category: '뉴스',
     thumbnail: '/images/articles/ai_research.png',
@@ -57,7 +53,6 @@ const FALLBACK_ARTICLES = [
     id: 6,
     title: '화성 토양에서 발견된 유기물, 생명체 흔적일까',
     excerpt: '퍼서비어런스 로버가 화성 예제로 크레이터에서 복잡한 유기 분자를 검출했습니다.',
-    full_content: '퍼서비어런스 로버가 화성 예제로 크레이터에서 복잡한 유기 분자를 검출했습니다.\n\nNASA의 화성 탐사 로버 퍼서비어런스가 예제로 크레이터 내 고대 삼각주 지역에서 다양한 유기 분자를 발견했습니다.',
     author: 'The Finch',
     category: '뉴스',
     thumbnail: '/images/articles/mars_rover.png',
@@ -67,7 +62,6 @@ const FALLBACK_ARTICLES = [
     id: 7,
     title: '인류의 달 귀환: 아르테미스 3호의 도전과 과제',
     excerpt: 'NASA의 아르테미스 3호가 50년 만의 유인 달 착륙을 준비하고 있습니다.',
-    full_content: 'NASA의 아르테미스 3호가 50년 만의 유인 달 착륙을 준비하고 있습니다.\n\n이번 미션에서는 최초로 여성 우주인이 달 표면에 발을 디딜 예정입니다.\n\n달 남극의 영구 그림자 지역에서 물 얼음을 탐사하는 것이 핵심 목표 중 하나입니다.',
     author: 'The Finch',
     category: '뉴스',
     thumbnail: '/images/articles/space_galaxy.png',
@@ -87,114 +81,59 @@ function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString('ko-KR');
 }
 
-export default function MagazineGrid({ onArticleClick }) {
-  const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function MagazineGrid({ articles: initialArticles }) {
+  const articles = initialArticles && initialArticles.length > 0 ? initialArticles : FALLBACK_ARTICLES;
 
-  // ── Supabase에서 기사 로드 ──
-  useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('articles')
-          .select('*')
-          .eq('is_published', true)
-          .order('display_order', { ascending: true })
-          .order('created_at', { ascending: false });
-
-        if (!error && data && data.length > 0) {
-          setArticles(data);
-        }
-      } catch {
-        // 네트워크 에러 → 폴백 사용
-        setArticles(FALLBACK_ARTICLES);
-      }
-      setLoading(false);
-    };
-
-    fetchArticles();
-  }, []);
-
-  // display_order 순서대로 위치 배치
-  // 0번: 중앙 히어로, 1·2번: 좌측, 3·4·5번: 우측
   const heroArticle = articles[0];
-  const sideLeftArticles = articles.slice(1, 3);
-  const trendingArticles = articles.slice(3, 6);
-
-  if (loading || articles.length === 0) {
-    return (
-      <section className="kq-section" id="magazine-section">
-        <div className="kq-header">
-          <h2 className="kq-header__title">The Finch</h2>
-          <p className="kq-header__sub">과학은 세상을 보는 창</p>
-        </div>
-        <div style={{ textAlign: 'center', padding: '60px 0', color: '#999' }}>
-          기사를 불러오는 중...
-        </div>
-      </section>
-    );
-  }
+  const leftArticles = articles.slice(1, 3);
+  const rightArticles = articles.slice(3, 6);
 
   return (
     <section className="kq-section" id="magazine-section">
-      {/* 헤더 */}
       <div className="kq-header">
         <h2 className="kq-header__title">The Finch</h2>
         <p className="kq-header__sub">과학은 세상을 보는 창</p>
       </div>
 
-      {/* ── Atlantic 스타일 3-칼럼 (display_order 기반 배치) ── */}
       <div className="atlantic-grid">
-        {/* 좌측: 1·2번 기사 */}
-        <aside className="atlantic-side-left">
-          {sideLeftArticles.map((a) => (
-            <article
-              key={a.id}
-              className="atlantic-side-article"
-              onClick={() => onArticleClick?.(a)}
-            >
-              <div className="atlantic-side-article__img">
+        {/* 좌측: 중형 썸네일 기사 2개 */}
+        <aside className="atlantic-col-left">
+          {leftArticles.map((a) => (
+            <Link key={a.id} href={`/article/${a.id}`} className="atlantic-md-card">
+              <div className="atlantic-md-card__img">
                 <img src={a.thumbnail} alt={a.title} />
               </div>
-              <h3 className="atlantic-side-article__title">{a.title}</h3>
-              <span className="atlantic-side-article__author">{a.author} · {formatDate(a.created_at)}</span>
-            </article>
+              <h3 className="atlantic-md-card__title">{a.title}</h3>
+              <span className="atlantic-md-card__author">{a.author} · {formatDate(a.created_at)}</span>
+            </Link>
           ))}
         </aside>
 
-        {/* 중앙: 0번 히어로 기사 */}
+        {/* 중앙: 히어로 기사 */}
         {heroArticle && (
-          <section className="atlantic-center" onClick={() => onArticleClick?.(heroArticle)}>
-            <div className="atlantic-hero-img">
+          <Link href={`/article/${heroArticle.id}`} className="atlantic-hero">
+            <div className="atlantic-hero__img">
               <img src={heroArticle.thumbnail} alt={heroArticle.title} />
             </div>
-            <h1 className="atlantic-hero-title">{heroArticle.title}</h1>
-            <p className="atlantic-hero-excerpt">{heroArticle.excerpt}</p>
-            <p className="atlantic-hero-author">{heroArticle.author}</p>
-          </section>
+            <h1 className="atlantic-hero__title">{heroArticle.title}</h1>
+            <p className="atlantic-hero__excerpt">{heroArticle.excerpt}</p>
+            <span className="atlantic-hero__author">{heroArticle.author} · {formatDate(heroArticle.created_at)}</span>
+          </Link>
         )}
 
-        {/* 우측: 3·4·5번 기사 + 뉴스레터 */}
-        <aside className="atlantic-side-right">
-          {trendingArticles.map((a) => (
-            <div
-              key={a.id}
-              className="atlantic-trending-item"
-              onClick={() => onArticleClick?.(a)}
-            >
-              <div className="atlantic-trending-body">
-                <h4 className="atlantic-trending-title">{a.title}</h4>
-                <span className="atlantic-trending-author">{a.author} · {formatDate(a.created_at)}</span>
+        {/* 우측: 소형 썸네일 기사 3개 */}
+        <aside className="atlantic-col-right">
+          {rightArticles.map((a) => (
+            <Link key={a.id} href={`/article/${a.id}`} className="atlantic-sm-card">
+              <img className="atlantic-sm-card__img" src={a.thumbnail} alt={a.title} />
+              <div className="atlantic-sm-card__body">
+                <h4 className="atlantic-sm-card__title">{a.title}</h4>
+                <span className="atlantic-sm-card__author">{a.author} · {formatDate(a.created_at)}</span>
               </div>
-              <img
-                className="atlantic-trending-thumb"
-                src={a.thumbnail}
-                alt={a.title}
-              />
-            </div>
+            </Link>
           ))}
 
-          {/* 뉴스레터 구독 */}
+          {/* 뉴스레터 / 추후 AdSense 영역 */}
           <div className="atlantic-newsletter">
             <h4 className="atlantic-newsletter__title">
               Finch의 매주 과학 뉴스레터를 받아보세요
@@ -212,6 +151,29 @@ export default function MagazineGrid({ onArticleClick }) {
             </div>
           </div>
         </aside>
+      </div>
+
+      <div className="atlantic-all-articles">
+        <Link href="/articles" className="atlantic-all-articles__btn">
+          전체 기사 보기
+        </Link>
+      </div>
+
+      <div className="atlantic-scroll-hint" onClick={() => {
+        const el = document.getElementById('hero-game');
+        if (el) {
+          const top = el.getBoundingClientRect().top + window.scrollY - 60;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      }}>
+        <span className="atlantic-scroll-hint__text">Play Lab에서 과학 게임 즐기기</span>
+        <span className="atlantic-scroll-hint__arrow">&#x2193;</span>
+      </div>
+
+      <div className="atlantic-wave-bottom">
+        <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <path d="M0,0 L1440,0 L1440,20 C1200,50 960,5 720,30 C480,55 240,10 0,35 Z" fill="#F2F2F2" />
+        </svg>
       </div>
     </section>
   );

@@ -1,16 +1,23 @@
+'use client';
+
 import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 
 const MENU_ITEMS = [
-  { id: 'home', label: '홈' },
-  { id: 'games', label: 'Play Lab' },
-  { id: 'magazine', label: 'The Finch' },
-  { id: 'about', label: 'About' },
+  { id: 'home', label: '홈', href: '/' },
+  { id: 'magazine', label: 'The Finch', href: '/#magazine' },
+  { id: 'games', label: 'Play Lab', href: '/#games' },
+  { id: 'about', label: 'About', href: '/about' },
 ];
 
-export default function Navbar({ activeSection, onSectionChange, user, onLoginClick, onSignupClick, onLogout, onAdminClick, isAdmin, onDeleteAccount }) {
+export default function Navbar({ user, onLoginClick, onLogout, isAdmin, onDeleteAccount }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -30,24 +37,71 @@ export default function Navbar({ activeSection, onSectionChange, user, onLoginCl
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [menuOpen]);
 
+  const handleMenuClick = (item) => {
+    if (item.id === 'home' || item.id === 'games' || item.id === 'magazine') {
+      if (pathname === '/') {
+        // 홈 페이지에서는 스크롤
+        const sectionId = item.id === 'home' ? 'hero-game' : item.id === 'games' ? 'game-carousel' : 'magazine-section';
+        const el = document.getElementById(sectionId);
+        if (el) {
+          const navbarHeight = 60;
+          const top = el.getBoundingClientRect().top + window.scrollY - navbarHeight;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+        return;
+      }
+    }
+    router.push(item.href);
+  };
+
+  const getActiveSection = () => {
+    if (pathname === '/about') return 'about';
+    if (pathname === '/admin') return 'admin';
+    if (pathname === '/') return 'home';
+    return '';
+  };
+
+  const activeSection = getActiveSection();
+
   return (
     <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
-      <div className="navbar__logo" onClick={() => onSectionChange('home')}>
-        <span className="navbar__logo-icon">🐦</span>
+      <Link href="/" className="navbar__logo">
+        <img className="navbar__logo-icon-img" src="/images/favicon/favicon-32x32.png" alt="Finch" />
         <span className="navbar__logo-text">Finch</span>
-      </div>
+      </Link>
 
+      {/* 데스크톱 메뉴 */}
       <ul className="navbar__menu">
         {MENU_ITEMS.map((item) => (
           <li
             key={item.id}
             className={`navbar__menu-item ${activeSection === item.id ? 'navbar__menu-item--active' : ''}`}
-            onClick={() => onSectionChange(item.id)}
+            onClick={() => handleMenuClick(item)}
           >
             {item.label}
           </li>
         ))}
       </ul>
+
+      {/* 모바일 햄버거 */}
+      <button className="navbar__hamburger" onClick={() => setMobileNavOpen(!mobileNavOpen)} aria-label="메뉴">
+        <span className={`navbar__hamburger-line ${mobileNavOpen ? 'navbar__hamburger-line--open' : ''}`} />
+      </button>
+
+      {/* 모바일 메뉴 패널 */}
+      {mobileNavOpen && (
+        <div className="navbar__mobile-menu">
+          {MENU_ITEMS.map((item) => (
+            <button
+              key={item.id}
+              className={`navbar__mobile-item ${activeSection === item.id ? 'navbar__mobile-item--active' : ''}`}
+              onClick={() => { setMobileNavOpen(false); handleMenuClick(item); }}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="navbar__right">
         {user ? (
@@ -69,7 +123,7 @@ export default function Navbar({ activeSection, onSectionChange, user, onLoginCl
             {menuOpen && (
               <div className="navbar__dropdown">
                 {isAdmin && (
-                  <button className="navbar__dropdown-item" onClick={() => { setMenuOpen(false); onAdminClick(); }}>
+                  <button className="navbar__dropdown-item" onClick={() => { setMenuOpen(false); router.push('/admin'); }}>
                     ✏️ 기사 관리
                   </button>
                 )}

@@ -1,23 +1,20 @@
-export default function Footer({ onNavigate }) {
-  const handleClick = (page) => {
-    if (onNavigate) {
-      onNavigate(page);
-      window.scrollTo(0, 0);
-    }
-  };
+'use client';
 
+import Link from 'next/link';
+
+export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer__inner">
         {/* 상단: 링크 */}
         <div className="footer__top">
           <div className="footer__brand">
-            <span className="footer__logo">🐦</span>
+            <img className="footer__logo" src="/images/favicon/favicon-32x32.png" alt="Finch" style={{width:'20px',height:'20px'}} />
             <span className="footer__brand-name">Finch</span>
           </div>
           <ul className="footer__links">
-            <li><a className="footer__link" onClick={() => handleClick('terms')}>이용약관</a></li>
-            <li><a className="footer__link footer__link--bold" onClick={() => handleClick('privacy')}>개인정보처리방침</a></li>
+            <li><Link className="footer__link" href="/terms">이용약관</Link></li>
+            <li><Link className="footer__link footer__link--bold" href="/privacy">개인정보처리방침</Link></li>
             <li><a className="footer__link" href="mailto:sciencegive@gmail.com">문의하기</a></li>
           </ul>
         </div>
