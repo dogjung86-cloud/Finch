@@ -182,7 +182,7 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
         ) : (
           /* ── 일반 기사: 전체 본문 ── */
           <>
-            <div className="article-page__body" style={{ fontSize: FONT_SIZES[fontSizeIdx] + 'px' }}>
+            <div className="article-page__body" data-fontsize={FONT_SIZES[fontSizeIdx]}>
               {(() => {
                 const content = article.fullContent || article.full_content || '';
                 if (content.includes('<')) {

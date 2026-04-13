@@ -2856,9 +2856,19 @@ img {
   margin: 24px auto;
 }
 
+.article-page__body[data-fontsize="18"] p { font-size: 18px; }
+.article-page__body[data-fontsize="20"] p { font-size: 20px; }
+.article-page__body[data-fontsize="22"] p { font-size: 22px; }
+.article-page__body[data-fontsize="24"] p { font-size: 24px; }
+.article-page__body[data-fontsize] .ql-size-small,
+.article-page__body[data-fontsize] .ql-size-small em,
+.article-page__body[data-fontsize] .ql-size-small span {
+  font-size: 14px !important;
+}
+
 .article-page__body p {
   font-family: 'Noto Serif KR', serif;
-  font-size: inherit;
+  font-size: 20px;
   line-height: 1.7;
   color: #333;
   margin-bottom: 20px;
