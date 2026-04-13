@@ -3738,10 +3738,13 @@ img {
     font-size: 20px !important;
     line-height: 1.7 !important;
   }
-  .article-page__body .ql-size-small,
-  .article-page__body .ql-size-small em,
-  .article-page__body .ql-size-small span {
+  .article-page__body span.ql-size-small,
+  .article-page__body em.ql-size-small,
+  .article-page__body p .ql-size-small,
+  .article-page__body p .ql-size-small em,
+  .article-page__body p .ql-size-small span {
     font-size: 14px !important;
+    line-height: 1.5 !important;
   }
   .article-page__body p.ql-align-center > em {
     font-size: 16px !important;
