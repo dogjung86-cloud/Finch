@@ -4,7 +4,7 @@ import LayoutShell from '../src/components/LayoutShell';
 
 export const metadata = {
   metadataBase: new URL('https://www.finch.co.kr'),
-  title: '과학 매거진 Finch | 과학 게임과 사이언스 아티클',
+  title: '과학 매거진 Finch｜과학 게임 & 재미있는 과학 이야기',
   description:
     '과학을 즐기고, 과학을 읽다. 물리·화학·생물·천문 과학 기사, 100년 전 과학 이야기, 캐주얼 과학 게임까지 — 과학 매거진 Finch.',
   keywords: [
@@ -25,7 +25,7 @@ export const metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: '과학 매거진 Finch | 과학 게임과 사이언스 아티클',
+    title: '과학 매거진 Finch｜과학 게임 & 재미있는 과학 이야기',
     description: '과학을 즐기고, 과학을 읽다 — 과학 기사와 과학 게임이 만나는 곳',
     url: 'https://www.finch.co.kr',
     siteName: 'Finch',
