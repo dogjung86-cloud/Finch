@@ -82,8 +82,9 @@ function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString('ko-KR');
 }
 
-export default function MagazineGrid({ articles: initialArticles }) {
+export default function MagazineGrid({ articles: initialArticles, latestHistory }) {
   const articles = initialArticles && initialArticles.length > 0 ? initialArticles : FALLBACK_ARTICLES;
+  const historyTitle = latestHistory?.title || '슈뢰딩거, 파동방정식으로 양자역학의 새 장을 열다';
 
   const heroArticle = articles[0];
   const leftArticles = articles.slice(1, 3);
@@ -100,7 +101,7 @@ export default function MagazineGrid({ articles: initialArticles }) {
       <Link href="/history" className="vintage-banner">
         <span className="vintage-banner__label">100년 전 과학은 어땠을까?</span>
         <span className="vintage-banner__divider">|</span>
-        <span className="vintage-banner__title">슈뢰딩거, 파동방정식으로 양자역학의 새 장을 열다</span>
+        <span className="vintage-banner__title">{historyTitle}</span>
         <span className="vintage-banner__cta">더 보기 &rarr;</span>
       </Link>
 

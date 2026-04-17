@@ -5,7 +5,7 @@ import HeroGame from '../src/components/HeroGame';
 import GameCarousel, { GAME_LIST } from '../src/components/GameCarousel';
 import MagazineGrid from '../src/components/MagazineGrid';
 
-export default function HomePageClient({ articles }) {
+export default function HomePageClient({ articles, latestHistory }) {
   // ── 게임 선택 ──
   const [selectedGameId, setSelectedGameId] = useState('cosmic-flight');
   const [tutorialOpen, setTutorialOpen] = useState(false);
@@ -42,7 +42,7 @@ export default function HomePageClient({ articles }) {
   return (
     <>
       <div ref={magazineRef}>
-        <MagazineGrid articles={articles} />
+        <MagazineGrid articles={articles} latestHistory={latestHistory} />
       </div>
 
       <div ref={heroRef}>
