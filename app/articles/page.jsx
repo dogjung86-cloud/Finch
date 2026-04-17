@@ -1,7 +1,7 @@
 import { createServerSupabase } from '../../src/lib/supabase-server';
 import ArticlesPageClient from './ArticlesPageClient';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export const metadata = {
   title: '전체 기사 – Finch',

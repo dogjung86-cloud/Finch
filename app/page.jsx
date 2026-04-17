@@ -1,14 +1,15 @@
 import { createServerSupabase } from '../src/lib/supabase-server';
 import HomePageClient from './HomePageClient';
 
-export const dynamic = 'force-dynamic';
+// 홈은 60초 ISR — admin 저장 후 최대 60초까지 반영 지연
+export const revalidate = 60;
 
 export default async function HomePage() {
   const supabase = createServerSupabase();
-  // display_order 기준 정렬, 같은 순서면 최신 우선
+  // 홈 카드에 필요한 컬럼만 — full_content 등 본문 필드는 제외해 RSC 페이로드 축소
   const { data: allArticles } = await supabase
     .from('articles')
-    .select('*')
+    .select('id,title,excerpt,thumbnail,author,category,created_at,display_order')
     .eq('is_published', true)
     .order('display_order', { ascending: true })
     .order('created_at', { ascending: false });
