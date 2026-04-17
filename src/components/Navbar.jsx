@@ -17,6 +17,7 @@ export default function Navbar({ user, onLoginClick, onLogout, isAdmin, onDelete
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [theme, setTheme] = useState('light');
+  const [activeOnHome, setActiveOnHome] = useState('magazine');
   const dropdownRef = useRef(null);
   const pathname = usePathname();
   const router = useRouter();
@@ -53,12 +54,13 @@ export default function Navbar({ user, onLoginClick, onLogout, isAdmin, onDelete
   const handleMenuClick = (item) => {
     if (item.id === 'home' || item.id === 'games' || item.id === 'magazine') {
       if (pathname === '/') {
-        // 홈 페이지에서는 스크롤
+        // 홈 페이지에서는 스크롤 + 액티브 바를 즉시 해당 섹션으로
         const sectionId = item.id === 'home' ? 'hero-game' : item.id === 'games' ? 'game-carousel' : 'magazine-section';
         const el = document.getElementById(sectionId);
         if (el) {
           const navbarHeight = 60;
           const top = el.getBoundingClientRect().top + window.scrollY - navbarHeight;
+          setActiveOnHome(item.id);
           window.scrollTo({ top, behavior: 'smooth' });
         }
         return;
@@ -67,10 +69,34 @@ export default function Navbar({ user, onLoginClick, onLogout, isAdmin, onDelete
     router.push(item.href);
   };
 
+  // 홈에서 현재 보이는 섹션을 감지해 활성 메뉴 결정
+  useEffect(() => {
+    if (pathname !== '/') return;
+    const sectionMap = {
+      'magazine-section': 'magazine',
+      'hero-game': 'home',
+      'game-carousel': 'games',
+    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActiveOnHome(sectionMap[visible.target.id]);
+      },
+      { rootMargin: '-40% 0px -40% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] }
+    );
+    Object.keys(sectionMap).forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, [pathname]);
+
   const getActiveSection = () => {
     if (pathname === '/about') return 'about';
     if (pathname === '/admin') return 'admin';
-    if (pathname === '/') return 'home';
+    if (pathname === '/') return activeOnHome;
     return '';
   };
 
