@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState, useCallback, useEffect } from 'react';
+import SmartImage from './SmartImage';
 import { supabase } from '../lib/supabase';
 
 // ═══════════════════════════════════════════════
@@ -8,79 +9,51 @@ import { supabase } from '../lib/supabase';
 // ═══════════════════════════════════════════════
 
 const GAME_BASE_URL = 'https://fly-darwin.vercel.app/';
+const GAME_ORIGIN = new URL(GAME_BASE_URL).origin;
 
-export default function HeroGame({ onScoreChange }) {
+export default function HeroGame() {
   const iframeRef = useRef(null);
   const containerRef = useRef(null);
-  const [gameUrl, setGameUrl] = useState(GAME_BASE_URL);
 
-  // Supabase 세션 토큰을 iframe URL에 전달
+  // Supabase 세션 토큰을 iframe 으로 postMessage 전달.
+  // (URL 쿼리스트링은 브라우저 히스토리·서버 로그에 잔류하므로 회피)
   useEffect(() => {
-    async function passToken() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.access_token) {
-        setGameUrl(GAME_BASE_URL + '?access_token=' + session.access_token + '&refresh_token=' + session.refresh_token);
-      }
+    function sendAuth(session) {
+      const target = iframeRef.current?.contentWindow;
+      if (!target) return;
+      target.postMessage(
+        {
+          type: 'finch-auth',
+          access_token: session?.access_token || null,
+          refresh_token: session?.refresh_token || null,
+        },
+        GAME_ORIGIN,
+      );
     }
-    passToken();
 
+    async function sendCurrentSession() {
+      const { data: { session } } = await supabase.auth.getSession();
+      sendAuth(session);
+    }
+
+    // 게임이 ready 신호를 보내오면 즉시 토큰 전송 (load 타이밍 의존 X)
+    function onMessage(e) {
+      if (e.origin !== GAME_ORIGIN) return;
+      if (e.data?.type === 'flydarwin-ready') sendCurrentSession();
+    }
+    window.addEventListener('message', onMessage);
+
+    // 로그인/로그아웃 이벤트 발생 시 즉시 갱신
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.access_token) {
-        setGameUrl(GAME_BASE_URL + '?access_token=' + session.access_token + '&refresh_token=' + session.refresh_token);
-      } else {
-        setGameUrl(GAME_BASE_URL);
-      }
+      sendAuth(session);
     });
-    return () => subscription.unsubscribe();
-  }, []);
-  const [likes, setLikes] = useState(0);
-  const [dislikes, setDislikes] = useState(0);
-  const [userVote, setUserVote] = useState(null);
 
-  useEffect(() => {
-    setLikes(parseInt(localStorage.getItem('finch_flydarwin_likes') || '0', 10));
-    setDislikes(parseInt(localStorage.getItem('finch_flydarwin_dislikes') || '0', 10));
-    setUserVote(localStorage.getItem('finch_flydarwin_vote') || null);
+    return () => {
+      window.removeEventListener('message', onMessage);
+      subscription.unsubscribe();
+    };
   }, []);
   const [isFullscreen, setIsFullscreen] = useState(false);
-
-  // 좋아요
-  const handleLike = useCallback(() => {
-    if (userVote === 'like') return; // 이미 좋아요
-    let newLikes = likes;
-    let newDislikes = dislikes;
-
-    if (userVote === 'dislike') {
-      newDislikes = Math.max(0, dislikes - 1);
-    }
-    newLikes = likes + 1;
-
-    setLikes(newLikes);
-    setDislikes(newDislikes);
-    setUserVote('like');
-    localStorage.setItem('finch_flydarwin_likes', String(newLikes));
-    localStorage.setItem('finch_flydarwin_dislikes', String(newDislikes));
-    localStorage.setItem('finch_flydarwin_vote', 'like');
-  }, [likes, dislikes, userVote]);
-
-  // 싫어요
-  const handleDislike = useCallback(() => {
-    if (userVote === 'dislike') return;
-    let newLikes = likes;
-    let newDislikes = dislikes;
-
-    if (userVote === 'like') {
-      newLikes = Math.max(0, likes - 1);
-    }
-    newDislikes = dislikes + 1;
-
-    setLikes(newLikes);
-    setDislikes(newDislikes);
-    setUserVote('dislike');
-    localStorage.setItem('finch_flydarwin_likes', String(newLikes));
-    localStorage.setItem('finch_flydarwin_dislikes', String(newDislikes));
-    localStorage.setItem('finch_flydarwin_vote', 'dislike');
-  }, [likes, dislikes, userVote]);
 
   // 전체화면
   const handleFullscreen = useCallback(() => {
@@ -103,20 +76,12 @@ export default function HeroGame({ onScoreChange }) {
     return () => document.removeEventListener('fullscreenchange', onChange);
   }, []);
 
-
-
-  // 숫자 포맷 (1000 → 1K)
-  const formatCount = (n) => {
-    if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
-    return String(n);
-  };
-
   return (
     <section className="hero-game" id="hero-game" ref={containerRef}>
       <div className="hero-game__container">
         <iframe
           ref={iframeRef}
-          src={gameUrl}
+          src={GAME_BASE_URL}
           className="hero-game__iframe"
           title="Fly Darwin"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
@@ -128,7 +93,7 @@ export default function HeroGame({ onScoreChange }) {
       {/* ── 게임 하단 컨트롤 바 ── */}
       <div className="game-bar">
         <div className="game-bar__info">
-          <div className="game-bar__icon"><img src="/images/favicon/favicon-32x32.png" alt="Finch" style={{width:'20px',height:'20px'}} /></div>
+          <div className="game-bar__icon"><SmartImage src="/images/favicon/favicon-32x32.png" alt="Finch" width={20} height={20} /></div>
           <div className="game-bar__text">
             <span className="game-bar__title">Fly Darwin</span>
             <span className="game-bar__maker">제작: Finch Lab</span>

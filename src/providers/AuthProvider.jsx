@@ -2,14 +2,13 @@
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
+import { ADMIN_EMAIL } from '../lib/constants';
 
 const AuthContext = createContext(null);
 
 export function useAuth() {
   return useContext(AuthContext);
 }
-
-const ADMIN_EMAIL = 'sciencegive@gmail.com';
 
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -23,6 +22,7 @@ export default function AuthProvider({ children }) {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         setUser({
+          id: session.user.id,
           email: session.user.email,
           name: session.user.user_metadata?.full_name || session.user.email.split('@')[0],
           avatar: session.user.user_metadata?.avatar_url,
@@ -33,6 +33,7 @@ export default function AuthProvider({ children }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
         setUser({
+          id: session.user.id,
           email: session.user.email,
           name: session.user.user_metadata?.full_name || session.user.email.split('@')[0],
           avatar: session.user.user_metadata?.avatar_url,
@@ -52,10 +53,13 @@ export default function AuthProvider({ children }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  // 게임 iframe에서 로그아웃 메시지 수신
+  // 게임 iframe에서 로그아웃/탈퇴 메시지 수신 (게임 origin 검증)
   useEffect(() => {
+    const GAME_ORIGIN = 'https://fly-darwin.vercel.app';
     function handleMessage(e) {
-      if (e.data && e.data.type === 'flydarwin-logout') {
+      if (e.origin !== GAME_ORIGIN) return;
+      if (!e.data) return;
+      if (e.data.type === 'flydarwin-logout' || e.data.type === 'flydarwin-delete-account') {
         supabase.auth.signOut();
       }
     }
@@ -77,10 +81,8 @@ export default function AuthProvider({ children }) {
   }, []);
 
   const handleAccountDeleted = useCallback(() => {
-    ['scidream_points', 'scidream_level',
-     'finch_flydarwin_likes', 'finch_flydarwin_dislikes', 'finch_flydarwin_vote',
-     'totalCoins', 'flyDarwinShop', 'flyDarwinRankings', 'DAILY_STORAGE_KEY',
-    ].forEach((key) => localStorage.removeItem(key));
+    ['totalCoins', 'flyDarwinShop', 'flyDarwinRankings', 'DAILY_STORAGE_KEY']
+      .forEach((key) => localStorage.removeItem(key));
     supabase.auth.signOut();
     setUser(null);
     setShowDeleteModal(false);

@@ -1,20 +1,11 @@
 'use client';
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import HeroGame from '../src/components/HeroGame';
 import GameCarousel, { GAME_LIST } from '../src/components/GameCarousel';
 import MagazineGrid from '../src/components/MagazineGrid';
 
 export default function HomePageClient({ articles }) {
-  // ── 포인트 / 레벨 ──
-  const [points, setPoints] = useState(0);
-  const [level, setLevel] = useState(1);
-
-  useEffect(() => {
-    setPoints(parseInt(localStorage.getItem('scidream_points') || '0', 10));
-    setLevel(parseInt(localStorage.getItem('scidream_level') || '1', 10));
-  }, []);
-
   // ── 게임 선택 ──
   const [selectedGameId, setSelectedGameId] = useState('cosmic-flight');
   const [tutorialOpen, setTutorialOpen] = useState(false);
@@ -26,20 +17,6 @@ export default function HomePageClient({ articles }) {
   const heroRef = useRef(null);
   const gamesRef = useRef(null);
   const magazineRef = useRef(null);
-
-  // 포인트 → localStorage & 레벨
-  useEffect(() => {
-    localStorage.setItem('scidream_points', String(points));
-    const newLevel = Math.floor(points / 500) + 1;
-    if (newLevel !== level) {
-      setLevel(newLevel);
-      localStorage.setItem('scidream_level', String(newLevel));
-    }
-  }, [points, level]);
-
-  const handleScoreChange = useCallback((score) => {
-    setPoints((prev) => prev + Math.floor(score / 10));
-  }, []);
 
   const handleSelectGame = (id) => {
     setSelectedGameId(id);
@@ -69,7 +46,7 @@ export default function HomePageClient({ articles }) {
       </div>
 
       <div ref={heroRef}>
-        <HeroGame onScoreChange={handleScoreChange} />
+        <HeroGame />
       </div>
 
       <div ref={gamesRef}>
