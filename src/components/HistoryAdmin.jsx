@@ -33,7 +33,6 @@ export default function HistoryAdmin({ onBack }) {
     title: '',
     content: '',
     thumbnail: '',
-    date_original: '',
     is_published: true,
     is_membership: false,
   });
@@ -145,7 +144,6 @@ export default function HistoryAdmin({ onBack }) {
       title: '',
       content: '',
       thumbnail: '',
-      date_original: '',
       is_published: true,
       is_membership: false,
     });
@@ -159,7 +157,6 @@ export default function HistoryAdmin({ onBack }) {
       title: item.title || '',
       content: item.content || '',
       thumbnail: item.thumbnail || '',
-      date_original: item.date_original || '',
       is_published: item.is_published ?? true,
       is_membership: item.is_membership ?? false,
     });
@@ -197,10 +194,6 @@ export default function HistoryAdmin({ onBack }) {
       setError('제목을 입력해주세요.');
       return;
     }
-    if (!formData.date_original) {
-      setError('원문 날짜를 입력해주세요.');
-      return;
-    }
 
     setSaving(true);
     setError('');
@@ -209,7 +202,6 @@ export default function HistoryAdmin({ onBack }) {
       title: formData.title,
       content: formData.content,
       thumbnail: formData.thumbnail,
-      date_original: formData.date_original,
       is_published: formData.is_published,
       is_membership: formData.is_membership,
     };
@@ -272,17 +264,6 @@ export default function HistoryAdmin({ onBack }) {
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               placeholder="예: 슈뢰딩거, 파동방정식으로 양자역학의 새 장을 열다"
             />
-          </div>
-
-          <div className="admin-form__field">
-            <label className="admin-form__label">원문 날짜 *</label>
-            <input
-              className="admin-form__input"
-              type="date"
-              value={formData.date_original}
-              onChange={(e) => setFormData({ ...formData, date_original: e.target.value })}
-            />
-            <span className="admin-form__hint">100년 전 기사의 원문 발행일 (목록 정렬 기준)</span>
           </div>
 
           {/* 썸네일 - 드래그앤드롭 */}

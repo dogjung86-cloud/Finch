@@ -12,9 +12,9 @@ export default async function HistoryPage() {
   const supabase = createServerSupabase();
   const { data: items } = await supabase
     .from('history_science')
-    .select('id,title,thumbnail,date_original,content,source')
+    .select('id,title,thumbnail,date_original,content,source,created_at')
     .eq('is_published', true)
-    .order('date_original', { ascending: false });
+    .order('created_at', { ascending: false });
 
   return <HistoryPageClient items={items || []} />;
 }
