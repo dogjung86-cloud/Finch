@@ -54,5 +54,39 @@ export default async function ArticleRoute({ params }) {
     );
   }
 
-  return <ArticlePageClient article={article} />;
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: article.excerpt || '',
+    image: article.thumbnail ? [article.thumbnail] : undefined,
+    datePublished: article.created_at,
+    dateModified: article.updated_at || article.created_at,
+    author: {
+      '@type': 'Person',
+      name: article.author || 'The Finch',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Finch',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://www.finch.co.kr/images/favicon/favicon-512x512.png',
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://www.finch.co.kr/article/${id}`,
+    },
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ArticlePageClient article={article} />
+    </>
+  );
 }

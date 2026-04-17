@@ -4,14 +4,29 @@ import LayoutShell from '../src/components/LayoutShell';
 
 export const metadata = {
   metadataBase: new URL('https://www.finch.co.kr'),
-  title: 'Finch – Science Games & Magazine',
-  description: 'Finch – 캐주얼 과학 Play Lab과 프리미엄 사이언스 Knowledge Quest가 만나는 곳',
+  title: '과학 매거진 Finch | 과학 게임과 사이언스 아티클',
+  description:
+    '과학을 즐기고, 과학을 읽다. 물리·화학·생물·천문 과학 기사, 100년 전 과학 이야기, 캐주얼 과학 게임까지 — 과학 매거진 Finch.',
+  keywords: [
+    '과학',
+    '과학 매거진',
+    '과학 기사',
+    '과학 게임',
+    '사이언스',
+    '100년 전 과학',
+    '물리',
+    '화학',
+    '생물',
+    '천문',
+    'Finch',
+    '핀치',
+  ],
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: 'Finch – Science Games & Magazine',
-    description: '과학을 즐기고, 과학을 읽다',
+    title: '과학 매거진 Finch | 과학 게임과 사이언스 아티클',
+    description: '과학을 즐기고, 과학을 읽다 — 과학 기사와 과학 게임이 만나는 곳',
     url: 'https://www.finch.co.kr',
     siteName: 'Finch',
     type: 'website',
@@ -19,7 +34,7 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Finch – Science Games & Magazine',
+    title: '과학 매거진 Finch',
     description: '과학을 즐기고, 과학을 읽다',
   },
   verification: {

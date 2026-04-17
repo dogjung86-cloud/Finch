@@ -42,5 +42,39 @@ export default async function HistoryDetailRoute({ params }) {
     );
   }
 
-  return <HistoryDetailClient item={item} />;
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: item.title,
+    image: item.thumbnail ? [item.thumbnail] : undefined,
+    datePublished: item.created_at,
+    dateModified: item.updated_at || item.created_at,
+    author: {
+      '@type': 'Organization',
+      name: 'Finch',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Finch',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://www.finch.co.kr/images/favicon/favicon-512x512.png',
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://www.finch.co.kr/history/${id}`,
+    },
+    articleSection: '100년 전 과학',
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <HistoryDetailClient item={item} />
+    </>
+  );
 }

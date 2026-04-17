@@ -4,8 +4,16 @@ import ArticlesPageClient from './ArticlesPageClient';
 export const revalidate = 60;
 
 export const metadata = {
-  title: '전체 기사 – Finch',
-  description: 'Finch의 모든 과학 기사를 카테고리별로 탐색하세요.',
+  title: '과학 기사 모음 | Finch 과학 매거진',
+  description:
+    '물리·화학·생물·천문 등 카테고리별 최신 과학 기사를 한 곳에서. 쉽고 재미있게 읽는 사이언스 아티클 — 과학 매거진 Finch.',
+  alternates: { canonical: '/articles' },
+  openGraph: {
+    title: '과학 기사 모음 | Finch',
+    description: '카테고리별 최신 과학 기사 – 쉽고 재미있게 읽는 사이언스 아티클',
+    url: 'https://www.finch.co.kr/articles',
+    type: 'website',
+  },
 };
 
 export default async function ArticlesPage() {
