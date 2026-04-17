@@ -8,18 +8,20 @@ const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 import 'react-quill-new/dist/quill.snow.css';
 
 /* ── 이미지 업로드 헬퍼 ── */
+const HISTORY_BUCKET = 'finch-100-years-ago';
+
 async function uploadImage(file, folder = 'history') {
   const fileExt = file.name.split('.').pop();
   const fileName = `${folder}/${Date.now()}_${Math.random().toString(36).slice(2)}.${fileExt}`;
 
   const { error } = await supabase.storage
-    .from('article-thumbnails')
+    .from(HISTORY_BUCKET)
     .upload(fileName, file, { upsert: true });
 
   if (error) throw error;
 
   const { data } = supabase.storage
-    .from('article-thumbnails')
+    .from(HISTORY_BUCKET)
     .getPublicUrl(fileName);
 
   return data.publicUrl;
