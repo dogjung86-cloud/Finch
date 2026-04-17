@@ -34,7 +34,7 @@ export default function RootLayout({ children }) {
         {/* 다크모드 깜빡임 방지 (head에서 <body>가 그려지기 전 테마 결정) */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('finch_theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`,
+            __html: `(function(){try{var t=localStorage.getItem('finch_theme')||'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`,
           }}
         />
         <AuthProvider>

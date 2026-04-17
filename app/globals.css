@@ -155,6 +155,15 @@
   background: linear-gradient(transparent, var(--bg-primary));
 }
 :root[data-theme="dark"] .atlantic-wave-bottom svg path { fill: var(--bg-warm); }
+:root[data-theme="dark"] .kq-section { background: var(--bg-primary); }
+:root[data-theme="dark"] .kq-header__title,
+:root[data-theme="dark"] .atlantic-all-articles__btn { color: var(--text-primary); }
+:root[data-theme="dark"] .atlantic-all-articles__btn { border-color: var(--border-medium); }
+:root[data-theme="dark"] .atlantic-all-articles__btn:hover { background: var(--bg-warm); }
+:root[data-theme="dark"] .atlantic-scroll-hint,
+:root[data-theme="dark"] .atlantic-scroll-hint__text { color: var(--text-secondary); }
+:root[data-theme="dark"] .atlantic-col-left { border-top-color: var(--border-light); border-bottom-color: var(--border-light); }
+:root[data-theme="dark"] .atlantic-col-right { border-top-color: var(--border-light); }
 
 /* ========================================
    다크모드 토글 버튼
