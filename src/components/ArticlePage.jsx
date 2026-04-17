@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import SmartImage from './SmartImage';
 import { supabase } from '../lib/supabase';
+import { ADMIN_EMAIL } from '../lib/constants';
 
 // 기사 본문 렌더링 직전 줄바꿈 보정.
 const fixLineBreaks = (html) =>
@@ -26,8 +28,6 @@ function timeAgo(dateStr) {
   if (diff < 31536000) return `${Math.floor(diff / 2592000)}개월 전`;
   return `${Math.floor(diff / 31536000)}년 전`;
 }
-
-const ADMIN_EMAIL = 'sciencegive@gmail.com';
 
 export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
   const [comments, setComments] = useState([]);
@@ -261,7 +261,7 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
                 <div className="comment-input">
                   <div className="comment-input__avatar">
                     {user.avatar ? (
-                      <img src={user.avatar} alt={user.name} />
+                      <SmartImage src={user.avatar} alt={user.name} width={40} height={40} />
                     ) : (
                       user.name.charAt(0).toUpperCase()
                     )}
@@ -318,7 +318,7 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
                     <div key={c.id} className="comment-item">
                       <div className="comment-item__avatar">
                         {c.user_avatar ? (
-                          <img src={c.user_avatar} alt={c.user_name} />
+                          <SmartImage src={c.user_avatar} alt={c.user_name} width={40} height={40} />
                         ) : (
                           c.user_name.charAt(0).toUpperCase()
                         )}

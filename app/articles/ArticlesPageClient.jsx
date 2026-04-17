@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import SmartImage from '../../src/components/SmartImage';
 
 const CATEGORIES = [
   { id: 'all', label: '전체' },
@@ -61,7 +62,16 @@ export default function ArticlesPageClient({ articles }) {
             {filtered.map((a) => (
               <Link key={a.id} href={`/article/${a.id}`} className="articles-page__card">
                 <div className="articles-page__card-img">
-                  <img src={a.thumbnail} alt={a.title} referrerPolicy="no-referrer" />
+                  {a.thumbnail && (
+                    <SmartImage
+                      src={a.thumbnail}
+                      alt={a.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 360px"
+                      style={{ objectFit: 'cover' }}
+                      referrerPolicy="no-referrer"
+                    />
+                  )}
                 </div>
                 <div className="articles-page__card-body">
                   {a.category && (

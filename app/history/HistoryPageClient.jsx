@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import SmartImage from '../../src/components/SmartImage';
 
 
 export default function HistoryPageClient({ items }) {
@@ -24,7 +25,13 @@ export default function HistoryPageClient({ items }) {
               <Link key={item.id} href={`/history/${item.id}`} className="history-card">
                 {item.thumbnail && (
                   <div className="history-card__img">
-                    <img src={item.thumbnail} alt={item.title} />
+                    <SmartImage
+                      src={item.thumbnail}
+                      alt={item.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 160px"
+                      style={{ objectFit: 'cover' }}
+                    />
                   </div>
                 )}
                 <div className="history-card__body">

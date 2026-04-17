@@ -60,6 +60,129 @@
   --content-max: 1200px;
 }
 
+/* ========================================
+   다크모드 — 따뜻한 잉크-블랙 톤
+   ======================================== */
+:root[data-theme="dark"] {
+  --bg-primary: #1a1816;
+  --bg-secondary: #232120;
+  --bg-warm: #2a2724;
+  --bg-card: #232120;
+  --border-light: #3a3633;
+  --border-medium: #4a4541;
+
+  --accent: #e74c3c;
+  --accent-hover: #ff6b5a;
+  --accent-light: rgba(231, 76, 60, 0.15);
+  --accent-blue: #5b8dc6;
+  --accent-blue-light: rgba(91, 141, 198, 0.15);
+
+  --text-primary: #f0ece6;
+  --text-secondary: #b8b3ab;
+  --text-muted: #8a847b;
+  --text-light: #6a655d;
+  --text-link: #7ab0e8;
+
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.25);
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.35);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.45);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.55);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.35), 0 1px 2px rgba(0,0,0,0.25);
+}
+
+/* 다크모드 — 본문/카드 안 색상 직참조한 곳 보정 */
+:root[data-theme="dark"] .atlantic-hero__title,
+:root[data-theme="dark"] .atlantic-md-card__title,
+:root[data-theme="dark"] .atlantic-sm-card__title,
+:root[data-theme="dark"] .article-page__body h1,
+:root[data-theme="dark"] .article-page__body h2,
+:root[data-theme="dark"] .article-page__body h3 { color: var(--text-primary); }
+:root[data-theme="dark"] .atlantic-hero__excerpt,
+:root[data-theme="dark"] .atlantic-hero__author,
+:root[data-theme="dark"] .footer__business p,
+:root[data-theme="dark"] .navbar__mobile-item { color: var(--text-secondary); }
+:root[data-theme="dark"] .article-page__body p { color: var(--text-secondary); }
+:root[data-theme="dark"] .article-page__body p.ql-align-center > em { color: var(--text-muted); }
+:root[data-theme="dark"] .navbar__mobile-menu { background: var(--bg-secondary); }
+:root[data-theme="dark"] .navbar__mobile-item:hover { background: rgba(255,255,255,0.04); }
+:root[data-theme="dark"] .vintage-banner,
+:root[data-theme="dark"] .atlantic-yt-link { background: var(--bg-warm); border-color: var(--border-light); }
+:root[data-theme="dark"] .vintage-banner:hover { background: var(--bg-card); border-color: var(--border-medium); box-shadow: var(--shadow-sm); }
+:root[data-theme="dark"] .vintage-banner__title { color: var(--text-primary); }
+:root[data-theme="dark"] .vintage-banner__label,
+:root[data-theme="dark"] .vintage-banner__cta { color: var(--text-secondary); }
+:root[data-theme="dark"] .vintage-banner__divider { color: var(--text-muted); }
+:root[data-theme="dark"] .atlantic-yt-link__name { color: var(--text-primary); }
+:root[data-theme="dark"] .atlantic-yt-link__sub,
+:root[data-theme="dark"] .atlantic-md-card__author,
+:root[data-theme="dark"] .atlantic-sm-card__author,
+:root[data-theme="dark"] .articles-page__card-meta,
+:root[data-theme="dark"] .articles-page__card-excerpt,
+:root[data-theme="dark"] .articles-page__sub,
+:root[data-theme="dark"] .kq-header__sub { color: var(--text-muted); }
+:root[data-theme="dark"] .articles-page__title,
+:root[data-theme="dark"] .articles-page__card-title { color: var(--text-primary); }
+:root[data-theme="dark"] .articles-page__tab { color: var(--text-secondary); }
+:root[data-theme="dark"] .articles-page__tab--active { color: var(--accent); }
+:root[data-theme="dark"] .article-page__title,
+:root[data-theme="dark"] .history-card__title { color: var(--text-primary); }
+:root[data-theme="dark"] .article-page__author,
+:root[data-theme="dark"] .article-page__date,
+:root[data-theme="dark"] .history-card__excerpt,
+:root[data-theme="dark"] .history-card__source { color: var(--text-muted); }
+:root[data-theme="dark"] .navbar { background: var(--bg-secondary); border-color: var(--border-light); }
+:root[data-theme="dark"] .navbar__menu-item,
+:root[data-theme="dark"] .navbar__user-name { color: var(--text-secondary); }
+:root[data-theme="dark"] .navbar__menu-item--active,
+:root[data-theme="dark"] .navbar__logo-text { color: var(--text-primary); }
+:root[data-theme="dark"] .navbar__menu-item:hover { background: var(--bg-warm); color: var(--text-primary); }
+:root[data-theme="dark"] .navbar__dropdown { background: var(--bg-secondary); border-color: var(--border-light); box-shadow: var(--shadow-md); }
+:root[data-theme="dark"] .navbar__dropdown-item { color: var(--text-secondary); }
+:root[data-theme="dark"] .navbar__dropdown-item:hover { background: var(--bg-warm); color: var(--text-primary); }
+:root[data-theme="dark"] .footer { background: var(--bg-secondary); border-color: var(--border-light); }
+:root[data-theme="dark"] .footer__brand-name,
+:root[data-theme="dark"] .footer__copyright { color: var(--text-primary); }
+:root[data-theme="dark"] .footer__link { color: var(--text-secondary); }
+:root[data-theme="dark"] .comments-section__count,
+:root[data-theme="dark"] .comment-item__author { color: var(--text-primary); }
+:root[data-theme="dark"] .comment-item__text { color: var(--text-secondary); }
+:root[data-theme="dark"] .comment-item__date,
+:root[data-theme="dark"] .comments-list__loading,
+:root[data-theme="dark"] .comments-list__empty { color: var(--text-muted); }
+:root[data-theme="dark"] .comment-input__textarea,
+:root[data-theme="dark"] .comment-edit__textarea { color: var(--text-primary); background: transparent; }
+:root[data-theme="dark"] .article-page__body--preview::after {
+  background: linear-gradient(transparent, var(--bg-primary));
+}
+:root[data-theme="dark"] .atlantic-wave-bottom svg path { fill: var(--bg-warm); }
+
+/* ========================================
+   다크모드 토글 버튼
+   ======================================== */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+  padding: 0;
+}
+.theme-toggle:hover {
+  background: var(--bg-warm);
+  color: var(--text-primary);
+  border-color: var(--border-medium);
+}
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
 /* ---- Reset ---- */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -1093,6 +1216,7 @@ img {
 }
 
 .atlantic-md-card__img {
+  position: relative;
   width: 100%;
   aspect-ratio: 16/9;
   border-radius: 4px;
@@ -1139,6 +1263,7 @@ img {
 }
 
 .atlantic-hero__img {
+  position: relative;
   width: 100%;
   aspect-ratio: 16/9;
   border-radius: 4px;
@@ -1155,12 +1280,13 @@ img {
 }
 
 .atlantic-hero__title {
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 22px;
-  font-weight: 800;
-  line-height: 1.35;
-  margin-top: 14px;
-  color: #1a1a1a;
+  font-family: 'Noto Serif KR', 'Playfair Display', serif;
+  font-size: clamp(24px, 3.4vw, 38px);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin-top: 16px;
+  color: var(--text-primary);
   word-break: keep-all;
   transition: color 0.2s;
 }
@@ -1169,13 +1295,13 @@ img {
 }
 
 .atlantic-hero__excerpt {
-  font-size: 14px;
+  font-size: clamp(14px, 1.4vw, 16px);
   line-height: 1.7;
-  color: #666;
-  margin-top: 8px;
+  color: var(--text-secondary);
+  margin-top: 10px;
   word-break: keep-all;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -1711,6 +1837,7 @@ img {
 }
 
 .articles-page__card-img {
+  position: relative;
   width: 100%;
   aspect-ratio: 16/9;
   overflow: hidden;
@@ -1884,6 +2011,7 @@ img {
 }
 
 .history-card__img {
+  position: relative;
   width: 160px;
   aspect-ratio: 16/9;
   border-radius: 4px;
@@ -3871,14 +3999,26 @@ img {
 /* ── Atlantic 반응형 ── */
 @media (max-width: 1024px) {
   .atlantic-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-  .atlantic-col-left {
-    display: none;
+    grid-template-columns: 1fr;
   }
   .atlantic-hero {
+    order: 1;
+    padding: 24px 0;
+  }
+  .atlantic-col-left {
+    order: 2;
+    flex-direction: row;
+    gap: 20px;
     border-right: none;
-    padding-right: 20px;
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+    padding: 24px 0;
+  }
+  .atlantic-md-card { flex: 1; min-width: 0; }
+  .atlantic-col-right {
+    order: 3;
+    border-left: none;
+    padding: 24px 0;
   }
   .about-features { grid-template-columns: 1fr; }
 }

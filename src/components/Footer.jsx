@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import SmartImage from './SmartImage';
 
 export default function Footer() {
   return (
@@ -9,7 +10,7 @@ export default function Footer() {
         {/* 상단: 링크 */}
         <div className="footer__top">
           <div className="footer__brand">
-            <img className="footer__logo" src="/images/favicon/favicon-32x32.png" alt="Finch" style={{width:'20px',height:'20px'}} />
+            <SmartImage className="footer__logo" src="/images/favicon/favicon-32x32.png" alt="Finch" width={20} height={20} />
             <span className="footer__brand-name">Finch</span>
           </div>
           <ul className="footer__links">

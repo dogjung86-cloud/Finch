@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import SmartImage from './SmartImage';
 import { usePathname, useRouter } from 'next/navigation';
 
 const MENU_ITEMS = [
@@ -15,9 +16,21 @@ export default function Navbar({ user, onLoginClick, onLogout, isAdmin, onDelete
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [theme, setTheme] = useState('light');
   const dropdownRef = useRef(null);
   const pathname = usePathname();
   const router = useRouter();
+
+  useEffect(() => {
+    setTheme(document.documentElement.getAttribute('data-theme') || 'light');
+  }, []);
+
+  const toggleTheme = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('finch_theme', next); } catch {}
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -66,7 +79,14 @@ export default function Navbar({ user, onLoginClick, onLogout, isAdmin, onDelete
   return (
     <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
       <Link href="/" className="navbar__logo">
-        <img className="navbar__logo-icon-img" src="/images/favicon/favicon-32x32.png" alt="Finch" />
+        <SmartImage
+          className="navbar__logo-icon-img"
+          src="/images/favicon/favicon-32x32.png"
+          alt="Finch"
+          width={28}
+          height={28}
+          priority
+        />
         <span className="navbar__logo-text">Finch</span>
       </Link>
 
@@ -104,11 +124,28 @@ export default function Navbar({ user, onLoginClick, onLogout, isAdmin, onDelete
       )}
 
       <div className="navbar__right">
+        <button
+          className="theme-toggle"
+          onClick={toggleTheme}
+          aria-label={theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
+          title={theme === 'dark' ? '라이트 모드' : '다크 모드'}
+        >
+          {theme === 'dark' ? (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          )}
+        </button>
         {user ? (
           <div className="navbar__user-area" ref={dropdownRef}>
             <div className="navbar__user-toggle" onClick={() => setMenuOpen(!menuOpen)}>
               {user.avatar ? (
-                <img className="navbar__user-avatar-img" src={user.avatar} alt={user.name} />
+                <SmartImage className="navbar__user-avatar-img" src={user.avatar} alt={user.name} width={30} height={30} />
               ) : (
                 <div className="navbar__user-avatar">
                   {user.name.charAt(0).toUpperCase()}

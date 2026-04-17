@@ -15,7 +15,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/images/favicon/favicon.ico" sizes="any" />
         <link rel="icon" type="image/png" href="/images/favicon/favicon-32x32.png" sizes="32x32" />
@@ -31,6 +31,12 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
+        {/* 다크모드 깜빡임 방지 (head에서 <body>가 그려지기 전 테마 결정) */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('finch_theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`,
+          }}
+        />
         <AuthProvider>
           <LayoutShell>
             {children}

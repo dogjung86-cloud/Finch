@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState, useCallback, useEffect } from 'react';
+import SmartImage from './SmartImage';
 
 // ═══════════════════════════════════════════════
 //  게임 목록 데이터
@@ -174,7 +175,14 @@ export default function GameCarousel({ selectedGameId, onSelectGame, isGamePlayi
               {/* 배경 */}
               <div className="game-card__bg">
                 {game.thumbnail ? (
-                  <img src={game.thumbnail} alt={game.title} className="game-card__thumb" />
+                  <SmartImage
+                    src={game.thumbnail}
+                    alt={game.title}
+                    fill
+                    sizes="(max-width: 768px) 50vw, 240px"
+                    style={{ objectFit: 'cover' }}
+                    className="game-card__thumb"
+                  />
                 ) : (
                   <span className="game-card__icon">{game.icon}</span>
                 )}

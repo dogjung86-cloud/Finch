@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import SmartImage from './SmartImage';
 
 /* ── 폴백 기사 데이터 (DB가 비어있을 때 사용) ── */
 const FALLBACK_ARTICLES = [
@@ -109,7 +110,16 @@ export default function MagazineGrid({ articles: initialArticles }) {
           {leftArticles.map((a) => (
             <Link key={a.id} href={`/article/${a.id}`} className="atlantic-md-card">
               <div className="atlantic-md-card__img">
-                <img src={a.thumbnail} alt={a.title} referrerPolicy="no-referrer" />
+                {a.thumbnail && (
+                  <SmartImage
+                    src={a.thumbnail}
+                    alt={a.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 280px"
+                    style={{ objectFit: 'cover' }}
+                    referrerPolicy="no-referrer"
+                  />
+                )}
               </div>
               <h3 className="atlantic-md-card__title">{a.title}</h3>
               <span className="atlantic-md-card__author">{a.author} · {formatDate(a.created_at)}</span>
@@ -121,7 +131,17 @@ export default function MagazineGrid({ articles: initialArticles }) {
         {heroArticle && (
           <Link href={`/article/${heroArticle.id}`} className="atlantic-hero">
             <div className="atlantic-hero__img">
-              <img src={heroArticle.thumbnail} alt={heroArticle.title} referrerPolicy="no-referrer" />
+              {heroArticle.thumbnail && (
+                <SmartImage
+                  src={heroArticle.thumbnail}
+                  alt={heroArticle.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 600px"
+                  style={{ objectFit: 'cover' }}
+                  priority
+                  referrerPolicy="no-referrer"
+                />
+              )}
             </div>
             <h1 className="atlantic-hero__title">{heroArticle.title}</h1>
             <p className="atlantic-hero__excerpt">{heroArticle.excerpt}</p>
@@ -133,7 +153,17 @@ export default function MagazineGrid({ articles: initialArticles }) {
         <aside className="atlantic-col-right">
           {rightArticles.map((a) => (
             <Link key={a.id} href={`/article/${a.id}`} className="atlantic-sm-card">
-              <img className="atlantic-sm-card__img" src={a.thumbnail} alt={a.title} referrerPolicy="no-referrer" />
+              {a.thumbnail && (
+                <SmartImage
+                  className="atlantic-sm-card__img"
+                  src={a.thumbnail}
+                  alt={a.title}
+                  width={110}
+                  height={62}
+                  sizes="110px"
+                  referrerPolicy="no-referrer"
+                />
+              )}
               <div className="atlantic-sm-card__body">
                 <h4 className="atlantic-sm-card__title">{a.title}</h4>
                 <span className="atlantic-sm-card__author">{a.author} · {formatDate(a.created_at)}</span>
@@ -148,10 +178,12 @@ export default function MagazineGrid({ articles: initialArticles }) {
             rel="noopener noreferrer"
             className="atlantic-yt-link"
           >
-            <img
+            <SmartImage
               src="https://yt3.ggpht.com/ytc/AIdro_kPatsMrZvvlPanQbTpBowpmbg-1BaDwtIf_2bCBchWpBk=s176-c-k-c0x00ffffff-no-rj"
               alt="과학드림"
               className="atlantic-yt-link__logo"
+              width={36}
+              height={36}
             />
             <div className="atlantic-yt-link__body">
               <span className="atlantic-yt-link__name">과학드림</span>
