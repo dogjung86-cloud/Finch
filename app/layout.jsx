@@ -38,8 +38,10 @@ export const metadata = {
     description: '과학을 즐기고, 과학을 읽다',
   },
   verification: {
-    // Google Search Console에서 받은 코드를 여기에 붙여넣으세요
-    // google: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    // Google Search Console: DNS TXT 방식으로 확인 완료 (메타태그 불필요)
+    other: {
+      'naver-site-verification': '36d8fa46c44b3c514db652b2f7cd7b28cc85f07b',
+    },
   },
 };
 
