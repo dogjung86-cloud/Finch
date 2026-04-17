@@ -31,11 +31,20 @@ export const metadata = {
     siteName: 'Finch',
     type: 'website',
     locale: 'ko_KR',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: '과학 매거진 Finch',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: '과학 매거진 Finch',
     description: '과학을 즐기고, 과학을 읽다',
+    images: ['/og-image.jpg'],
   },
   verification: {
     // Google Search Console: DNS TXT 방식으로 확인 완료 (메타태그 불필요)
