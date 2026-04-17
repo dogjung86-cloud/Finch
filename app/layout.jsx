@@ -3,13 +3,28 @@ import AuthProvider from '../src/providers/AuthProvider';
 import LayoutShell from '../src/components/LayoutShell';
 
 export const metadata = {
+  metadataBase: new URL('https://www.finch.co.kr'),
   title: 'Finch – Science Games & Magazine',
   description: 'Finch – 캐주얼 과학 Play Lab과 프리미엄 사이언스 Knowledge Quest가 만나는 곳',
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     title: 'Finch – Science Games & Magazine',
     description: '과학을 즐기고, 과학을 읽다',
+    url: 'https://www.finch.co.kr',
     siteName: 'Finch',
     type: 'website',
+    locale: 'ko_KR',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Finch – Science Games & Magazine',
+    description: '과학을 즐기고, 과학을 읽다',
+  },
+  verification: {
+    // Google Search Console에서 받은 코드를 여기에 붙여넣으세요
+    // google: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
   },
 };
 
