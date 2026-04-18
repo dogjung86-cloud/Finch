@@ -170,15 +170,17 @@ export default function MagazineGrid({ articles: initialArticles, latestHistory 
           {rightArticles.map((a) => (
             <Link key={a.id} href={`/article/${a.id}`} className="atlantic-sm-card">
               {a.thumbnail && (
-                <SmartImage
-                  className="atlantic-sm-card__img"
-                  src={a.thumbnail}
-                  alt={a.title}
-                  width={320}
-                  height={180}
-                  sizes="(max-width: 900px) 100vw, 280px"
-                  referrerPolicy="no-referrer"
-                />
+                <div className="atlantic-sm-card__img-wrap">
+                  <SmartImage
+                    className="atlantic-sm-card__img"
+                    src={a.thumbnail}
+                    alt={a.title}
+                    width={320}
+                    height={180}
+                    sizes="(max-width: 900px) 100vw, 280px"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
               )}
               <div className="atlantic-sm-card__body">
                 <h4 className="atlantic-sm-card__title">{a.title}</h4>
