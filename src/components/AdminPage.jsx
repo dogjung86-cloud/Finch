@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
+import { revalidatePaths } from '../lib/revalidate';
 import dynamic from 'next/dynamic';
 
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
@@ -260,6 +261,10 @@ export default function AdminPage({ onBack }) {
         // fallback: 전체 다시 조회
         fetchArticles();
       }
+      const savedId = saved?.id ?? (editing !== 'new' ? editing.id : null);
+      const paths = ['/', '/articles'];
+      if (savedId) paths.push(`/article/${savedId}`);
+      revalidatePaths(paths);
       resetForm();
     }
     setSaving(false);
@@ -274,6 +279,7 @@ export default function AdminPage({ onBack }) {
       setError('삭제 실패: ' + error.message);
     } else {
       setArticles(prev => prev.filter(a => a.id !== id));
+      revalidatePaths(['/', '/articles', `/article/${id}`]);
     }
   };
 
@@ -282,12 +288,14 @@ export default function AdminPage({ onBack }) {
     if (selected.length === 0) return;
     if (!confirm(`선택한 ${selected.length}개의 기사를 삭제하시겠습니까?`)) return;
 
-    const { error } = await supabase.from('articles').delete().in('id', selected);
+    const idsToDelete = [...selected];
+    const { error } = await supabase.from('articles').delete().in('id', idsToDelete);
     if (error) {
       setError('일괄 삭제 실패: ' + error.message);
     } else {
-      setArticles((prev) => prev.filter((a) => !selected.includes(a.id)));
+      setArticles((prev) => prev.filter((a) => !idsToDelete.includes(a.id)));
       setSelected([]);
+      revalidatePaths(['/', '/articles', ...idsToDelete.map((id) => `/article/${id}`)]);
     }
   };
 

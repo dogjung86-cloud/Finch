@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
+import { revalidatePaths } from '../lib/revalidate';
 import dynamic from 'next/dynamic';
 
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
@@ -222,6 +223,10 @@ export default function HistoryAdmin({ onBack }) {
     if (result.error) {
       setError('저장 실패: ' + result.error.message);
     } else {
+      const savedId = result.data?.[0]?.id ?? (editing !== 'new' ? editing.id : null);
+      const paths = ['/', '/history'];
+      if (savedId) paths.push(`/history/${savedId}`);
+      revalidatePaths(paths);
       fetchItems();
       resetForm();
     }
@@ -236,6 +241,7 @@ export default function HistoryAdmin({ onBack }) {
       setError('삭제 실패: ' + error.message);
     } else {
       setItems((prev) => prev.filter((i) => i.id !== id));
+      revalidatePaths(['/', '/history', `/history/${id}`]);
     }
   };
 
