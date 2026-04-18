@@ -174,9 +174,9 @@ export default function MagazineGrid({ articles: initialArticles, latestHistory 
                   className="atlantic-sm-card__img"
                   src={a.thumbnail}
                   alt={a.title}
-                  width={110}
-                  height={62}
-                  sizes="110px"
+                  width={320}
+                  height={180}
+                  sizes="(max-width: 900px) 100vw, 280px"
                   referrerPolicy="no-referrer"
                 />
               )}
