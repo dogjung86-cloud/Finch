@@ -223,7 +223,7 @@ export default function AdminPage({ onBack }) {
       title: formData.title,
       excerpt: formData.excerpt,
       full_content: formData.full_content,
-      author: formData.author,
+      author: 'The Finch',
       category: formData.category,
       thumbnail: formData.thumbnail,
       display_order: formData.display_order,
@@ -387,15 +387,6 @@ export default function AdminPage({ onBack }) {
                 onChange={(e) =>
                   setFormData({ ...formData, display_order: parseInt(e.target.value) || 0 })
                 }
-              />
-            </div>
-            <div className="admin-form__field">
-              <label className="admin-form__label">작성자</label>
-              <input
-                className="admin-form__input"
-                type="text"
-                value={formData.author}
-                onChange={(e) => setFormData({ ...formData, author: e.target.value })}
               />
             </div>
           </div>
