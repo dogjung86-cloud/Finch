@@ -4931,9 +4931,9 @@ button.vintage-banner__cta:hover {
 
 .history-home__card-title {
   font-family: 'Noto Serif KR', Georgia, serif;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 700;
-  line-height: 1.4;
+  line-height: 1.35;
   color: #2d2518;
   margin: 0;
   word-break: keep-all;
@@ -4994,6 +4994,7 @@ button.vintage-banner__cta:hover {
   .history-home__grid { grid-template-columns: 1fr; gap: 28px; }
   .history-home__header { margin-bottom: 32px; }
   .history-home__title { font-size: 26px; }
+  .history-home__card-title { font-size: 20px; }
   .history-home__footer { margin-top: 32px; }
 }
 
