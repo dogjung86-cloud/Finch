@@ -4869,11 +4869,11 @@ button.vintage-banner__cta:hover {
 
 .history-home__title {
   font-family: 'Playfair Display', 'Noto Serif KR', Georgia, serif;
-  font-size: 36px;
+  font-size: 52px;
   font-weight: 700;
   font-style: italic;
   color: #3d3322;
-  margin: 0 0 10px;
+  margin: 0 0 14px;
   letter-spacing: -0.01em;
 }
 :root[data-theme="dark"] .history-home__title { color: var(--text-primary); }
@@ -4987,13 +4987,13 @@ button.vintage-banner__cta:hover {
 
 @media (max-width: 900px) {
   .history-home__grid { grid-template-columns: repeat(2, 1fr); gap: 28px 20px; }
-  .history-home__title { font-size: 30px; }
+  .history-home__title { font-size: 42px; }
 }
 @media (max-width: 600px) {
   .history-home { padding: 56px 16px 44px; }
   .history-home__grid { grid-template-columns: 1fr; gap: 28px; }
   .history-home__header { margin-bottom: 32px; }
-  .history-home__title { font-size: 26px; }
+  .history-home__title { font-size: 34px; }
   .history-home__card-title { font-size: 20px; }
   .history-home__footer { margin-top: 32px; }
 }

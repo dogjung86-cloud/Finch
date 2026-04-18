@@ -12,7 +12,7 @@ export default function HistoryListSection({ items }) {
       <div className="history-home__inner">
         <header className="history-home__header">
           <h2 className="history-home__title">100년 전 과학</h2>
-          <p className="history-home__sub">옛날 옛적 과학사 이야기</p>
+          <p className="history-home__sub">과거의 과학 이야기를 되짚어봅니다</p>
         </header>
 
         <div className="history-home__grid">
