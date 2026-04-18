@@ -4816,3 +4816,256 @@ img {
   .admin-editor-wrap .ql-container { min-height: 250px; }
   .admin-editor-wrap .ql-editor { min-height: 250px; padding: 12px; }
 }
+
+/* ──────────────────────────────────────────────
+ * 빈티지 배너: Link/button 태그 리셋
+ * ────────────────────────────────────────────── */
+.vintage-banner__title {
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.vintage-banner__title:hover {
+  color: #2d2518;
+  text-decoration: underline;
+  text-decoration-color: #b8a88a;
+  text-underline-offset: 3px;
+}
+button.vintage-banner__cta {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+button.vintage-banner__cta:hover {
+  color: #5a4a30;
+}
+
+/* ──────────────────────────────────────────────
+ * 홈 하단 "100년 전 과학" 섹션
+ * ────────────────────────────────────────────── */
+.history-home {
+  background: linear-gradient(180deg, #f4efe5 0%, #efe8d9 100%);
+  padding: 80px 20px 60px;
+  border-top: 1px solid #e5dcc6;
+  border-bottom: 1px solid #e5dcc6;
+}
+:root[data-theme="dark"] .history-home {
+  background: linear-gradient(180deg, var(--bg-warm) 0%, var(--bg-primary) 100%);
+  border-top-color: var(--border-medium);
+  border-bottom-color: var(--border-medium);
+}
+
+.history-home__inner {
+  max-width: var(--content-max);
+  margin: 0 auto;
+}
+
+.history-home__header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.history-home__title {
+  font-family: 'Playfair Display', 'Noto Serif KR', Georgia, serif;
+  font-size: 36px;
+  font-weight: 700;
+  font-style: italic;
+  color: #3d3322;
+  margin: 0 0 10px;
+  letter-spacing: -0.01em;
+}
+:root[data-theme="dark"] .history-home__title { color: var(--text-primary); }
+
+.history-home__sub {
+  font-family: 'Noto Serif KR', Georgia, serif;
+  font-size: 15px;
+  color: #8b7750;
+  margin: 0;
+}
+:root[data-theme="dark"] .history-home__sub { color: var(--text-secondary); }
+
+.history-home__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 36px 28px;
+}
+
+.history-home__card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.25s ease;
+}
+.history-home__card:hover {
+  transform: translateY(-3px);
+}
+
+.history-home__card-img {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #e8e0cd;
+  border: 1px solid #d9cfb6;
+  border-radius: 2px;
+}
+.history-home__card-img :global(img),
+.history-home__card-img img {
+  filter: grayscale(0.25) sepia(0.15);
+  transition: filter 0.35s ease, transform 0.45s ease;
+}
+.history-home__card:hover .history-home__card-img img {
+  filter: grayscale(0) sepia(0);
+  transform: scale(1.03);
+}
+
+.history-home__card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.history-home__card-title {
+  font-family: 'Noto Serif KR', Georgia, serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #2d2518;
+  margin: 0;
+  word-break: keep-all;
+}
+:root[data-theme="dark"] .history-home__card-title { color: var(--text-primary); }
+
+.history-home__card-excerpt {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #5d5240;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+:root[data-theme="dark"] .history-home__card-excerpt { color: var(--text-secondary); }
+
+.history-home__footer {
+  text-align: center;
+  margin-top: 48px;
+}
+
+.history-home__all {
+  display: inline-block;
+  padding: 12px 28px;
+  font-family: 'Noto Serif KR', Georgia, serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a3f2f;
+  background: transparent;
+  border: 1px solid #b8a88a;
+  border-radius: 2px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.history-home__all:hover {
+  background: #4a3f2f;
+  color: #f4efe5;
+  border-color: #4a3f2f;
+}
+:root[data-theme="dark"] .history-home__all {
+  color: var(--text-primary);
+  border-color: var(--border-medium);
+}
+:root[data-theme="dark"] .history-home__all:hover {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+@media (max-width: 900px) {
+  .history-home__grid { grid-template-columns: repeat(2, 1fr); gap: 28px 20px; }
+  .history-home__title { font-size: 30px; }
+}
+@media (max-width: 600px) {
+  .history-home { padding: 56px 16px 44px; }
+  .history-home__grid { grid-template-columns: 1fr; gap: 28px; }
+  .history-home__header { margin-bottom: 32px; }
+  .history-home__title { font-size: 26px; }
+  .history-home__footer { margin-top: 32px; }
+}
+
+/* ──────────────────────────────────────────────
+ * 홈 하단 Play Lab CTA 배너
+ * ────────────────────────────────────────────── */
+.playlab-cta-wrap {
+  max-width: var(--content-max);
+  margin: 48px auto;
+  padding: 0 20px;
+}
+
+.playlab-cta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 22px 28px;
+  background: linear-gradient(135deg, #1a2d5a 0%, #0b1628 100%);
+  border-radius: 10px;
+  text-decoration: none;
+  color: #fff;
+  box-shadow: 0 4px 18px rgba(10, 22, 40, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.playlab-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(10, 22, 40, 0.28);
+}
+
+.playlab-cta__icon {
+  font-size: 32px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.playlab-cta__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.playlab-cta__label {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 13px;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 0.08em;
+  color: #00e5ff;
+  text-transform: uppercase;
+}
+
+.playlab-cta__title {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.playlab-cta__arrow {
+  font-size: 22px;
+  color: #00e5ff;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+.playlab-cta:hover .playlab-cta__arrow {
+  transform: translateX(4px);
+}
+
+@media (max-width: 600px) {
+  .playlab-cta-wrap { margin: 36px auto; padding: 0 16px; }
+  .playlab-cta { padding: 18px 20px; gap: 14px; }
+  .playlab-cta__icon { font-size: 26px; }
+  .playlab-cta__title { font-size: 15px; }
+}

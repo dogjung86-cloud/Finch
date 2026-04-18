@@ -84,11 +84,20 @@ function formatDate(dateStr) {
 
 export default function MagazineGrid({ articles: initialArticles, latestHistory }) {
   const articles = initialArticles && initialArticles.length > 0 ? initialArticles : FALLBACK_ARTICLES;
-  const historyTitle = latestHistory?.title || '슈뢰딩거, 파동방정식으로 양자역학의 새 장을 열다';
 
   const heroArticle = articles[0];
   const leftArticles = articles.slice(1, 3);
   const rightArticles = articles.slice(3, 6);
+
+  const scrollToHistorySection = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const el = document.getElementById('history-section');
+    if (!el) return;
+    const navbarHeight = 60;
+    const top = el.getBoundingClientRect().top + window.scrollY - navbarHeight;
+    window.scrollTo({ top, behavior: 'smooth' });
+  };
 
   return (
     <section className="kq-section" id="magazine-section">
@@ -98,12 +107,18 @@ export default function MagazineGrid({ articles: initialArticles, latestHistory 
       </div>
 
       {/* ── 100년 전 과학 배너 ── */}
-      <Link href="/history" className="vintage-banner">
-        <span className="vintage-banner__label">100년 전 과학은 어땠을까?</span>
-        <span className="vintage-banner__divider">|</span>
-        <span className="vintage-banner__title">{historyTitle}</span>
-        <span className="vintage-banner__cta">더 보기 &rarr;</span>
-      </Link>
+      {latestHistory && (
+        <div className="vintage-banner">
+          <span className="vintage-banner__label">100년 전 과학은 어땠을까?</span>
+          <span className="vintage-banner__divider">|</span>
+          <Link href={`/history/${latestHistory.id}`} className="vintage-banner__title">
+            {latestHistory.title}
+          </Link>
+          <button type="button" className="vintage-banner__cta" onClick={scrollToHistorySection}>
+            더 보기 &rarr;
+          </button>
+        </div>
+      )}
 
       <div className="atlantic-grid">
         {/* 좌측: 중형 썸네일 기사 2개 */}
@@ -198,17 +213,6 @@ export default function MagazineGrid({ articles: initialArticles, latestHistory 
         <Link href="/articles" className="atlantic-all-articles__btn">
           전체 기사 보기
         </Link>
-      </div>
-
-      <div className="atlantic-scroll-hint" onClick={() => {
-        const el = document.getElementById('hero-game');
-        if (el) {
-          const top = el.getBoundingClientRect().top + window.scrollY - 60;
-          window.scrollTo({ top, behavior: 'smooth' });
-        }
-      }}>
-        <span className="atlantic-scroll-hint__text">Play Lab에서 과학 게임 즐기기</span>
-        <span className="atlantic-scroll-hint__arrow">&#x2193;</span>
       </div>
 
       <div className="atlantic-wave-bottom">

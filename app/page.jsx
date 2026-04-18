@@ -16,11 +16,10 @@ export default async function HomePage() {
       .order('created_at', { ascending: false }),
     supabase
       .from('history_science')
-      .select('id,title')
+      .select('id,title,thumbnail,content')
       .eq('is_published', true)
       .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle(),
+      .limit(6),
   ]);
 
   // display_order당 최신 1개만 선택 (새 기사가 기존 기사를 대체)
@@ -31,5 +30,7 @@ export default async function HomePage() {
     return true;
   }).slice(0, 6);
 
-  return <HomePageClient articles={articles} latestHistory={historyRes.data || null} />;
+  const historyItems = historyRes.data || [];
+
+  return <HomePageClient articles={articles} historyItems={historyItems} />;
 }

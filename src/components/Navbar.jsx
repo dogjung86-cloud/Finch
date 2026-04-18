@@ -8,7 +8,7 @@ import { usePathname, useRouter } from 'next/navigation';
 const MENU_ITEMS = [
   { id: 'home', label: '홈', href: '/' },
   { id: 'magazine', label: 'The Finch', href: '/#magazine' },
-  { id: 'games', label: 'Play Lab', href: '/#games' },
+  { id: 'games', label: 'Play Lab', href: '/playlab' },
   { id: 'about', label: 'About', href: '/about' },
 ];
 
@@ -52,19 +52,21 @@ export default function Navbar({ user, onLoginClick, onLogout, isAdmin, onDelete
   }, [menuOpen]);
 
   const handleMenuClick = (item) => {
-    if (item.id === 'home' || item.id === 'games' || item.id === 'magazine') {
-      if (pathname === '/') {
-        // 홈 페이지에서는 스크롤 + 액티브 바를 즉시 해당 섹션으로
-        const sectionId = item.id === 'home' ? 'hero-game' : item.id === 'games' ? 'game-carousel' : 'magazine-section';
-        const el = document.getElementById(sectionId);
-        if (el) {
-          const navbarHeight = 60;
-          const top = el.getBoundingClientRect().top + window.scrollY - navbarHeight;
-          setActiveOnHome(item.id);
-          window.scrollTo({ top, behavior: 'smooth' });
-        }
+    // 홈에서 홈/매거진 탭은 동일 페이지 스크롤
+    if (pathname === '/' && (item.id === 'home' || item.id === 'magazine')) {
+      if (item.id === 'home') {
+        setActiveOnHome('home');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
+      const el = document.getElementById('magazine-section');
+      if (el) {
+        const navbarHeight = 60;
+        const top = el.getBoundingClientRect().top + window.scrollY - navbarHeight;
+        setActiveOnHome('magazine');
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+      return;
     }
     router.push(item.href);
   };
@@ -74,8 +76,7 @@ export default function Navbar({ user, onLoginClick, onLogout, isAdmin, onDelete
     if (pathname !== '/') return;
     const sectionMap = {
       'magazine-section': 'magazine',
-      'hero-game': 'home',
-      'game-carousel': 'games',
+      'history-section': 'magazine',
     };
     const observer = new IntersectionObserver(
       (entries) => {
@@ -96,6 +97,7 @@ export default function Navbar({ user, onLoginClick, onLogout, isAdmin, onDelete
   const getActiveSection = () => {
     if (pathname === '/about') return 'about';
     if (pathname === '/admin') return 'admin';
+    if (pathname === '/playlab') return 'games';
     if (pathname === '/') return activeOnHome;
     return '';
   };
