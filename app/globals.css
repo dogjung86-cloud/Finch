@@ -1353,11 +1353,12 @@ img {
 }
 
 .atlantic-sm-card__img {
-  width: 100%;
+  width: 75%;
   height: auto;
   aspect-ratio: 16/9;
   border-radius: 3px;
   object-fit: cover;
+  align-self: flex-start;
 }
 
 .atlantic-sm-card__body {
@@ -1393,7 +1394,7 @@ img {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 16px;
+  margin-top: auto;
   padding: 14px;
   border-top: 1px solid #e8e5de;
   cursor: pointer;
