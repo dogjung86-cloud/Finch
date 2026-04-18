@@ -18,6 +18,11 @@ export default function PlayLabClient() {
 
   return (
     <>
+      <header className="playlab-header">
+        <h1 className="playlab-header__title">Play Lab</h1>
+        <p className="playlab-header__sub">게임에 과학을 더하다</p>
+      </header>
+
       <HeroGame />
 
       <GameCarousel

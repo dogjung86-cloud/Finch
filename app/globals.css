@@ -4999,6 +4999,42 @@ button.vintage-banner__cta:hover {
 }
 
 /* ──────────────────────────────────────────────
+ * /playlab 상단 헤더
+ * ────────────────────────────────────────────── */
+.playlab-header {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: calc(var(--navbar-height) + 48px) 40px 24px;
+  text-align: center;
+}
+
+.playlab-header__title {
+  font-family: 'Playfair Display', 'Noto Serif KR', Georgia, serif;
+  font-size: 52px;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--text-primary);
+  margin: 0 0 10px;
+  letter-spacing: -0.01em;
+}
+
+.playlab-header__sub {
+  font-family: 'Noto Serif KR', Georgia, serif;
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .playlab-header { padding: calc(var(--navbar-height) + 32px) 24px 20px; }
+  .playlab-header__title { font-size: 42px; }
+}
+@media (max-width: 600px) {
+  .playlab-header { padding: calc(var(--navbar-height) + 24px) 16px 16px; }
+  .playlab-header__title { font-size: 34px; }
+}
+
+/* ──────────────────────────────────────────────
  * 홈 하단 Play Lab CTA 배너
  * ────────────────────────────────────────────── */
 .playlab-cta-wrap {

@@ -134,7 +134,7 @@ export default function GameCarousel({ selectedGameId, onSelectGame, isGamePlayi
       <div className="game-carousel__header">
         <h2 className="section-title">
           <span className="section-title__icon">🎮</span>
-          <span className="section-title__accent">Play Lab</span>
+          <span className="section-title__accent">Game List</span>
         </h2>
         <div className="game-carousel__arrows">
           <button
