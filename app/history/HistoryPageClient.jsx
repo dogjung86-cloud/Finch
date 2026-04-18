@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import SmartImage from '../../src/components/SmartImage';
+import { stripHtmlToText } from '../../src/lib/htmlText';
 
 
 export default function HistoryPageClient({ items }) {
@@ -39,7 +40,7 @@ export default function HistoryPageClient({ items }) {
                   <h3 className="history-card__title">{item.title}</h3>
                   {item.content && (
                     <p className="history-card__excerpt">
-                      {item.content.length > 120 ? item.content.slice(0, 120) + '...' : item.content}
+                      {stripHtmlToText(item.content, 120)}
                     </p>
                   )}
                   {item.source && (
