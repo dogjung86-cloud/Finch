@@ -37,8 +37,8 @@ export default function ArticlesPageClient({ articles }) {
         <Link href="/" className="articles-page__back">← 홈으로</Link>
 
         <div className="articles-page__header">
-          <h1 className="articles-page__title">전체 기사</h1>
-          <p className="articles-page__sub">Finch의 모든 과학 기사를 탐색하세요</p>
+          <h1 className="articles-page__title">과학 서랍</h1>
+          <p className="articles-page__sub">읽고 싶은 하나의 이야기를 찾으세요</p>
         </div>
 
         <div className="articles-page__tabs">
