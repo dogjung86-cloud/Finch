@@ -1,9 +1,11 @@
-'use client';
+import TermsClient from './TermsClient';
 
-import { useRouter } from 'next/navigation';
-import TermsPage from '../../src/components/TermsPage';
+export const metadata = {
+  title: '이용약관 | 과학 매거진 Finch',
+  description: 'Finch 이용약관.',
+  alternates: { canonical: '/terms' },
+};
 
 export default function Terms() {
-  const router = useRouter();
-  return <TermsPage onBack={() => { router.push('/'); window.scrollTo(0, 0); }} />;
+  return <TermsClient />;
 }

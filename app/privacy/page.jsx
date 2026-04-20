@@ -1,9 +1,11 @@
-'use client';
+import PrivacyClient from './PrivacyClient';
 
-import { useRouter } from 'next/navigation';
-import PrivacyPage from '../../src/components/PrivacyPage';
+export const metadata = {
+  title: '개인정보처리방침 | 과학 매거진 Finch',
+  description: 'Finch 개인정보처리방침.',
+  alternates: { canonical: '/privacy' },
+};
 
 export default function Privacy() {
-  const router = useRouter();
-  return <PrivacyPage onBack={() => { router.push('/'); window.scrollTo(0, 0); }} />;
+  return <PrivacyClient />;
 }

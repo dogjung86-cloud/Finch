@@ -14,6 +14,7 @@ export async function generateMetadata({ params }) {
 
   return {
     title: `${item.title} – 100년 전 과학 – Finch`,
+    alternates: { canonical: `/history/${id}` },
     openGraph: {
       title: item.title,
       images: item.thumbnail ? [{ url: item.thumbnail }] : [],
