@@ -1336,8 +1336,9 @@ img {
 
 .atlantic-sm-card {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
   padding: 12px 0;
   border-bottom: 1px solid #e8e5de;
   cursor: pointer;
@@ -1346,7 +1347,7 @@ img {
 .atlantic-sm-card:last-child { border-bottom: none; }
 
 .atlantic-sm-card__img-wrap {
-  width: 45%;
+  flex: 0 0 45%;
   aspect-ratio: 16 / 9;
   border-radius: 3px;
   overflow: hidden;
@@ -1365,6 +1366,8 @@ img {
 }
 
 .atlantic-sm-card__body {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 4px;
