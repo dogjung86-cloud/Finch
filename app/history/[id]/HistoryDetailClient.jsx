@@ -53,7 +53,7 @@ export default function HistoryDetailClient({ item }) {
 
       <div className="article-page__container">
         <button className="article-page__back" onClick={handleBack}>
-          ← 100년 전 과학 목록
+          ← 재밌는 과학사 목록
         </button>
 
         <h1 className="article-page__title">{item.title}</h1>

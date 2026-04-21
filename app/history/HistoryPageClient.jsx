@@ -12,8 +12,8 @@ export default function HistoryPageClient({ items }) {
         <Link href="/" className="history-page__back">← 홈으로</Link>
 
         <div className="history-page__header">
-          <h1 className="history-page__title">100년 전 과학</h1>
-          <p className="history-page__sub">과거의 과학 이야기를 되짚어봅니다</p>
+          <h1 className="history-page__title">쓸데없이 재밌는 과학사</h1>
+          <p className="history-page__sub">엉뚱한 과학의 순간들</p>
         </div>
 
         {items.length === 0 ? (

@@ -1989,7 +1989,7 @@ img {
 
 .history-page__title {
   font-family: 'Playfair Display', Georgia, 'Noto Serif KR', serif;
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 700;
   font-style: italic;
   color: #4a3f2f;
@@ -2101,7 +2101,7 @@ img {
     padding: 24px 16px 60px;
   }
   .history-page__title {
-    font-size: 28px;
+    font-size: 26px;
   }
   .history-card {
     flex-direction: column;
@@ -4857,9 +4857,17 @@ button.vintage-banner__cta {
   padding: 0;
   cursor: pointer;
   font-family: inherit;
+  position: relative;
+  z-index: 3;
 }
 button.vintage-banner__cta:hover {
   color: #5a4a30;
+}
+
+.vintage-banner__link-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
 }
 
 /* ──────────────────────────────────────────────
@@ -4889,7 +4897,7 @@ button.vintage-banner__cta:hover {
 
 .history-home__title {
   font-family: 'Playfair Display', 'Noto Serif KR', Georgia, serif;
-  font-size: 52px;
+  font-size: 44px;
   font-weight: 700;
   font-style: italic;
   color: #3d3322;
@@ -5007,13 +5015,13 @@ button.vintage-banner__cta:hover {
 
 @media (max-width: 900px) {
   .history-home__grid { grid-template-columns: repeat(2, 1fr); gap: 28px 20px; }
-  .history-home__title { font-size: 42px; }
+  .history-home__title { font-size: 36px; }
 }
 @media (max-width: 600px) {
   .history-home { padding: 56px 16px 44px; }
   .history-home__grid { grid-template-columns: 1fr; gap: 28px; }
   .history-home__header { margin-bottom: 32px; }
-  .history-home__title { font-size: 34px; }
+  .history-home__title { font-size: 30px; }
   .history-home__card-title { font-size: 20px; }
   .history-home__footer { margin-top: 32px; }
 }
