@@ -1346,7 +1346,7 @@ img {
 .atlantic-sm-card:last-child { border-bottom: none; }
 
 .atlantic-sm-card__img-wrap {
-  width: 55%;
+  width: 45%;
   aspect-ratio: 16 / 9;
   border-radius: 3px;
   overflow: hidden;
