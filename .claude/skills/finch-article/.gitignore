@@ -1,0 +1,9 @@
+# 실행 시 생성되는 아티팩트 (머신별, 실행별 다름)
+state/
+
+# 로컬 설정 (admin URL, 계정 정보 있을 수 있음)
+config.json
+
+# Python 캐시
+__pycache__/
+*.pyc

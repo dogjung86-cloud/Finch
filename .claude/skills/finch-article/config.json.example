@@ -1,0 +1,26 @@
+{
+  "admin_url": "https://www.finch.co.kr/admin",
+  "admin_name": "finch.co.kr",
+  "local_server_port": 8765,
+  "source_sites": {
+    "new_scientist": {
+      "news_url": "https://www.newscientist.com/section/news/",
+      "features_url": "https://www.newscientist.com/section/features/",
+      "count": 13
+    },
+    "scientific_american": {
+      "latest_url": "https://www.scientificamerican.com/latest/",
+      "count": 13
+    },
+    "the_atlantic": {
+      "science_url": "https://www.theatlantic.com/science/",
+      "count": 4
+    }
+  },
+  "categories": ["천문우주", "생명진화", "뇌심리", "지구환경", "물리화학"],
+  "image_sources": ["Wikimedia Commons", "NASA", "ESA", "Hubble", "Unsplash"],
+  "image_widths": {
+    "body": 800,
+    "thumbnail": 1280
+  }
+}
