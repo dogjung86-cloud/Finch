@@ -7,9 +7,10 @@ import { usePathname, useRouter } from 'next/navigation';
 
 const MENU_ITEMS = [
   { id: 'home', label: '홈', href: '/' },
-  { id: 'magazine', label: 'The Finch', href: '/#magazine' },
-  { id: 'games', label: 'Play Lab', href: '/playlab' },
-  { id: 'about', label: 'About', href: '/about' },
+  { id: 'magazine', label: '요즘 과학', href: '/#magazine' },
+  { id: 'history', label: '과학사', href: '/history' },
+  { id: 'games', label: '게임', href: '/playlab' },
+  { id: 'about', label: '소개', href: '/about' },
 ];
 
 export default function Navbar({ user, onLoginClick, onLogout, isAdmin, onDeleteAccount }) {
@@ -98,6 +99,7 @@ export default function Navbar({ user, onLoginClick, onLogout, isAdmin, onDelete
     if (pathname === '/about') return 'about';
     if (pathname === '/admin') return 'admin';
     if (pathname === '/playlab') return 'games';
+    if (pathname.startsWith('/history')) return 'history';
     if (pathname === '/') return activeOnHome;
     return '';
   };
