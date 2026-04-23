@@ -136,10 +136,12 @@
 **본문 이미지 (2~3장):**
 ```html
 <p class="ql-align-center">
-  <img src="이미지_URL" alt="대체 텍스트">
+  <img src="{Supabase URL — publish 단계에서 자동 치환}" alt="대체 텍스트">
 </p>
-<p class="ql-align-center"><em>캡션 텍스트 — 출처: Wikimedia Commons (CC BY-SA 4.0) / 저자명</em></p>
+<p class="ql-align-center"><em>캡션 텍스트. 출처: Wikimedia Commons (CC BY-SA 4.0) / 저자명</em></p>
 ```
+
+> ℹ️ `src` 는 write 단계에서는 원본(Wikimedia/Unsplash) URL이 들어가지만, publish 단계에서 Playwright가 로컬 이미지를 admin UI에 업로드하면서 **Supabase `article-thumbnails` 버킷 URL**로 자동 치환된다.
 
 **썸네일:** 폼의 `thumbnail` 필드에 URL만 입력 (본문에는 넣지 않음 — ArticlePage가 자동 삽입)
 

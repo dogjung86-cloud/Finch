@@ -72,26 +72,27 @@ CSS 클래스와 구조가 정확히 맞아야 서체·캡션·이미지가 제�
 - 2~4개가 적당
 - **언론 원문 링크 절대 금지** — 학술 논문 DOI만
 
-## 이미지 용량 규칙 (매우 중요 — 페이지 로딩 속도)
+## 이미지 다운로드 URL 규칙 (write 단계에서만 사용)
 
-고해상도 원본 URL 직접 사용 금지. 반드시 축소된 URL을 사용.
+> ℹ️ **참고**: 실제 기사에 들어가는 `<img src>`는 최종적으로 **Supabase `article-thumbnails` 버킷 URL**로 치환된다 (publish 단계). 아래 규칙은 **로컬 다운로드 소스 URL 선정**을 위한 것.
+
+고해상도 원본 다운로드 금지. 반드시 저용량 URL을 사용.
 
 1. **Wikimedia Commons** — Special:FilePath 엔드포인트
    - 금지: `https://upload.wikimedia.org/wikipedia/commons/...` (원본, 수 MB)
-   - 금지: `https://upload.wikimedia.org/wikipedia/commons/thumb/.../800px-...` (특정 해상도가 캐시 안 돼 있으면 400)
-   - 권장 (본문 800px): `https://commons.wikimedia.org/wiki/Special:FilePath/File_name.jpg?width=800`
-   - 권장 (썸네일 1280px): `https://commons.wikimedia.org/wiki/Special:FilePath/File_name.jpg?width=1280`
+   - 금지: `https://upload.wikimedia.org/wikipedia/commons/thumb/.../1200px-...` (해시 디렉터리 오류 위험)
+   - 권장 (다운로드): `https://commons.wikimedia.org/wiki/Special:FilePath/File_name.jpg?width=1200`
    - 파일명의 공백·괄호 등 특수문자는 URL-encode (`%20`, `%28`, `%29`) 유지
 
 2. **Unsplash** — 쿼리 파라미터로 사이즈 지정
-   - 본문 800px: `https://images.unsplash.com/photo-xxx?w=800&q=80&auto=format&fit=crop`
-   - 썸네일 1280px: `https://images.unsplash.com/photo-xxx?w=1280&q=80&auto=format&fit=crop`
+   - 권장: `https://images.unsplash.com/photo-xxx?w=1200&q=80&fm=jpg`
+   - `fm=jpg` 로 포맷 강제 (브라우저별 WebP 이슈 회피)
 
 3. **ESA Hubble / NASA Hubble** — 미리보기 사이즈 사용
    - ESA Hubble: `https://cdn.esahubble.org/archives/images/screen/heic####.jpg` (~100KB, 1280×800)
    - `/publicationjpg/`, `/large/`, `/wallpaper/` 사용 금지
 
-기본값: **본문 이미지 width=800**, **썸네일 width=1280**.
+**용량 기준**: 썸네일 100~300KB, 본문 150~500KB, 상한 800KB. 초과 시 `width` 줄여 재다운로드.
 
 ## 전체 기사 구조 예시 (스켈레톤)
 
