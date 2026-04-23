@@ -14,14 +14,20 @@
   "supabase_bucket": "finch-100-years-ago",
 
   "image_widths": {
-    "body": 1200,
-    "thumbnail": 1200
+    "body": 900,
+    "thumbnail": 1100
+  },
+
+  "image_quality": {
+    "body": 72,
+    "thumbnail": 78
   },
 
   "image_size_limits_kb": {
-    "min": 50,
-    "max": 1000,
-    "warn_below": 100,
-    "warn_above": 800
+    "min": 40,
+    "max": 500,
+    "warn_below": 80,
+    "warn_above": 350,
+    "_comment": "본문 ~150KB, 썸네일 ~250KB 목표. 권장 sweet spot이며 Wikimedia 기본 q=85에서 sharp로 q=72/78 재압축 시 도달 가능."
   }
 }

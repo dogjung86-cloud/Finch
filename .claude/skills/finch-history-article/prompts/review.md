@@ -42,10 +42,10 @@ Agent({
      - thumbnail.local_path 파일 존재 & 0 byte 아님 (Bash: ls -la)
      - 모든 image 블록 local_path 파일 존재 & 0 byte 아님
      - 파일 크기 체크 (Bash: stat -c%s {path}):
-       * 50KB 미만 → 썸네일 파손 의심, FAIL
-       * 1MB 초과 → 저용량 버전으로 재다운로드 권고, high severity issue
-       * 100KB~800KB 권장 범위
-     - 해상도 체크 (선택): 이미지가 지나치게 작거나(가로 600px 미만) 큰지(2000px 초과)
+       * 40KB 미만 → 파손 의심, FAIL
+       * 600KB 초과 → sharp 재압축 권고, medium severity issue
+       * 본문 권장 100~200KB, 썸네일 권장 200~300KB
+     - 해상도 체크 (선택): 본문 가로 700~1000px, 썸네일 900~1200px 권장
 
   3. 스타일 체크 (style-guide.md §10)
      - **첫 블록 = 썸네일 캡션 paragraph**인지 확인 (가운데 정렬·이탤릭 권장, 본문 위에 자동 삽입되는 썸네일 설명용)
