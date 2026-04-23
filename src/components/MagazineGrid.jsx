@@ -192,26 +192,6 @@ export default function MagazineGrid({ articles: initialArticles, latestHistory 
               </div>
             </Link>
           ))}
-
-          {/* 과학드림 유튜브 / 추후 AdSense 영역 */}
-          <a
-            href="https://www.youtube.com/@sciencedream"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="atlantic-yt-link"
-          >
-            <SmartImage
-              src="https://yt3.ggpht.com/ytc/AIdro_kPatsMrZvvlPanQbTpBowpmbg-1BaDwtIf_2bCBchWpBk=s176-c-k-c0x00ffffff-no-rj"
-              alt="과학드림"
-              className="atlantic-yt-link__logo"
-              width={36}
-              height={36}
-            />
-            <div className="atlantic-yt-link__body">
-              <span className="atlantic-yt-link__name">과학드림</span>
-              <span className="atlantic-yt-link__sub">YouTube 채널 보기</span>
-            </div>
-          </a>
         </aside>
       </div>
 
