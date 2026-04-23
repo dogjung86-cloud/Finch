@@ -1,0 +1,27 @@
+{
+  "_comment": "이 파일을 config.json으로 복사해서 본인 머신에 맞게 수정하세요.",
+
+  "project_root": "D:/Finch",
+  "skill_dir": "D:/Finch/.claude/skills/finch-history-article",
+  "companion_skill_dir": "D:/Finch/.claude/skills/finch-article",
+
+  "nautilus_archive": "G:/내 드라이브/Nautilus/History(노틸러스)/articles",
+
+  "downloads_dir": "C:/Users/kjh/Downloads",
+  "selected_filename": "finch-history-selected.json",
+
+  "admin_url": "https://www.finch.co.kr/admin",
+  "supabase_bucket": "finch-100-years-ago",
+
+  "image_widths": {
+    "body": 1200,
+    "thumbnail": 1200
+  },
+
+  "image_size_limits_kb": {
+    "min": 50,
+    "max": 1000,
+    "warn_below": 100,
+    "warn_above": 800
+  }
+}
