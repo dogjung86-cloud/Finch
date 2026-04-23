@@ -4,8 +4,8 @@ import LayoutShell from '../src/components/LayoutShell';
 
 export const metadata = {
   metadataBase: new URL('https://www.finch.co.kr'),
-  title: '과학 매거진 Finch｜과학 게임 & 재미있는 과학 이야기',
-  description: '과학을 즐기고, 과학을 읽다 - 과학 이야기와 과학 게임이 만나는 곳',
+  title: '핀치 - 쉽고 재밌는 과학 플랫폼',
+  description: '쉽고 재밌는 과학 플랫폼 - 과학 이야기와 과학 게임이 만나는 곳',
   keywords: [
     '과학',
     '과학 매거진',
@@ -24,8 +24,8 @@ export const metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: '과학 매거진 Finch｜과학 게임 & 재미있는 과학 이야기',
-    description: '과학을 즐기고, 과학을 읽다 - 과학 이야기와 과학 게임이 만나는 곳',
+    title: '핀치 - 쉽고 재밌는 과학 플랫폼',
+    description: '쉽고 재밌는 과학 플랫폼 - 과학 이야기와 과학 게임이 만나는 곳',
     url: 'https://www.finch.co.kr',
     siteName: 'Finch',
     type: 'website',
@@ -35,14 +35,14 @@ export const metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: '과학 매거진 Finch',
+        alt: '핀치 - 쉽고 재밌는 과학 플랫폼',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: '과학 매거진 Finch',
-    description: '과학을 즐기고, 과학을 읽다 - 과학 이야기와 과학 게임이 만나는 곳',
+    title: '핀치 - 쉽고 재밌는 과학 플랫폼',
+    description: '쉽고 재밌는 과학 플랫폼 - 과학 이야기와 과학 게임이 만나는 곳',
     images: ['/og-image.jpg'],
   },
   verification: {
