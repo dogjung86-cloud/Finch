@@ -59,7 +59,7 @@ const INTRO_TEXT =
   '작은 관찰 하나가 세상을 바꾸는 영감이 되었듯, ' +
   '이 플랫폼도 일상 속에서 과학적 호기심과 영감을 만나는 공간이 되길 바라는 마음으로 만들었습니다. ' +
   'Finch는 유튜브 채널 과학드림의 서브 프로젝트로 해당 채널의 취향이 묻어 있는 공간입니다. ' +
-  '가볍게 즐기는 과학 게임부터 깊이 있는 기초과학 기사까지, 과학이 재미있어지는 순간을 즐겨보세요!';
+  '가볍게 즐기는 과학 게임부터 깊이 있는 자연과학 기사까지, 과학이 재미있어지는 순간을 즐겨보세요!';
 
 /* ── 상수 ── */
 const BIRD_W = 130;
@@ -274,7 +274,7 @@ export default function AboutPage() {
             alt="Finch"
             className="about-page__title-logo"
           />
-          <p className="about-page__subtitle">과학을 즐기고, 과학을 읽다</p>
+          <p className="about-page__subtitle">쉽고 재밌는 과학 플랫폼</p>
         </div>
 
         {/* ── Pretext 인터랙티브 영역 ── */}
@@ -309,7 +309,7 @@ export default function AboutPage() {
         <div className="about-features">
           <div className="about-feature-card">
             <span className="about-feature-card__icon">🎮</span>
-            <h3 className="about-feature-card__title">Play Lab</h3>
+            <h3 className="about-feature-card__title">게임</h3>
             <p className="about-feature-card__desc">
               과학적 상상력이 더해진 게임들을 만들어보고 싶었습니다. 누구나 쉽게
               조작하고, 가볍게 플레이하는 게임들로 채워나갈 예정입니다. 요즘 게임들은
@@ -318,7 +318,7 @@ export default function AboutPage() {
           </div>
           <div className="about-feature-card">
             <span className="about-feature-card__icon">📰</span>
-            <h3 className="about-feature-card__title">The Finch</h3>
+            <h3 className="about-feature-card__title">요즘 과학</h3>
             <p className="about-feature-card__desc">
               AI나 IT 같은 기술과학보다는 자연과학 기사들을 씁니다. 기술은 유행을
               타지만, 자연과학은 100년이 지나도 여전히 매력적이잖아요. 솔직히 챗봇보다는
