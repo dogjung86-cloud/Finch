@@ -277,10 +277,15 @@ img {
 }
 
 .navbar__menu {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   gap: 2px;
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .navbar__menu-item {
