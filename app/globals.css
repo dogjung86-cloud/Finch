@@ -1999,10 +1999,9 @@ img {
 }
 
 .history-page__title {
-  font-family: 'Playfair Display', Georgia, 'Noto Serif KR', serif;
+  font-family: 'Noto Serif KR', Georgia, serif;
   font-size: 32px;
   font-weight: 700;
-  font-style: italic;
   color: #4a3f2f;
 }
 
@@ -4912,10 +4911,9 @@ button.vintage-banner__cta:hover {
 }
 
 .history-home__title {
-  font-family: 'Playfair Display', 'Noto Serif KR', Georgia, serif;
+  font-family: 'Noto Serif KR', Georgia, serif;
   font-size: 44px;
   font-weight: 700;
-  font-style: italic;
   color: #3d3322;
   margin: 0 0 14px;
   letter-spacing: -0.01em;
