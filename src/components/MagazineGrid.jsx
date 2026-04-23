@@ -109,10 +109,11 @@ export default function MagazineGrid({ articles: initialArticles, latestHistory 
       {/* ── 100년 전 과학 배너 ── */}
       {latestHistory && (
         <div className="vintage-banner">
-          <Link
-            href={`/history/${latestHistory.id}`}
+          <button
+            type="button"
             className="vintage-banner__link-overlay"
-            aria-label={`${latestHistory.title} 읽기`}
+            onClick={scrollToHistorySection}
+            aria-label="쓸데없이 재밌는 과학사 목록으로 이동"
           />
           <span className="vintage-banner__label">쓸데없이 재밌는 과학사</span>
           <span className="vintage-banner__divider">|</span>

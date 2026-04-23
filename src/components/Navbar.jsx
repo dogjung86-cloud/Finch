@@ -116,6 +116,7 @@ export default function Navbar({ user, onLoginClick, onLogout, isAdmin, onDelete
           priority
         />
         <span className="navbar__logo-text">Finch</span>
+        <span className="navbar__logo-tagline">과학은 세상을 보는 창</span>
       </Link>
 
       {/* 데스크톱 메뉴 */}

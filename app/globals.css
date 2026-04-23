@@ -267,6 +267,18 @@ img {
   letter-spacing: -0.02em;
 }
 
+.navbar__logo-tagline {
+  margin-left: 10px;
+  padding-left: 12px;
+  border-left: 1px solid var(--border-light);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
 .navbar__menu {
   display: flex;
   align-items: center;
@@ -2796,6 +2808,7 @@ img {
   .navbar__menu { display: none; }
   .navbar__hamburger { display: block; }
   .navbar__logo { flex-shrink: 0; }
+  .navbar__logo-tagline { display: none; }
   .navbar__right { flex-shrink: 0; order: 2; }
   .navbar__hamburger { order: 3; }
   .navbar__user-name { display: none; }
@@ -4868,6 +4881,10 @@ button.vintage-banner__cta:hover {
   position: absolute;
   inset: 0;
   z-index: 2;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
 }
 
 /* ──────────────────────────────────────────────
