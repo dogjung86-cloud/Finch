@@ -1060,10 +1060,11 @@ img {
 
 .kq-header__title {
   font-family: 'Gowun Batang', 'Noto Serif KR', Georgia, serif;
-  font-size: 44px;
+  font-size: clamp(22px, 5.6vw, 44px);
   font-weight: 700;
   color: #1a1a1a;
   letter-spacing: -0.03em;
+  white-space: nowrap;
 }
 
 .kq-header__sub {
@@ -2821,7 +2822,6 @@ img {
   /* Knowledge Quest — 모바일 */
   .kq-section { padding: var(--navbar-height) 16px 60px; }
   .kq-header { padding: 28px 0 20px; }
-  .kq-header__title { font-size: 28px; }
   .kq-layout { flex-direction: column; gap: 20px; }
   .kq-nav { flex-direction: row; overflow-x: auto; gap: 10px; padding: 0 0 8px; }
   .kq-thumb__indicator { display: none; }
@@ -2859,8 +2859,6 @@ img {
   .game-card { flex: 0 0 140px; }
   .kq-thumb__img { width: 52px; height: 52px; }
   .kq-thumb--active .kq-thumb__img { width: 64px; height: 64px; }
-
-  .kq-header__title { font-size: 36px; }
 }
 
 /* ========================================
