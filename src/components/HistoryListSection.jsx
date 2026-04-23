@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import SmartImage from './SmartImage';
-import { stripHtmlToText } from '../lib/htmlText';
+import { stripHtmlToProse } from '../lib/htmlText';
 
 export default function HistoryListSection({ items }) {
   if (!items || items.length === 0) return null;
@@ -37,7 +37,7 @@ export default function HistoryListSection({ items }) {
                 <h3 className="history-home__card-title">{item.title}</h3>
                 {item.content && (
                   <p className="history-home__card-excerpt">
-                    {stripHtmlToText(item.content, 90)}
+                    {stripHtmlToProse(item.content, 90)}
                   </p>
                 )}
               </div>

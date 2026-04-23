@@ -26,3 +26,20 @@ export function stripHtmlToText(html, maxLen) {
   }
   return text;
 }
+
+export function stripHtmlToProse(html, maxLen) {
+  if (!html) return '';
+  const cleaned = String(html)
+    .replace(/<p[^>]*class="[^"]*ql-align-center[^"]*"[^>]*>[\s\S]*?<\/p>/gi, ' ')
+    .replace(/<figure[\s\S]*?<\/figure>/gi, ' ')
+    .replace(/<figcaption[\s\S]*?<\/figcaption>/gi, ' ')
+    .replace(/<img[^>]*>/gi, ' ');
+  const text = decodeEntities(cleaned.replace(/<[^>]+>/g, ' '))
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!text) return stripHtmlToText(html, maxLen);
+  if (typeof maxLen === 'number' && text.length > maxLen) {
+    return text.slice(0, maxLen) + '...';
+  }
+  return text;
+}
