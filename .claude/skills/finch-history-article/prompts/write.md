@@ -119,34 +119,25 @@ Agent({
      - 파일명: thumb.{ext}, body-1.{ext}, body-2.{ext}, body-3.{ext}
      - Windows 파일 시스템 제약: 파일 경로의 슬래시는 forward-slash 사용
 
-     **용량 목표 (압축 후)**: 본문 100~200KB, 썸네일 200~300KB (상한 500KB)
-     **해상도 목표**: 본문 가로 900px, 썸네일 1100px
-     **품질**: JPEG q=72 (본문) / q=78 (썸네일)
+     **용량 목표**: 썸네일 100~300KB, 본문 이미지 150~500KB (상한 800KB)
+     **해상도 목표**: 가로 1200px 내외 (최대 1600px)
      **포맷 우선순위**: jpg > webp > png
-
-     **왜 이 값인가**: ArticlePage 본문 컨테이너는 데스크톱 ~700px / 모바일 ~390px. retina 2x 기준으로도 900~1100px이면 충분. q=72~78은 q=85 대비 거의 무손실 체감(그라디언트 영역만 미세 차이)이지만 용량은 30~40% 절감.
 
      **저용량 URL 요청 방법 (원본 대신 썸네일/리사이즈 URL을 쓸 것)**:
 
      a. **Wikimedia Commons** — `Special:FilePath` 엔드포인트 사용 (가장 안정적)
-        - 본문 패턴: `https://commons.wikimedia.org/wiki/Special:FilePath/{파일명}?width=900`
-        - 썸네일 패턴: `https://commons.wikimedia.org/wiki/Special:FilePath/{파일명}?width=1100`
+        - 패턴: `https://commons.wikimedia.org/wiki/Special:FilePath/{파일명}?width=1200`
+        - 예: `https://commons.wikimedia.org/wiki/Special:FilePath/Pyramide_Kheops.JPG?width=1200`
         - 302 리다이렉트로 실제 썸네일 URL로 이동 → curl `-L` 옵션이 따라감
         - 파일명에 공백은 `_`로 치환, 한글/특수문자는 URL 인코딩
         - SVG 파일도 동일 (자동으로 PNG 래스터화됨)
-
-        **다운로드 후 sharp로 q=72(본문)/q=78(썸네일) 재압축 권장** (Wikimedia 기본 q=85라 ~30% 추가 절감 가능):
-        ```
-        npx --yes sharp-cli resize 900 --input "{path}" --output "{path}.tmp.jpg" --format jpeg --quality 72 && mv "{path}.tmp.jpg" "{path}"
-        ```
 
         **주의 — 썸네일 직접 URL 금지**:
         `upload.wikimedia.org/.../thumb/X/YZ/name.jpg/1200px-name.jpg` 패턴은 해시 디렉터리(X/YZ)가 맞아야 하는데 에이전트가 틀릴 수 있음. 반드시 `Special:FilePath` 경유.
 
      b. **Unsplash** — 쿼리 파라미터로 크기·품질 제어
-        - 본문: `https://images.unsplash.com/photo-XXXX?w=900&q=72&fm=jpg`
-        - 썸네일: `https://images.unsplash.com/photo-XXXX?w=1100&q=78&fm=jpg`
-        - Unsplash는 서버 측 압축이라 sharp 후처리 불필요
+        - `https://images.unsplash.com/photo-XXXX?w=1200&q=80&fm=jpg`
+        - `w=1200` (너비), `q=80` (품질 80%), `fm=jpg` (포맷 jpg)
 
      c. **NASA / ESA / JWST / Hubble** — 공식 배포본 중 중간 해상도 선택
         - NASA images.nasa.gov: 이미지 상세 페이지 "Downloads" 섹션에 여러 크기 있음 → **small 또는 medium** 선택
@@ -163,14 +154,16 @@ Agent({
      Bash: stat -c%s "{target_path}"   # 파일 크기 바이트
      ```
      - 0 byte → 재다운로드 (URL 오류)
-     - 본문 200KB 이하 / 썸네일 300KB 이하 → 이상적
-     - 본문 500KB 이상 / 썸네일 600KB 이상 → **sharp로 재압축**:
-       ```
-       npx --yes sharp-cli resize {width} --input "{path}" --output "{path}.tmp.jpg" --format jpeg --quality {quality} && mv "{path}.tmp.jpg" "{path}"
-       ```
-       (본문 width=900 q=72, 썸네일 width=1100 q=78)
-     - 압축 후에도 600KB 초과 → 다른 이미지 후보로 변경
-     - 너무 작음(40KB 미만) → 원본 손상 의심, 재다운로드
+     - 1MB 미만 → OK
+     - 1MB 이상 → **재다운로드 시도**: URL의 `1200px` → `800px`로 내려서 재요청 (Wikimedia), Unsplash는 `w=800&q=75`로 내림
+     - 재시도 후에도 1MB 초과 시: 다른 이미지 후보로 변경
+
+     **최후의 방어선 — 로컬 압축** (위 단계로 해결 안 될 때만):
+     ```
+     npx --yes sharp-cli resize 1200 --input "{path}" --output "{path}.tmp.jpg" --format jpeg --quality 78 && mv "{path}.tmp.jpg" "{path}"
+     ```
+     - sharp-cli가 없으면 `npx --yes` 가 자동 다운로드
+     - 실패하면 해당 이미지 후보 포기하고 다른 것 탐색
 
      **주의**: original_url 필드에는 **실제 다운로드한 저용량 URL**을 기록. 원본 URL이 아니다.
 
