@@ -22,8 +22,15 @@ Playwright 발행 에이전트는 **오직 이 JSON만 읽어서** admin 화면�
 
   "body_blocks": [
     {
+      "_comment": "★ 첫 블록은 반드시 썸네일 캡션. HistoryDetailClient.jsx가 본문 위에 자동으로 썸네일을 삽입하기 때문.",
       "type": "paragraph",
-      "text": "이집트 기자 고원에는 거대한 돌무더기 세 개가 있습니다. 대(大)피라미드 — 평균 무게 2.5톤짜리 석회암 블록 약 230만 개가 쌓여 올라간, 높이 146.6m의 인공 산이죠."
+      "align": "center",
+      "italic": true,
+      "text": "이집트 기자의 대피라미드. 출처: Wikimedia Commons (CC BY-SA 4.0) / Nina Aldin Thune"
+    },
+    {
+      "type": "paragraph",
+      "text": "이집트 기자 고원에는 거대한 돌무더기 세 개가 있습니다. 대피라미드 — 평균 무게 2.5톤짜리 석회암 블록 약 230만 개가 쌓여 올라간, 높이 146.6m의 인공 산이죠."
     },
     {
       "type": "paragraph",

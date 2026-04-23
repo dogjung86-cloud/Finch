@@ -91,9 +91,11 @@ Agent({
   4. 과학드림 스타일로 재구성
      - **작성 직전 선언**: "지금부터 나는 facts.json과 style-guide.md만 본다. 원문은 안 본다."
      - 제목: 호기심 유발 한글 제목 (예: "피라미드는 왜 그 자리에 서 있을까?")
-     - 본문: body_blocks 배열, 6~10개 paragraph + 2~3개 image + 선택 heading + 마지막 references
-     - **원문 문장 직역 절대 금지** — facts.json의 사실만 한국어로 재구성 (원문을 다시 참조해서 문장 짜지 말 것 — 표절 위험)
+     - 본문: body_blocks 배열, **첫 블록은 반드시 썸네일 캡션** (가운데 정렬 + 이탤릭 paragraph), 그 다음 6~10개 paragraph + 2~3개 image + 선택 heading + 마지막 references
+     - **썸네일 캡션 작성 규칙**: HistoryDetailClient가 본문 위에 자동으로 썸네일 이미지를 삽입한다. 그 바로 아래에 보일 캡션을 첫 블록으로 작성. thumbnail 메타데이터의 source/license/author를 활용해 1~2문장: `"{이미지가 보여주는 것}. 출처: {source} ({license}) / {author}"` 형식
+     - **원문 문장 직역 절대 금지** — facts.json의 사실만 한국어로 재구성
      - style-guide.md §10 체크리스트 전 항목 통과
+     - **§5-1 괄호 영어 병기는 한 기사에 5개 이내** (위반 시 reviewer가 FAIL)
      - 종결어 2종 이상 섞기 (~합니다 / ~하죠 / ~인 거죠 / ~거예요)
      - "자~ 그런데!" 같은 유튜브 추임새 의식적 삽입 금지
      - "과학드림이었습니다" 같은 엔딩 시그니처 절대 금지
