@@ -197,7 +197,7 @@ export default function MagazineGrid({ articles: initialArticles, latestHistory 
 
       <div className="atlantic-all-articles">
         <Link href="/articles" className="atlantic-all-articles__btn">
-          분야별로 더 보기 &rarr;
+          분야별로 더 보기
         </Link>
       </div>
 
