@@ -103,7 +103,7 @@ export default function MagazineGrid({ articles: initialArticles, latestHistory 
     <section className="kq-section" id="magazine-section">
       <div className="kq-header">
         <h2 className="kq-header__title">쉽고 재밌는 과학 이야기</h2>
-        <p className="kq-header__sub">세상을 바꾸는 지금의 과학</p>
+        <p className="kq-header__sub">자연의 원리가 더 재밌어지는 순간</p>
       </div>
 
       {/* ── 100년 전 과학 배너 ── */}
