@@ -34,8 +34,11 @@ finch.co.kr 관리자 페이지(Supabase `articles` 테이블)에 **과학드림
 - 주제 수집: New Scientist(13) + Scientific American(13) + The Atlantic Science(4) = 30개
 - 카테고리: 천문우주 / 생명진화 / 뇌심리 / 지구환경 / 물리화학 (5개) 균형 배분
 - 작성: 각 기사를 독립 executor-opus 에이전트에 위임 (컨텍스트 오염 방지 + 퀄리티 유지)
-- 이미지: Wikimedia Commons / NASA·ESA / Unsplash만 사용 (원문 사이트 제외)
-- 등록: Playwright MCP로 admin에 자동 입력
+- 이미지 수집: Wikimedia Commons / NASA·ESA / Unsplash 에서 **저용량 URL**로 로컬 다운로드
+  - Wikimedia: `Special:FilePath?width=1200`, Unsplash: `w=1200&q=80&fm=jpg`
+  - 용량 목표: 썸네일 100~300KB / 본문 150~500KB
+- 등록: Playwright MCP로 admin **파일 업로드 UI** 경유 → Supabase `article-thumbnails` 버킷에 재호스팅 → 자체 CDN URL로 발행
+  - ⚠️ HistoryAdmin의 `finch-100-years-ago` 버킷과는 다른 별도 버킷. AdminPage가 하드코딩돼 있어 자동 분리됨.
 
 ## 2단계 파이프라인
 
