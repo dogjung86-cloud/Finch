@@ -102,8 +102,8 @@ export default function MagazineGrid({ articles: initialArticles, latestHistory 
   return (
     <section className="kq-section" id="magazine-section">
       <div className="kq-header">
-        <h2 className="kq-header__title">The Finch</h2>
-        <p className="kq-header__sub">과학은 세상을 보는 창</p>
+        <h2 className="kq-header__title">요즘 과학</h2>
+        <p className="kq-header__sub">지금 가장 흥미로운 과학 이야기</p>
       </div>
 
       {/* ── 100년 전 과학 배너 ── */}
@@ -217,7 +217,7 @@ export default function MagazineGrid({ articles: initialArticles, latestHistory 
 
       <div className="atlantic-all-articles">
         <Link href="/articles" className="atlantic-all-articles__btn">
-          전체 기사 보기
+          분야별로 더 보기 &rarr;
         </Link>
       </div>
 

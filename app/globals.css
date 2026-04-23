@@ -1057,12 +1057,11 @@ img {
 }
 
 .kq-header__title {
-  font-family: 'Playfair Display', Georgia, 'Noto Serif KR', serif;
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 52px;
-  font-weight: 700;
-  font-style: italic;
+  font-weight: 900;
   color: #1a1a1a;
-  letter-spacing: 0.02em;
+  letter-spacing: -0.03em;
 }
 
 .kq-header__sub {
