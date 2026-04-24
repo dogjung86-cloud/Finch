@@ -1,3 +1,4 @@
+import { notFound } from 'next/navigation';
 import { createServerSupabase } from '../../../src/lib/supabase-server';
 import HistoryDetailClient from './HistoryDetailClient';
 
@@ -35,12 +36,7 @@ export default async function HistoryDetailRoute({ params }) {
     .maybeSingle();
 
   if (error || !item) {
-    return (
-      <div style={{ textAlign: 'center', padding: '100px 20px', color: '#999' }}>
-        <h1>항목을 찾을 수 없습니다</h1>
-        <p>삭제되었거나 존재하지 않는 항목입니다.</p>
-      </div>
-    );
+    notFound();
   }
 
   const jsonLd = {

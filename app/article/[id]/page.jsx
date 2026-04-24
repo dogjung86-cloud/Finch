@@ -1,3 +1,4 @@
+import { notFound } from 'next/navigation';
 import { createServerSupabase } from '../../../src/lib/supabase-server';
 import ArticlePageClient from './ArticlePageClient';
 
@@ -47,12 +48,7 @@ export default async function ArticleRoute({ params }) {
     .single();
 
   if (error || !article) {
-    return (
-      <div style={{ textAlign: 'center', padding: '100px 20px', color: '#999' }}>
-        <h1>기사를 찾을 수 없습니다</h1>
-        <p>삭제되었거나 존재하지 않는 기사입니다.</p>
-      </div>
-    );
+    notFound();
   }
 
   const jsonLd = {
