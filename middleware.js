@@ -19,6 +19,10 @@ const LEGACY_PATH_PATTERNS = [
 export function middleware(request) {
   const { pathname } = request.nextUrl;
 
+  if (pathname.startsWith('/codex-uploader') || pathname.startsWith('/codex-upload-')) {
+    return NextResponse.next();
+  }
+
   if (LEGACY_PATH_PATTERNS.some((re) => re.test(pathname))) {
     return new NextResponse(
       '<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><title>410 Gone</title></head><body><h1>410 Gone</h1><p>이 페이지는 영구적으로 삭제되었습니다.</p></body></html>',
@@ -33,5 +37,5 @@ export function middleware(request) {
 }
 
 export const config = {
-  matcher: '/((?!_next/|api/|images/|favicon|sitemap.xml|robots.txt|og-image|app-auth).*)',
+  matcher: '/((?!_next/|api/|images/|favicon|sitemap.xml|robots.txt|og-image|app-auth|codex-uploader|codex-upload-).*)',
 };
