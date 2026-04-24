@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import AdminPage from '../../src/components/AdminPage';
 import HistoryAdmin from '../../src/components/HistoryAdmin';
 import StatsAdmin from '../../src/components/StatsAdmin';
+import CommentsAdmin from '../../src/components/CommentsAdmin';
 import { useAuth } from '../../src/providers/AuthProvider';
 
 export default function Admin() {
@@ -82,14 +83,22 @@ export default function Admin() {
         >
           통계
         </button>
+        <button
+          className={`admin-tabs__btn ${tab === 'comments' ? 'admin-tabs__btn--active' : ''}`}
+          onClick={() => setTab('comments')}
+        >
+          댓글
+        </button>
       </div>
 
       {tab === 'articles' ? (
         <AdminPage onBack={handleBack} />
       ) : tab === 'history' ? (
         <HistoryAdmin onBack={handleBack} />
-      ) : (
+      ) : tab === 'stats' ? (
         <StatsAdmin />
+      ) : (
+        <CommentsAdmin />
       )}
     </div>
   );

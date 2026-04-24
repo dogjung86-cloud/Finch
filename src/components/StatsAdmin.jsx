@@ -28,7 +28,7 @@ export default function StatsAdmin() {
     // 전체 페이지뷰
     const { data: views } = await supabase
       .from('page_views')
-      .select('visitor_id, device, page, created_at')
+      .select('visitor_id, device, page, referrer, created_at')
       .gte('created_at', since);
 
     // 기사별 조회수
