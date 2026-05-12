@@ -1242,7 +1242,7 @@ img {
 .mag-hero__image {
   position: relative;
   width: 100%;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 5 / 3;
   overflow: hidden;
   background: #f2f2f2;
 }
@@ -1260,11 +1260,11 @@ img {
 .mag-hero__info {
   background: #1a1a1a;
   color: #fff;
-  padding: 36px 40px;
+  padding: 28px 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .mag-hero__label {
