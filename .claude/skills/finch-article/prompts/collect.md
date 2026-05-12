@@ -2,18 +2,19 @@
 
 ## 목표
 
-3개 사이트에서 **최근 기사 30개**를 수집하고, 5개 카테고리로 균형 배분해 `state/selector.html`을 생성한다. 사용자가 브라우저에서 슬롯 0~7를 지정하면 JSON으로 출력한다.
+4개 사이트에서 **최근 기사 40개**를 수집하고, 5개 카테고리로 균형 배분해 `state/selector.html`을 생성한다. 사용자가 브라우저에서 슬롯 0~7를 지정하면 JSON으로 출력한다.
 
 ## 단계
 
 ### 1. Playwright 세션 준비
 
 ```
-mcp__playwright__browser_navigate (4개 탭 열기):
+mcp__playwright__browser_navigate (5개 탭 열기):
   - https://www.newscientist.com/section/news/
   - https://www.scientificamerican.com/
+  - https://www.nytimes.com/section/science
   - https://www.theatlantic.com/science/
-  - https://finch.co.kr/admin (또는 실제 admin URL)
+  - https://www.finch.co.kr/admin
 ```
 
 각 탭에서 사용자 로그인 대기:
@@ -24,6 +25,7 @@ mcp__playwright__browser_navigate (4개 탭 열기):
 대기 후, `mcp__playwright__browser_evaluate`로 로그인 상태 검증:
 - New Scientist: 프로필 아이콘 또는 `document.cookie.includes('ns_user')` 확인
 - Scientific American: 구독자 전용 요소 visible 체크
+- New York Times: 헤더의 "Account" 텍스트 또는 구독자 메뉴 존재
 - The Atlantic: 헤더의 Account 링크 텍스트 변경 확인
 - finch admin: `/admin` URL에서 리다이렉트되지 않는지 확인
 
@@ -33,19 +35,26 @@ mcp__playwright__browser_navigate (4개 탭 열기):
 
 각 사이트별로 Playwright로 페이지 렌더링 후 DOM에서 추출.
 
-**New Scientist (총 13개):**
-- News 섹션: https://www.newscientist.com/section/news/ — 8개
-- Features 섹션: https://www.newscientist.com/section/features/ — 5개
+**New Scientist (총 10개):**
+- News 섹션: https://www.newscientist.com/section/news/ — 6개
+- Features 섹션: https://www.newscientist.com/section/features/ — 4개
 - 추출: 제목 / URL / 요약 / 발행일 / 대략 주제 키워드
 
-**Scientific American (총 13개):**
-- 홈: https://www.scientificamerican.com/
-- Latest 섹션에서 최근 기사
-- 추출: 위와 동일
+**Scientific American (총 10개):**
+- Latest: https://www.scientificamerican.com/latest/
+- 최근 기사 (필요 시 page=2까지)
+- 추출: 위와 동일. 카드 텍스트 구조는 카테고리\n제목 형태이므로 후처리 필요
 
-**The Atlantic (총 4개):**
+**New York Times Science (총 12개):**
+- https://www.nytimes.com/section/science
+- 최근 기사 카드 (페이월 있을 수 있으나 구독자 세션이면 통과)
+- 추출: 위와 동일
+- 카드 URL 패턴: `nytimes.com/YYYY/MM/DD/science/...`
+
+**The Atlantic (총 8개):**
 - https://www.theatlantic.com/science/
 - 최근 Science 섹션 기사만
+- URL 패턴: `theatlantic.com/science/YYYY/MM/...`
 
 **추출 방법:**
 ```javascript
