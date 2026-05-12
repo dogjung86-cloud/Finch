@@ -1219,12 +1219,12 @@ img {
    메인 그리드: 롱블랙 스타일 (분할 히어로 + 4:3 카드)
    ────────────────────────────────────────────────── */
 
-/* ── 분할 히어로: 좌 이미지 50% + 우 다크 패널 50% ── */
+/* ── 분할 히어로: 좌 이미지 55% + 우 다크 패널 45% ── */
 .mag-hero {
   max-width: 1080px;
   margin: 0 auto 40px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 5fr 4fr;
   gap: 0;
   border-radius: 10px;
   overflow: hidden;
@@ -1242,7 +1242,7 @@ img {
 .mag-hero__image {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 3 / 2;
   overflow: hidden;
   background: #f2f2f2;
 }
@@ -1260,11 +1260,11 @@ img {
 .mag-hero__info {
   background: #1a1a1a;
   color: #fff;
-  padding: 24px 36px;
+  padding: 36px 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 8px;
+  gap: 12px;
 }
 
 .mag-hero__label {
