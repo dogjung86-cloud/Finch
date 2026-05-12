@@ -1046,7 +1046,7 @@ img {
 .kq-section {
   background: #F2F2F2;
   padding: 0 40px 0;
-  padding-top: var(--navbar-height);
+  padding-top: calc(var(--navbar-height) + 32px);
   position: relative;
 }
 
@@ -1078,7 +1078,7 @@ img {
 
 /* ── 100년 전 과학 배너 ── */
 .vintage-banner {
-  max-width: var(--content-max);
+  max-width: 1080px;
   margin: 0 auto 20px;
   padding: 14px 24px;
   display: flex;
@@ -1219,12 +1219,12 @@ img {
    메인 그리드: 롱블랙 스타일 (분할 히어로 + 4:3 카드)
    ────────────────────────────────────────────────── */
 
-/* ── 분할 히어로: 좌 이미지 60% + 우 다크 패널 40% ── */
+/* ── 분할 히어로: 좌 이미지 50% + 우 다크 패널 50% ── */
 .mag-hero {
   max-width: 1080px;
   margin: 0 auto 40px;
   display: grid;
-  grid-template-columns: 3fr 2fr;
+  grid-template-columns: 1fr 1fr;
   gap: 0;
   border-radius: 10px;
   overflow: hidden;
@@ -4893,7 +4893,7 @@ button.vintage-banner__cta:hover {
 }
 
 .history-home__inner {
-  max-width: var(--content-max);
+  max-width: 1080px;
   margin: 0 auto;
 }
 
