@@ -28,7 +28,7 @@ export default async function HomePage() {
     if (seen.has(a.display_order)) return false;
     seen.add(a.display_order);
     return true;
-  }).slice(0, 6);
+  }).slice(0, 8);
 
   const historyItems = historyRes.data || [];
 
