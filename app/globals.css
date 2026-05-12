@@ -1221,7 +1221,7 @@ img {
 
 /* ── 분할 히어로: 좌 이미지 50% + 우 다크 패널 50% ── */
 .mag-hero {
-  max-width: var(--content-max);
+  max-width: 1080px;
   margin: 0 auto 36px;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1315,13 +1315,13 @@ img {
   letter-spacing: 0.2px;
 }
 
-/* ── 서브 카드 그리드: 4:3 썸네일, 5개 균등 ── */
+/* ── 서브 카드 그리드: 16:9 썸네일, 5개 균등 ── */
 .mag-sub-grid {
-  max-width: var(--content-max);
+  max-width: 1080px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 22px;
+  gap: 20px;
 }
 
 .mag-card {
@@ -1336,7 +1336,7 @@ img {
 .mag-card__img {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 9;
   border-radius: 8px;
   overflow: hidden;
   background: #f2f2f2;
