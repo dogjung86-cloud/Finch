@@ -64,7 +64,7 @@ finch.co.kr 관리자 페이지(Supabase `articles` 테이블)에 **과학드림
 1. JSON 파싱 → `state/selected.json` 저장
 2. 8개 슬롯을 순차적으로 처리:
    - **각 슬롯마다 executor(model=opus) 에이전트 독립 호출**
-   - 에이전트는 원문 읽기 + 재작성 + 이미지 3장+썸네일 + 참고문헌 → `state/slot-N.json` 저장
+   - 에이전트는 원문 읽기 + 재작성 + 이미지 3장(도식 일러스트 2 + 실사 1) + 썸네일 + 참고문헌 → `state/slot-N.json` 저장
 3. 8개 모두 완료 후 code-reviewer로 표절/톤 검증 (슬롯별 개별 호출)
 4. Playwright로 finch admin 접속 → 슬롯별로 8회 입력·저장
 5. 각 슬롯의 `display_order = 슬롯 번호`, `is_published = true` 고정

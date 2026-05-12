@@ -64,11 +64,26 @@ Agent({
      - 본문: 6~10문단, 기승전결
      - 원문 문장 직역 금지 — 사실만 재구성
 
-  5. 이미지 3장 + 썸네일 1장 **URL 수집**:
-     - Wikimedia Commons, NASA/ESA, Unsplash만 사용
-     - 각 이미지에 대해: URL / 대체 텍스트 / 캡션 / 출처 / 라이선스 / 저자
-     - 캡션 형식은 templates/quill-html.md 참조
-     - 검색 방법: Playwright로 commons.wikimedia.org / images.nasa.gov / unsplash.com 검색
+  5. 이미지 3장 + 썸네일 1장 **URL 수집 / 일러스트 슬롯 지정**:
+
+     **이미지 구성 (3장):**
+     - **`body-1`, `body-2` = 도식 일러스트** (Codex 외부 생성 예정, 자리만 잡아둠)
+       - 본문 내용에 맞는 **과학 다이어그램·그래프·인포그래픽·메커니즘 도해** 필요한 자리 식별
+       - 각 슬롯에 어떤 도식이 들어가야 하는지 **한국어 일러스트 프롬프트** 작성 (Codex에 전달용)
+       - 제약: 사람·동물 얼굴·실사 인물 ❌. 추상 도형·화살표·구조도·세포 단면 같은 **도식**만.
+       - slot-N.json에 `local_path` 대신 `illustration_prompt` 필드로 기록
+     - **`body-3` = 실사 1장** — Wikimedia Commons / NASA·ESA / Unsplash 중에서
+       - 기존과 동일하게 저용량 URL 수집 + 로컬 다운로드
+     - **썸네일 1장** — 실사 (Wikimedia/NASA/Unsplash)
+     - 각 이미지에 대해: URL(실사) 또는 illustration_prompt(도식) / 대체 텍스트 / 캡션
+     - 캡션 형식: templates/quill-html.md 참조. 도식 캡션엔 "그림: 본문 이해를 돕는 도식" 같은 표시 권장.
+
+     **실사 검색 방법**: Playwright로 commons.wikimedia.org / images.nasa.gov / unsplash.com
+
+     **도식 일러스트는 어떻게 들어가나?**
+     - **write 단계에선 생성 안 함** — `illustration_prompt`만 기록
+     - publish 직전에 사용자가 Codex로 2장 생성 → `state/slot-N/images/body-1.png`, `body-2.png` 로 저장
+     - Playwright가 그 파일들을 일반 이미지처럼 업로드
 
   5-1. 이미지 **로컬 다운로드** (필수 — 반드시 저용량 버전으로)
      - 저장 경로: `.claude/skills/finch-article/state/slot-{SLOT}/images/`
