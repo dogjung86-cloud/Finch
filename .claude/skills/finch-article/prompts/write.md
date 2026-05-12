@@ -187,4 +187,4 @@ Agent({
 
 ## 완료 후
 
-6개 `slot-N.json`이 모두 존재하면 → `prompts/review.md`(검증) → `prompts/publish.md`(등록)로 진행.
+8개 `slot-N.json`이 모두 존재하면 → `prompts/review.md`(검증) → `prompts/publish.md`(등록)로 진행.

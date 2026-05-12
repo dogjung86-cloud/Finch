@@ -173,7 +173,7 @@
 <header>
   <div>
     <h1>Finch 기사 슬롯 선택기</h1>
-    <div class="status" id="status">0 / 6개 슬롯 지정됨</div>
+    <div class="status" id="status">0 / 8개 슬롯 지정됨</div>
   </div>
   <button class="complete-btn" id="complete-btn" disabled>완료</button>
 </header>
@@ -238,7 +238,7 @@ function render() {
         <span class="card-date">${escapeHtml(item.published || '')}</span>
         <select class="slot-select ${assignedSlot !== undefined ? 'assigned' : ''}" data-id="${escapeHtml(item.id)}">
           <option value="">슬롯 지정 안 함</option>
-          ${[0,1,2,3,4,5].map(n =>
+          ${[0,1,2,3,4,5,6,7].map(n =>
             `<option value="${n}" ${assignedSlot === n ? 'selected' : ''}>슬롯 ${n}</option>`
           ).join('')}
         </select>
@@ -276,9 +276,9 @@ function onSlotChange(e) {
 
 function updateStatus() {
   const count = selections.size;
-  statusEl.textContent = `${count} / 6개 슬롯 지정됨`;
-  statusEl.classList.toggle('ready', count === 6);
-  completeBtn.disabled = count !== 6;
+  statusEl.textContent = `${count} / 8개 슬롯 지정됨`;
+  statusEl.classList.toggle('ready', count === 8);
+  completeBtn.disabled = count !== 8;
 }
 
 document.getElementById('filters').addEventListener('click', (e) => {

@@ -2,7 +2,7 @@
 
 ## 전제 조건
 
-- `state/slot-0.json` ~ `state/slot-5.json` 모두 존재
+- `state/slot-0.json` ~ `state/slot-7.json` 모두 존재
 - 각 슬롯마다 **로컬 다운로드된 이미지 파일**이 `state/slot-N/images/` 아래 준비됨:
   - `thumb.{ext}` (썸네일)
   - `body-1.{ext}`, `body-2.{ext}`, `body-3.{ext}` (본문 이미지)
@@ -34,7 +34,7 @@ mcp__playwright__browser_snapshot (화면 확인)
 
 **기본 탭이 일반 기사 탭인지 확인**: HistoryAdmin 탭("100년 전 과학")이 아니라 일반 AdminPage("기사 관리")여야 함.
 
-### 2. 각 슬롯 등록 (0 → 5 순차)
+### 2. 각 슬롯 등록 (0 → 7 순차)
 
 각 슬롯마다 아래 반복.
 
@@ -232,9 +232,9 @@ browser_evaluate:
 
 ### 3. 전체 완료 리포트
 
-6개 슬롯 처리 후 사용자에게:
+8개 슬롯 처리 후 사용자에게:
 ```
-완료: 슬롯 0~5 기사 등록
+완료: 슬롯 0~7 기사 등록
 - 슬롯 0: {제목} ✓  (썸네일 + 본문 이미지 N장 → article-thumbnails 버킷)
 - 슬롯 1: {제목} ✓
 ...

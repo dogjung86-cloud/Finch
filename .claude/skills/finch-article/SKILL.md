@@ -1,6 +1,6 @@
 ---
 name: finch-article
-description: finch.co.kr admin에 과학드림 스타일 기사 6편을 자동 등록하는 2단계 파이프라인. New Scientist / Scientific American / The Atlantic Science에서 30개 주제 수집 → 슬롯 선택 → 서브에이전트 병렬 작성 → Playwright admin 자동 등록. 트리거: "/finch-article", "기사 자동 등록", "주제 수집해줘", "finch 기사 써줘"
+description: finch.co.kr admin에 과학드림 스타일 기사 8편을 자동 등록하는 2단계 파이프라인. New Scientist / Scientific American / The Atlantic Science에서 30개 주제 수집 → 슬롯 선택 → 서브에이전트 병렬 작성 → Playwright admin 자동 등록. 트리거: "/finch-article", "기사 자동 등록", "주제 수집해줘", "finch 기사 써줘"
 ---
 
 # Finch Article Automation Skill
@@ -29,7 +29,7 @@ description: finch.co.kr admin에 과학드림 스타일 기사 6편을 자동 �
 
 ## 무엇을 하는가
 
-finch.co.kr 관리자 페이지(Supabase `articles` 테이블)에 **과학드림 스타일**의 기사 6편을 슬롯 0~5에 자동 등록한다.
+finch.co.kr 관리자 페이지(Supabase `articles` 테이블)에 **과학드림 스타일**의 기사 8편을 슬롯 0~7에 자동 등록한다.
 
 - 주제 수집: New Scientist(13) + Scientific American(13) + The Atlantic Science(4) = 30개
 - 카테고리: 천문우주 / 생명진화 / 뇌심리 / 지구환경 / 물리화학 (5개) 균형 배분
@@ -54,7 +54,7 @@ finch.co.kr 관리자 페이지(Supabase `articles` 테이블)에 **과학드림
 5. LLM 분류로 5개 카테고리 균형 배분 (30개)
 6. `state/collected.json` 저장
 7. `state/selector.html` 생성 후 브라우저에서 오픈
-8. 사용자는 카드 6개에 슬롯 0~5 지정 후 "완료" 클릭
+8. 사용자는 카드 8개에 슬롯 0~7 지정 후 "완료" 클릭
 9. JSON이 `<textarea>`에 출력됨 → 사용자가 복사해서 채팅에 붙여넣기
 
 자세한 프로토콜: `prompts/collect.md`
@@ -62,18 +62,18 @@ finch.co.kr 관리자 페이지(Supabase `articles` 테이블)에 **과학드림
 ### 단계 B: `/finch-article write` (JSON 붙여넣기 후 자동 발동)
 
 1. JSON 파싱 → `state/selected.json` 저장
-2. 6개 슬롯을 순차적으로 처리:
+2. 8개 슬롯을 순차적으로 처리:
    - **각 슬롯마다 executor(model=opus) 에이전트 독립 호출**
    - 에이전트는 원문 읽기 + 재작성 + 이미지 3장+썸네일 + 참고문헌 → `state/slot-N.json` 저장
-3. 6개 모두 완료 후 code-reviewer로 표절/톤 검증 (슬롯별 개별 호출)
-4. Playwright로 finch admin 접속 → 슬롯별로 6회 입력·저장
+3. 8개 모두 완료 후 code-reviewer로 표절/톤 검증 (슬롯별 개별 호출)
+4. Playwright로 finch admin 접속 → 슬롯별로 8회 입력·저장
 5. 각 슬롯의 `display_order = 슬롯 번호`, `is_published = true` 고정
 
 자세한 프로토콜: `prompts/write.md`, `prompts/publish.md`
 
 ## 핵심 원칙
 
-1. **절대 한 컨텍스트에 6개 기사를 몰아넣지 않는다.** 각 기사는 독립 서브에이전트.
+1. **절대 한 컨텍스트에 8개 기사를 몰아넣지 않는다.** 각 기사는 독립 서브에이전트.
 2. **style-guide.md를 모든 작성 에이전트에 강제 주입.**
 3. **원문 사이트 이미지 절대 사용 금지.** Wikimedia/NASA/Unsplash만.
 4. **참고문헌 섹션 필수.** 학술 논문 DOI·출처만 (언론 원문 링크 포함 금지 — 표절 우려 회피).
@@ -105,7 +105,7 @@ ${SKILL_DIR}/
 └── state/                 실행 중 아티팩트 (gitignore)
     ├── collected.json
     ├── selected.json
-    └── slot-0~5.json
+    └── slot-0~7.json
 ```
 
 ## 트리거 예시
