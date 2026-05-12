@@ -59,15 +59,6 @@ const FALLBACK_ARTICLES = [
     thumbnail: '/images/articles/mars_rover.png',
     created_at: new Date().toISOString(),
   },
-  {
-    id: 7,
-    title: '인류의 달 귀환: 아르테미스 3호의 도전과 과제',
-    excerpt: 'NASA의 아르테미스 3호가 50년 만의 유인 달 착륙을 준비하고 있습니다.',
-    author: 'The Finch',
-    category: '뉴스',
-    thumbnail: '/images/articles/space_galaxy.png',
-    created_at: new Date().toISOString(),
-  },
 ];
 
 /* ── 날짜 포맷 헬퍼 ── */
@@ -86,8 +77,7 @@ export default function MagazineGrid({ articles: initialArticles, latestHistory 
   const articles = initialArticles && initialArticles.length > 0 ? initialArticles : FALLBACK_ARTICLES;
 
   const heroArticle = articles[0];
-  const leftArticles = articles.slice(1, 3);
-  const rightArticles = articles.slice(3, 6);
+  const subArticles = articles.slice(1, 6); // slot 1~5
 
   const scrollToHistorySection = (e) => {
     e.preventDefault();
@@ -124,76 +114,60 @@ export default function MagazineGrid({ articles: initialArticles, latestHistory 
         </div>
       )}
 
-      <div className="atlantic-grid">
-        {/* 좌측: 중형 썸네일 기사 2개 */}
-        <aside className="atlantic-col-left">
-          {leftArticles.map((a) => (
-            <Link key={a.id} href={`/article/${a.id}`} className="atlantic-md-card">
-              <div className="atlantic-md-card__img">
+      {/* ── 분할 히어로 (slot 0): 좌 이미지 + 우 다크 패널 ── */}
+      {heroArticle && (
+        <Link href={`/article/${heroArticle.id}`} className="mag-hero">
+          <div className="mag-hero__image">
+            {heroArticle.thumbnail && (
+              <SmartImage
+                src={heroArticle.thumbnail}
+                alt={heroArticle.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                style={{ objectFit: 'cover' }}
+                priority
+                referrerPolicy="no-referrer"
+              />
+            )}
+          </div>
+          <div className="mag-hero__info">
+            <span className="mag-hero__label">이번 주 과학</span>
+            <h1 className="mag-hero__title">{heroArticle.title}</h1>
+            {heroArticle.excerpt && (
+              <p className="mag-hero__excerpt">{heroArticle.excerpt}</p>
+            )}
+            <span className="mag-hero__meta">
+              {heroArticle.author} · {formatDate(heroArticle.created_at)}
+            </span>
+          </div>
+        </Link>
+      )}
+
+      {/* ── 서브 카드 그리드 (slot 1~5): 4:3 썸네일 ── */}
+      {subArticles.length > 0 && (
+        <div className="mag-sub-grid">
+          {subArticles.map((a) => (
+            <Link key={a.id} href={`/article/${a.id}`} className="mag-card">
+              <div className="mag-card__img">
                 {a.thumbnail && (
                   <SmartImage
                     src={a.thumbnail}
                     alt={a.title}
                     fill
-                    sizes="(max-width: 768px) 100vw, 280px"
+                    sizes="(max-width: 768px) 100vw, 240px"
                     style={{ objectFit: 'cover' }}
                     referrerPolicy="no-referrer"
                   />
                 )}
               </div>
-              <h3 className="atlantic-md-card__title">{a.title}</h3>
-              <span className="atlantic-md-card__author">{a.author} · {formatDate(a.created_at)}</span>
-            </Link>
-          ))}
-        </aside>
-
-        {/* 중앙: 히어로 기사 */}
-        {heroArticle && (
-          <Link href={`/article/${heroArticle.id}`} className="atlantic-hero">
-            <div className="atlantic-hero__img">
-              {heroArticle.thumbnail && (
-                <SmartImage
-                  src={heroArticle.thumbnail}
-                  alt={heroArticle.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 600px"
-                  style={{ objectFit: 'cover' }}
-                  priority
-                  referrerPolicy="no-referrer"
-                />
-              )}
-            </div>
-            <h1 className="atlantic-hero__title">{heroArticle.title}</h1>
-            <p className="atlantic-hero__excerpt">{heroArticle.excerpt}</p>
-            <span className="atlantic-hero__author">{heroArticle.author} · {formatDate(heroArticle.created_at)}</span>
-          </Link>
-        )}
-
-        {/* 우측: 소형 썸네일 기사 3개 */}
-        <aside className="atlantic-col-right">
-          {rightArticles.map((a) => (
-            <Link key={a.id} href={`/article/${a.id}`} className="atlantic-sm-card">
-              {a.thumbnail && (
-                <div className="atlantic-sm-card__img-wrap">
-                  <SmartImage
-                    className="atlantic-sm-card__img"
-                    src={a.thumbnail}
-                    alt={a.title}
-                    width={320}
-                    height={180}
-                    sizes="(max-width: 900px) 100vw, 280px"
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-              )}
-              <div className="atlantic-sm-card__body">
-                <h4 className="atlantic-sm-card__title">{a.title}</h4>
-                <span className="atlantic-sm-card__author">{a.author} · {formatDate(a.created_at)}</span>
+              <div className="mag-card__body">
+                <h3 className="mag-card__title">{a.title}</h3>
+                <span className="mag-card__meta">{a.author} · {formatDate(a.created_at)}</span>
               </div>
             </Link>
           ))}
-        </aside>
-      </div>
+        </div>
+      )}
 
       <div className="atlantic-all-articles">
         <Link href="/articles" className="atlantic-all-articles__btn">
