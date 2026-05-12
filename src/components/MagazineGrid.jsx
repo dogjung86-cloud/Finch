@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
 import SmartImage from './SmartImage';
 
@@ -59,6 +60,24 @@ const FALLBACK_ARTICLES = [
     thumbnail: '/images/articles/mars_rover.png',
     created_at: new Date().toISOString(),
   },
+  {
+    id: 7,
+    title: '인류의 달 귀환: 아르테미스 3호의 도전과 과제',
+    excerpt: 'NASA의 아르테미스 3호가 50년 만의 유인 달 착륙을 준비하고 있습니다.',
+    author: 'The Finch',
+    category: '뉴스',
+    thumbnail: '/images/articles/space_galaxy.png',
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: 8,
+    title: '바다거북의 항법 비밀, 자기장이 답을 주다',
+    excerpt: '바다거북이 수천 km를 정확히 돌아오는 항법의 비밀이 지구 자기장 감지에 있음이 확인되었습니다.',
+    author: 'The Finch',
+    category: '뉴스',
+    thumbnail: '/images/articles/space_galaxy.png',
+    created_at: new Date().toISOString(),
+  },
 ];
 
 /* ── 날짜 포맷 헬퍼 ── */
@@ -77,7 +96,38 @@ export default function MagazineGrid({ articles: initialArticles, latestHistory 
   const articles = initialArticles && initialArticles.length > 0 ? initialArticles : FALLBACK_ARTICLES;
 
   const heroArticle = articles[0];
-  const subArticles = articles.slice(1, 6); // slot 1~5
+  const subArticles = articles.slice(1, 8); // 슬롯 2~8 (총 7개)
+
+  const scrollerRef = useRef(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const updateScrollButtons = () => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+  };
+
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    updateScrollButtons();
+    el.addEventListener('scroll', updateScrollButtons, { passive: true });
+    window.addEventListener('resize', updateScrollButtons);
+    return () => {
+      el.removeEventListener('scroll', updateScrollButtons);
+      window.removeEventListener('resize', updateScrollButtons);
+    };
+  }, [subArticles.length]);
+
+  const scrollByAmount = (dir) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const firstCard = el.querySelector('.mag-card');
+    const step = firstCard ? firstCard.clientWidth + 20 : el.clientWidth * 0.6;
+    el.scrollBy({ left: dir * step, behavior: 'smooth' });
+  };
 
   const scrollToHistorySection = (e) => {
     e.preventDefault();
@@ -114,7 +164,7 @@ export default function MagazineGrid({ articles: initialArticles, latestHistory 
         </div>
       )}
 
-      {/* ── 분할 히어로 (slot 0): 좌 이미지 + 우 다크 패널 ── */}
+      {/* ── 분할 히어로 (슬롯 1): 좌 이미지(60%) + 우 다크 패널(40%) ── */}
       {heroArticle && (
         <Link href={`/article/${heroArticle.id}`} className="mag-hero">
           <div className="mag-hero__image">
@@ -123,7 +173,7 @@ export default function MagazineGrid({ articles: initialArticles, latestHistory 
                 src={heroArticle.thumbnail}
                 alt={heroArticle.title}
                 fill
-                sizes="(max-width: 768px) 100vw, 50vw"
+                sizes="(max-width: 768px) 100vw, 60vw"
                 style={{ objectFit: 'cover' }}
                 priority
                 referrerPolicy="no-referrer"
@@ -143,29 +193,54 @@ export default function MagazineGrid({ articles: initialArticles, latestHistory 
         </Link>
       )}
 
-      {/* ── 서브 카드 그리드 (slot 1~5): 4:3 썸네일 ── */}
+      {/* ── 서브 카드 캐러셀 (슬롯 2~8): 16:9, 4개 노출 + 좌우 화살표 ── */}
       {subArticles.length > 0 && (
-        <div className="mag-sub-grid">
-          {subArticles.map((a) => (
-            <Link key={a.id} href={`/article/${a.id}`} className="mag-card">
-              <div className="mag-card__img">
-                {a.thumbnail && (
-                  <SmartImage
-                    src={a.thumbnail}
-                    alt={a.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 240px"
-                    style={{ objectFit: 'cover' }}
-                    referrerPolicy="no-referrer"
-                  />
-                )}
-              </div>
-              <div className="mag-card__body">
-                <h3 className="mag-card__title">{a.title}</h3>
-                <span className="mag-card__meta">{a.author} · {formatDate(a.created_at)}</span>
-              </div>
-            </Link>
-          ))}
+        <div className="mag-sub-wrap">
+          <div className="mag-sub-toolbar">
+            <span className="mag-sub-toolbar__label">더 많은 과학 이야기</span>
+            <div className="mag-sub-toolbar__arrows">
+              <button
+                type="button"
+                className="mag-sub-arrow"
+                aria-label="이전"
+                onClick={() => scrollByAmount(-1)}
+                disabled={!canScrollLeft}
+              >
+                ‹
+              </button>
+              <button
+                type="button"
+                className="mag-sub-arrow"
+                aria-label="다음"
+                onClick={() => scrollByAmount(1)}
+                disabled={!canScrollRight}
+              >
+                ›
+              </button>
+            </div>
+          </div>
+          <div className="mag-sub-scroller" ref={scrollerRef}>
+            {subArticles.map((a) => (
+              <Link key={a.id} href={`/article/${a.id}`} className="mag-card">
+                <div className="mag-card__img">
+                  {a.thumbnail && (
+                    <SmartImage
+                      src={a.thumbnail}
+                      alt={a.title}
+                      fill
+                      sizes="(max-width: 768px) 80vw, 240px"
+                      style={{ objectFit: 'cover' }}
+                      referrerPolicy="no-referrer"
+                    />
+                  )}
+                </div>
+                <div className="mag-card__body">
+                  <h3 className="mag-card__title">{a.title}</h3>
+                  <span className="mag-card__meta">{a.author} · {formatDate(a.created_at)}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       )}
 
