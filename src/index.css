@@ -3468,6 +3468,74 @@ img {
   font-size: 12px;
   color: var(--text-muted);
 }
+
+/* 썸네일 포커스 포인트 조절 (object-position) */
+.admin-form__dropzone--has-image { cursor: default; }
+.admin-form__focus-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 360px;
+  background: #000;
+  cursor: crosshair;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  overflow: hidden;
+}
+.admin-form__focus-stage img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.admin-form__focus-stage--dragging { cursor: grabbing; }
+.admin-form__focus-point {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent, #e9472a);
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.45);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.admin-form__focus-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #fafafa;
+  border-top: 1px solid #eee;
+  flex-wrap: wrap;
+}
+.admin-form__focus-readout {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-align: left;
+  line-height: 1.4;
+}
+.admin-form__focus-readout strong { color: var(--accent, #e9472a); }
+.admin-form__focus-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.admin-form__focus-buttons {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
 .admin-form__url-input {
   margin-top: 10px;
   display: flex;

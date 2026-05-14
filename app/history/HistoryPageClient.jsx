@@ -31,7 +31,7 @@ export default function HistoryPageClient({ items }) {
                       alt={item.title}
                       fill
                       sizes="(max-width: 768px) 100vw, 160px"
-                      style={{ objectFit: 'cover' }}
+                      style={{ objectFit: 'cover', objectPosition: item.thumbnail_position || '50% 50%' }}
                     />
                   </div>
                 )}

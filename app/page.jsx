@@ -16,7 +16,7 @@ export default async function HomePage() {
       .order('created_at', { ascending: false }),
     supabase
       .from('history_science')
-      .select('id,title,thumbnail,content')
+      .select('id,title,thumbnail,thumbnail_position,content')
       .eq('is_published', true)
       .order('created_at', { ascending: false })
       .limit(6),

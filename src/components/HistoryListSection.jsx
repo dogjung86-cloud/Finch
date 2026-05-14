@@ -29,7 +29,7 @@ export default function HistoryListSection({ items }) {
                     alt={item.title}
                     fill
                     sizes="(max-width: 600px) 100vw, (max-width: 1100px) 50vw, 360px"
-                    style={{ objectFit: 'cover' }}
+                    style={{ objectFit: 'cover', objectPosition: item.thumbnail_position || '50% 50%' }}
                   />
                 </div>
               )}

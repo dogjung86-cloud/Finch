@@ -20,7 +20,7 @@ export default async function HistoryPage() {
   const supabase = createServerSupabase();
   const { data: items } = await supabase
     .from('history_science')
-    .select('id,title,thumbnail,date_original,content,source,created_at')
+    .select('id,title,thumbnail,thumbnail_position,date_original,content,source,created_at')
     .eq('is_published', true)
     .order('created_at', { ascending: false });
 

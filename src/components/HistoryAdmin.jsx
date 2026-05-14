@@ -36,6 +36,7 @@ export default function HistoryAdmin({ onBack }) {
     title: '',
     content: '',
     thumbnail: '',
+    thumbnail_position: '50% 50%',
     is_published: true,
     is_membership: false,
   });
@@ -147,6 +148,7 @@ export default function HistoryAdmin({ onBack }) {
       title: '',
       content: '',
       thumbnail: '',
+      thumbnail_position: '50% 50%',
       is_published: true,
       is_membership: false,
     });
@@ -160,6 +162,7 @@ export default function HistoryAdmin({ onBack }) {
       title: item.title || '',
       content: item.content || '',
       thumbnail: item.thumbnail || '',
+      thumbnail_position: item.thumbnail_position || '50% 50%',
       is_published: item.is_published ?? true,
       is_membership: item.is_membership ?? false,
     });
@@ -174,12 +177,52 @@ export default function HistoryAdmin({ onBack }) {
     setError('');
     try {
       const url = await uploadImage(file);
-      setFormData((prev) => ({ ...prev, thumbnail: url }));
+      // 새 이미지가 올라오면 포커스 포인트는 중앙으로 초기화
+      setFormData((prev) => ({ ...prev, thumbnail: url, thumbnail_position: '50% 50%' }));
     } catch (err) {
       setError('이미지 업로드 실패: ' + err.message);
     }
     setUploading(false);
   };
+
+  // ── 포커스 포인트 조절 (썸네일 미리보기 클릭/드래그) ──
+  const [focusDragging, setFocusDragging] = useState(false);
+  const updateFocusFromEvent = (e, rectEl) => {
+    const rect = rectEl.getBoundingClientRect();
+    const x = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+    const y = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100));
+    setFormData((prev) => ({ ...prev, thumbnail_position: `${x.toFixed(1)}% ${y.toFixed(1)}%` }));
+  };
+  const handleFocusPointerDown = (e) => {
+    if (!formData.thumbnail) return;
+    e.stopPropagation();
+    e.preventDefault();
+    setFocusDragging(true);
+    updateFocusFromEvent(e, e.currentTarget);
+  };
+  const handleFocusPointerMove = (e) => {
+    if (!focusDragging) return;
+    e.stopPropagation();
+    e.preventDefault();
+    updateFocusFromEvent(e, e.currentTarget);
+  };
+  const handleFocusPointerUp = (e) => {
+    if (!focusDragging) return;
+    e.stopPropagation();
+    setFocusDragging(false);
+  };
+  const resetFocusPoint = (e) => {
+    e.stopPropagation();
+    setFormData((prev) => ({ ...prev, thumbnail_position: '50% 50%' }));
+  };
+  const triggerThumbReplace = (e) => {
+    e.stopPropagation();
+    document.getElementById('history-thumb-input')?.click();
+  };
+  const focusXY = (() => {
+    const parts = String(formData.thumbnail_position || '50% 50%').split(' ');
+    return { x: parseFloat(parts[0]) || 50, y: parseFloat(parts[1]) || 50 };
+  })();
 
   const handleThumbnailUpload = (e) => {
     handleThumbnailFile(e.target.files?.[0]);
@@ -205,6 +248,7 @@ export default function HistoryAdmin({ onBack }) {
       title: formData.title,
       content: formData.content,
       thumbnail: formData.thumbnail,
+      thumbnail_position: formData.thumbnail_position || '50% 50%',
       is_published: formData.is_published,
       is_membership: formData.is_membership,
     };
@@ -282,15 +326,52 @@ export default function HistoryAdmin({ onBack }) {
               onDragOver={(e) => { e.preventDefault(); setThumbDragOver(true); }}
               onDragLeave={() => setThumbDragOver(false)}
               onDrop={handleThumbDrop}
-              onClick={() => document.getElementById('history-thumb-input').click()}
+              onClick={!formData.thumbnail ? () => document.getElementById('history-thumb-input').click() : undefined}
             >
               {formData.thumbnail ? (
-                <div className="admin-form__dropzone-preview">
-                  <img src={formData.thumbnail} alt="썸네일 미리보기" />
-                  <div className="admin-form__dropzone-overlay">
-                    <span>클릭하거나 새 이미지를 드래그하여 변경</span>
+                <>
+                  <div
+                    className={`admin-form__focus-stage ${focusDragging ? 'admin-form__focus-stage--dragging' : ''}`}
+                    onPointerDown={handleFocusPointerDown}
+                    onPointerMove={handleFocusPointerMove}
+                    onPointerUp={handleFocusPointerUp}
+                    onPointerCancel={handleFocusPointerUp}
+                    title="클릭 또는 드래그로 목록 카드에서 보일 중심점을 지정하세요"
+                  >
+                    <img
+                      src={formData.thumbnail}
+                      alt="썸네일 미리보기"
+                      style={{ objectPosition: formData.thumbnail_position || '50% 50%' }}
+                      draggable={false}
+                    />
+                    <div
+                      className="admin-form__focus-point"
+                      style={{ left: `${focusXY.x}%`, top: `${focusXY.y}%` }}
+                    />
                   </div>
-                </div>
+                  <div className="admin-form__focus-controls">
+                    <span className="admin-form__focus-readout">
+                      포커스 포인트: <strong>{focusXY.x.toFixed(0)}%, {focusXY.y.toFixed(0)}%</strong>
+                      <span className="admin-form__focus-hint">미리보기를 클릭하거나 드래그해 조절</span>
+                    </span>
+                    <div className="admin-form__focus-buttons">
+                      <button
+                        type="button"
+                        className="admin-btn admin-btn--small admin-btn--outline"
+                        onClick={resetFocusPoint}
+                      >
+                        중앙 리셋
+                      </button>
+                      <button
+                        type="button"
+                        className="admin-btn admin-btn--small admin-btn--outline"
+                        onClick={triggerThumbReplace}
+                      >
+                        🔄 이미지 변경
+                      </button>
+                    </div>
+                  </div>
+                </>
               ) : (
                 <div className="admin-form__dropzone-empty">
                   <span className="admin-form__dropzone-icon">🖼️</span>
