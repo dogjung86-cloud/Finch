@@ -2,22 +2,30 @@
 
 import Image from 'next/image';
 
+const DIRECT_IMAGE_HOSTS = [
+  'supabase.co',
+];
+
 // next/image가 안전하게 프록시·최적화할 수 있는 호스트.
 // (wikimedia 등 hotlink-rate-limit 호스트는 native <img>로 직접 로드해야 안전)
 const KNOWN_HOSTS = [
-  'supabase.co',
   'lh3.googleusercontent.com',
   'yt3.ggpht.com',
   'images.unsplash.com',
   'live.staticflickr.com',
 ];
 
+function matchesHost(hostname, host) {
+  return hostname === host || hostname.endsWith('.' + host);
+}
+
 function isOptimizable(src) {
   if (!src) return false;
   if (src.startsWith('/')) return true;
   try {
     const u = new URL(src);
-    return KNOWN_HOSTS.some((h) => u.hostname === h || u.hostname.endsWith('.' + h));
+    if (DIRECT_IMAGE_HOSTS.some((h) => matchesHost(u.hostname, h))) return false;
+    return KNOWN_HOSTS.some((h) => matchesHost(u.hostname, h));
   } catch {
     return false;
   }
