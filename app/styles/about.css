@@ -25,16 +25,18 @@
   font-size: 13px;
   color: var(--text-3);
 }
+.about-hero__text {
+  container-type: inline-size;
+}
+/* 어느 폭에서든 한 줄로 들어가도록 글자 크기를 글 칸 너비에 맞춘다.
+   왼쪽 여백은 큰 글자의 획 시작선을 본문과 맞추는 값 */
 .about-hero__title {
-  margin: 12px 0 26px;
-  font-size: var(--fs-h1);
+  margin: 12px 0 26px -0.02em;
+  font-size: min(9cqi, var(--fs-h1));
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.035em;
   color: var(--teal);
-}
-.about-hero__title span {
-  display: block;
 }
 .about-hero__p {
   max-width: 36em;
@@ -73,15 +75,6 @@
 
 .about-bio {
   scroll-margin-top: var(--nav-h);
-}
-.bio-text {
-  margin-bottom: clamp(32px, 4vw, 48px);
-  padding: clamp(22px, 3vw, 32px);
-  font-size: 16px;
-  line-height: 1.85;
-  color: var(--text-2);
-  background: var(--bg-soft);
-  border-radius: var(--r-lg);
 }
 .bio-row {
   display: grid;

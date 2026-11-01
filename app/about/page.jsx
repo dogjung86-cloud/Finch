@@ -73,11 +73,7 @@ export default function AboutPage() {
           </figure>
           <div className="about-hero__text" data-reveal style={{ '--d': '100ms' }}>
             <p className="eyebrow">About Me</p>
-            <h1 className="about-hero__title">
-              {ABOUT.titleLines.map((line) => (
-                <span key={line}>{line}</span>
-              ))}
-            </h1>
+            <h1 className="about-hero__title">{ABOUT.title}</h1>
             {ABOUT.paragraphs.map((p) => (
               <p key={p.slice(0, 12)} className="about-hero__p">
                 {p}
@@ -108,9 +104,6 @@ export default function AboutPage() {
             title="약력"
             desc="강연 소개나 방송 자막, 보도자료에 필요하시면 그대로 가져다 쓰셔도 됩니다."
           />
-          <p className="bio-text" data-reveal>
-            {BIO.text}
-          </p>
           <BioRow title="경력">
             <YearList items={BIO.career} />
           </BioRow>
