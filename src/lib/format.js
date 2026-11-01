@@ -1,12 +1,16 @@
 // 날짜·숫자 표시 도우미
 
+// 서버(UTC)와 방문자 브라우저의 시간대가 달라도 같은 날짜가 나오도록 한국 시간으로 고정한다
+const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
+
 export function formatDate(value) {
   if (!value) return '';
-  const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return '';
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
+  const time = new Date(value).getTime();
+  if (Number.isNaN(time)) return '';
+  const d = new Date(time + KST_OFFSET_MS);
+  const y = d.getUTCFullYear();
+  const m = String(d.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(d.getUTCDate()).padStart(2, '0');
   return `${y}.${m}.${day}`;
 }
 

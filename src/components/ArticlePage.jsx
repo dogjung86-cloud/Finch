@@ -6,6 +6,7 @@ import SmartImage from './SmartImage';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { ADMIN_EMAIL } from '../lib/constants';
 import { FONT_SIZES, fixLineBreaks } from '../lib/articleText';
+import { formatDate } from '../lib/format';
 import ReadProgress from './articles/ReadProgress';
 
 function timeAgo(dateStr) {
@@ -191,7 +192,7 @@ export default function ArticlePage({ article, user, onLoginRequest }) {
         {/* 메타 정보 */}
         <div className="article-page__meta">
           <span className="article-page__author">{article.author}</span>
-          <span className="article-page__date">{article.date || (article.created_at ? new Date(article.created_at).toLocaleDateString('ko-KR') : '')}</span>
+          <span className="article-page__date">{article.date || formatDate(article.created_at)}</span>
         </div>
 
         {/* 본문에 썸네일이 없으면 본문 앞에 원본 비율로 삽입 */}

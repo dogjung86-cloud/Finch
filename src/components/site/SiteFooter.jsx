@@ -70,7 +70,8 @@ export default function SiteFooter() {
           <span>주소 {BUSINESS.address}</span>
           <span>이메일 {BUSINESS.email}</span>
         </p>
-        <p>
+        {/* 새해가 되면 미리 만들어 둔 페이지의 연도와 잠시 달라질 수 있다 */}
+        <p suppressHydrationWarning>
           © {year} {SITE.name}. All rights reserved.
         </p>
       </div>

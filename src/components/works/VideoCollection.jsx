@@ -33,7 +33,12 @@ export function VideoCard({ video, onOpen }) {
       <span className="vcard__body">
         {video.kicker && <span className="vcard__kicker">{video.kicker}</span>}
         <span className="vcard__title">{video.title}</span>
-        {meta && <span className="vcard__meta">{meta}</span>}
+        {/* "3시간 전" 같은 글자는 서버에서 만든 시점과 달라질 수 있으므로 어긋나도 경고하지 않는다 */}
+        {meta && (
+          <span className="vcard__meta" suppressHydrationWarning>
+            {meta}
+          </span>
+        )}
       </span>
     </a>
   );
