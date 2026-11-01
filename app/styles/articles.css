@@ -1,0 +1,19 @@
+/* ───────────────────────── ARTICLES ───────────────────────── */
+
+.hub {
+  padding-bottom: clamp(64px, 8vw, 112px);
+}
+.hub__cats {
+  margin-top: 20px;
+}
+.hub__grid {
+  margin-top: clamp(32px, 4vw, 48px);
+}
+.hub__empty {
+  margin-top: 32px;
+}
+.hub__more {
+  display: flex;
+  justify-content: center;
+  margin-top: 56px;
+}

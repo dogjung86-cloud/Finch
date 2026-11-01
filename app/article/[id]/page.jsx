@@ -1,23 +1,18 @@
 import { notFound } from 'next/navigation';
-import { createServerSupabase } from '../../../src/lib/supabase-server';
+import { getColumnById } from '../../../src/lib/content';
 import ArticlePageClient from './ArticlePageClient';
 
 // ── 동적 메타데이터 (SEO 핵심!) ──
 export async function generateMetadata({ params }) {
   const { id } = await params;
-  const supabase = createServerSupabase();
-  const { data: article } = await supabase
-    .from('articles')
-    .select('title, excerpt, thumbnail, author')
-    .eq('id', id)
-    .single();
+  const article = await getColumnById(id);
 
   if (!article) {
-    return { title: '기사를 찾을 수 없습니다 – Finch' };
+    return { title: '기사를 찾을 수 없습니다' };
   }
 
   return {
-    title: `${article.title} – Finch`,
+    title: article.title,
     description: article.excerpt || '',
     alternates: { canonical: `/article/${id}` },
     openGraph: {
@@ -25,7 +20,7 @@ export async function generateMetadata({ params }) {
       description: article.excerpt || '',
       images: article.thumbnail ? [{ url: article.thumbnail }] : [],
       type: 'article',
-      siteName: 'Finch',
+      siteName: '과학드림',
       authors: [article.author || 'The Finch'],
     },
     twitter: {
@@ -40,14 +35,9 @@ export async function generateMetadata({ params }) {
 // ── 서버 컴포넌트: 기사 데이터를 서버에서 가져와서 완성된 HTML로 전달 ──
 export default async function ArticleRoute({ params }) {
   const { id } = await params;
-  const supabase = createServerSupabase();
-  const { data: article, error } = await supabase
-    .from('articles')
-    .select('*')
-    .eq('id', id)
-    .single();
+  const article = await getColumnById(id);
 
-  if (error || !article) {
+  if (!article) {
     notFound();
   }
 
@@ -65,7 +55,7 @@ export default async function ArticleRoute({ params }) {
     },
     publisher: {
       '@type': 'Organization',
-      name: 'Finch',
+      name: '과학드림',
       logo: {
         '@type': 'ImageObject',
         url: 'https://www.finch.co.kr/images/favicon/favicon-512x512.png',

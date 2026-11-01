@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { FONT_SIZES, fixLineBreaks } from '../../../src/lib/articleText';
+import ReadProgress from '../../../src/components/articles/ReadProgress';
 
 export default function HistoryDetailClient({ item }) {
-  const router = useRouter();
   const [fontSizeIdx, setFontSizeIdx] = useState(1);
 
   const cycleFontSize = () => {
@@ -24,15 +24,12 @@ export default function HistoryDetailClient({ item }) {
     }
   };
 
-  const handleBack = () => {
-    router.push('/history');
-  };
-
   const content = item.content || '';
   const thumbnailInContent = item.thumbnail && content.includes(item.thumbnail);
 
   return (
     <div className="article-page">
+      <ReadProgress />
       {/* 데스크톱 사이드 툴바 */}
       <div className="article-toolbar">
         <button className="article-toolbar__btn" onClick={cycleFontSize} title="글자 크기">
@@ -52,9 +49,11 @@ export default function HistoryDetailClient({ item }) {
       </div>
 
       <div className="article-page__container">
-        <button className="article-page__back" onClick={handleBack}>
-          ← 재밌는 과학사 목록
-        </button>
+        <Link className="article-page__back" href="/history">
+          ← 과학사 목록
+        </Link>
+
+        <p className="article-page__kicker">쓸데없이 재밌는 과학사</p>
 
         <h1 className="article-page__title">{item.title}</h1>
 

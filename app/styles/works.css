@@ -1,0 +1,181 @@
+/* ───────────────────────── WORKS ───────────────────────── */
+
+.works-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 28px;
+}
+.works-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 18px;
+  font-size: 15px;
+  font-weight: 600;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+}
+.works-nav a:hover {
+  border-color: var(--text);
+}
+.works-section {
+  scroll-margin-top: var(--nav-h);
+}
+
+.channel-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 20px;
+  margin-bottom: clamp(48px, 6vw, 72px);
+  padding: 20px 24px;
+  background: var(--bg);
+  border-radius: var(--r-lg);
+}
+.channel-row__logo {
+  width: 52px;
+  height: auto;
+}
+.channel-row__info {
+  flex: 1;
+  min-width: 200px;
+}
+.channel-row__name {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.channel-row__meta {
+  font-size: 14px;
+  color: var(--text-3);
+}
+.channel-row__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.works-sub {
+  margin-top: clamp(64px, 8vw, 104px);
+}
+
+/* 출연 영상: 기관별 묶음. 기관 이름을 크게, 프로그램 이름은 작게 */
+.org-group {
+  margin-top: clamp(44px, 5.5vw, 68px);
+}
+.org-group .video-grid {
+  scroll-margin-top: calc(var(--nav-h) + 120px);
+}
+.org-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px 24px;
+  margin-bottom: 22px;
+}
+.org-head__name {
+  font-size: clamp(24px, 2.6vw, 30px);
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+}
+.org-head__program {
+  margin-top: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+.org-head__program span {
+  font-weight: 500;
+  color: var(--text-3);
+}
+.org-head__desc {
+  margin-top: 3px;
+  font-size: 14px;
+  color: var(--text-3);
+}
+.video-more {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(24px, 3vw, 36px);
+}
+
+.book-list {
+  display: grid;
+  border-top: 1px solid var(--line);
+}
+.book-list > div {
+  border-bottom: 1px solid var(--line);
+}
+.book--full {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  align-items: start;
+  gap: clamp(24px, 4vw, 56px);
+  padding: clamp(28px, 4vw, 44px) 0;
+  scroll-margin-top: calc(var(--nav-h) + 16px);
+}
+.book--full .book__cover {
+  display: block;
+}
+.book--full .book__cover img {
+  width: 100%;
+  height: auto;
+  box-shadow: 0 14px 30px -12px rgba(0, 0, 0, 0.35);
+}
+.book__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.book__badge {
+  margin-left: 10px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  border-radius: var(--r-pill);
+}
+.book--full .book__title {
+  font-size: clamp(22px, 2.4vw, 28px);
+  font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: -0.03em;
+}
+.book__sub {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+.book__authors {
+  font-size: 14px;
+  color: var(--text-3);
+}
+.book__desc {
+  max-width: 40em;
+  margin-top: 6px;
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--text-2);
+}
+.book__buy {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+@media (max-width: 640px) {
+  .book--full {
+    grid-template-columns: 1fr;
+  }
+  .book--full .book__cover {
+    max-width: 180px;
+  }
+}

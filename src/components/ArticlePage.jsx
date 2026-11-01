@@ -1,10 +1,12 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import SmartImage from './SmartImage';
-import { supabase } from '../lib/supabase';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { ADMIN_EMAIL } from '../lib/constants';
 import { FONT_SIZES, fixLineBreaks } from '../lib/articleText';
+import ReadProgress from './articles/ReadProgress';
 
 function timeAgo(dateStr) {
   const now = new Date();
@@ -18,7 +20,7 @@ function timeAgo(dateStr) {
   return `${Math.floor(diff / 31536000)}년 전`;
 }
 
-export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
+export default function ArticlePage({ article, user, onLoginRequest }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [editingId, setEditingId] = useState(null);
@@ -47,9 +49,9 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
     }
   };
 
-  // 조회수 증가 (페이지당 1회)
+  // 조회수 증가 (페이지당 1회). Supabase 가 없는 로컬 미리보기에서는 세지 않는다
   useEffect(() => {
-    if (viewCounted.current || !article?.id) return;
+    if (viewCounted.current || !article?.id || !isSupabaseConfigured) return;
     viewCounted.current = true;
     supabase.rpc('increment_view_count', { article_id: article.id })
       .then(({ error }) => {
@@ -59,6 +61,10 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
 
   // Supabase에서 댓글 로드
   const loadComments = async () => {
+    if (!isSupabaseConfigured) {
+      setLoading(false);
+      return;
+    }
     const { data, error } = await supabase
       .from('comments')
       .select('*')
@@ -140,6 +146,7 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
 
   return (
     <div className="article-page">
+      <ReadProgress />
       {/* 데스크톱 사이드 툴바 */}
       <div className="article-toolbar">
         <button className="article-toolbar__btn" onClick={cycleFontSize} title="글자 크기">
@@ -160,9 +167,13 @@ export default function ArticlePage({ article, onBack, user, onLoginRequest }) {
 
       <div className="article-page__container">
         {/* 뒤로 가기 */}
-        <button className="article-page__back" onClick={onBack}>
-          ← 목록으로
-        </button>
+        <Link className="article-page__back" href="/articles">
+          ← 칼럼 목록
+        </Link>
+
+        <p className="article-page__kicker">
+          요즘 과학{article.category && article.category !== '미분류' ? ` · ${article.category}` : ''}
+        </p>
 
         {/* 제목 */}
         <h1 className="article-page__title">{article.title}</h1>

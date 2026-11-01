@@ -1,41 +1,30 @@
 import { notFound } from 'next/navigation';
-import { createServerSupabase } from '../../../src/lib/supabase-server';
+import { getHistoryById } from '../../../src/lib/content';
 import HistoryDetailClient from './HistoryDetailClient';
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
-  const supabase = createServerSupabase();
-  const { data: item } = await supabase
-    .from('history_science')
-    .select('title, thumbnail')
-    .eq('id', id)
-    .single();
+  const item = await getHistoryById(id);
 
-  if (!item) return { title: '항목을 찾을 수 없습니다 – Finch' };
+  if (!item) return { title: '글을 찾을 수 없습니다' };
 
   return {
-    title: `${item.title} – 100년 전 과학 – Finch`,
+    title: `${item.title} · 쓸데없이 재밌는 과학사`,
     alternates: { canonical: `/history/${id}` },
     openGraph: {
       title: item.title,
       images: item.thumbnail ? [{ url: item.thumbnail }] : [],
       type: 'article',
-      siteName: 'Finch',
+      siteName: '과학드림',
     },
   };
 }
 
 export default async function HistoryDetailRoute({ params }) {
   const { id } = await params;
-  const supabase = createServerSupabase();
-  const { data: item, error } = await supabase
-    .from('history_science')
-    .select('*')
-    .eq('id', id)
-    .eq('is_published', true)
-    .maybeSingle();
+  const item = await getHistoryById(id);
 
-  if (error || !item) {
+  if (!item) {
     notFound();
   }
 
@@ -48,11 +37,11 @@ export default async function HistoryDetailRoute({ params }) {
     dateModified: item.updated_at || item.created_at,
     author: {
       '@type': 'Organization',
-      name: 'Finch',
+      name: '과학드림',
     },
     publisher: {
       '@type': 'Organization',
-      name: 'Finch',
+      name: '과학드림',
       logo: {
         '@type': 'ImageObject',
         url: 'https://www.finch.co.kr/images/favicon/favicon-512x512.png',
@@ -62,7 +51,7 @@ export default async function HistoryDetailRoute({ params }) {
       '@type': 'WebPage',
       '@id': `https://www.finch.co.kr/history/${id}`,
     },
-    articleSection: '100년 전 과학',
+    articleSection: '쓸데없이 재밌는 과학사',
   };
 
   return (

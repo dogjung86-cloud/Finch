@@ -18,6 +18,12 @@ const nextConfig = {
     imageSizes: [64, 128, 256, 384],
     formats: ['image/webp'],
   },
+  async redirects() {
+    return [
+      // 리뉴얼 전 게임 페이지 주소 → 새 게임 페이지
+      { source: '/playlab', destination: '/games/fly-darwin', permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

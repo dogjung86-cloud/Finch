@@ -1,48 +1,54 @@
-import './globals.css';
+import './styles/tokens.css';
+import './styles/components.css';
+import './styles/chrome.css';
+import './styles/home.css';
+import './styles/about.css';
+import './styles/works.css';
+import './styles/games.css';
+import './styles/articles.css';
+import './styles/collaborate.css';
+import './styles/article.css';
 import AuthProvider from '../src/providers/AuthProvider';
 import LayoutShell from '../src/components/LayoutShell';
+import { SITE } from '../src/data/site';
+
+const TITLE = '과학드림 | 과학은 세상을 보는 창';
 
 export const metadata = {
-  metadataBase: new URL('https://www.finch.co.kr'),
-  title: '핀치 - 쉽고 재밌는 과학 플랫폼',
-  description: '쉽고 재밌는 과학 플랫폼 - 과학 이야기와 과학 게임이 만나는 곳',
-  keywords: [
-    '과학',
-    '과학 매거진',
-    '과학 기사',
-    '과학 게임',
-    '사이언스',
-    '100년 전 과학',
-    '물리',
-    '화학',
-    '생물',
-    '천문',
-    'Finch',
-    '핀치',
-  ],
-  alternates: {
-    canonical: '/',
+  metadataBase: new URL(SITE.url),
+  title: {
+    default: TITLE,
+    template: '%s | 과학드림',
   },
+  description: SITE.description,
+  keywords: [
+    '과학드림',
+    '김정훈',
+    '과학 유튜버',
+    '과학 유튜브',
+    '진화',
+    '고생물',
+    '과학 강연',
+    '과학 책',
+    '과학 게임',
+    'Fly Darwin',
+    '과학 칼럼',
+    'Science Dream',
+  ],
+  alternates: { canonical: '/' },
   openGraph: {
-    title: '핀치 - 쉽고 재밌는 과학 플랫폼',
-    description: '쉽고 재밌는 과학 플랫폼 - 과학 이야기와 과학 게임이 만나는 곳',
-    url: 'https://www.finch.co.kr',
-    siteName: 'Finch',
+    title: TITLE,
+    description: SITE.description,
+    url: SITE.url,
+    siteName: '과학드림',
     type: 'website',
     locale: 'ko_KR',
-    images: [
-      {
-        url: '/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: '핀치 - 쉽고 재밌는 과학 플랫폼',
-      },
-    ],
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: '과학드림' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: '핀치 - 쉽고 재밌는 과학 플랫폼',
-    description: '쉽고 재밌는 과학 플랫폼 - 과학 이야기와 과학 게임이 만나는 곳',
+    title: TITLE,
+    description: SITE.description,
     images: ['/og-image.jpg'],
   },
   verification: {
@@ -53,9 +59,16 @@ export const metadata = {
   },
 };
 
+export const viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#ffffff' },
+  ],
+};
+
 export default function RootLayout({ children }) {
   return (
-    <html lang="ko" suppressHydrationWarning>
+    <html lang="ko" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/images/favicon/favicon.ico" sizes="any" />
         <link rel="icon" type="image/png" href="/images/favicon/favicon-32x32.png" sizes="32x32" />
@@ -66,8 +79,8 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@400;500;600;700&family=Gowun+Batang:wght@400;700&display=swap"
           rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&display=swap"
         />
         <link
           rel="stylesheet"
@@ -75,16 +88,8 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        {/* 다크모드 깜빡임 방지 (head에서 <body>가 그려지기 전 테마 결정) */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('finch_theme')||'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`,
-          }}
-        />
         <AuthProvider>
-          <LayoutShell>
-            {children}
-          </LayoutShell>
+          <LayoutShell>{children}</LayoutShell>
         </AuthProvider>
       </body>
     </html>

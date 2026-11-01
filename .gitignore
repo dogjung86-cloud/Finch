@@ -41,3 +41,5 @@ select.html
 zi[0-9a-zA-Z]*
 100년전과학_*.html
 
+# 로컬 개발용 공개 사이트 글 사본 (scripts/pull-live-articles.mjs 가 만듦)
+.dev-content/
