@@ -51,7 +51,7 @@
 .article-page__title {
   margin-bottom: 18px;
   font-size: clamp(28px, 3.8vw, 40px);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.32;
   letter-spacing: -0.035em;
   word-break: keep-all;
@@ -106,7 +106,7 @@
 }
 .article-toolbar__icon {
   font-size: 17px;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.2;
 }
 .article-toolbar__label {
@@ -206,12 +206,12 @@
 .article-page__body h1 {
   margin: 40px 0 16px;
   font-size: 28px;
-  font-weight: 800;
+  font-weight: 700;
 }
 .article-page__body h2 {
   margin: 36px 0 14px;
   font-size: 24px;
-  font-weight: 800;
+  font-weight: 700;
 }
 .article-page__body h3 {
   margin: 28px 0 12px;
@@ -258,7 +258,7 @@
   right: 0;
   bottom: 0;
   height: 120px;
-  background: linear-gradient(transparent, #fff);
+  background: linear-gradient(transparent, var(--bg));
   pointer-events: none;
 }
 .membership-lock {
@@ -275,7 +275,7 @@
 .membership-lock__title {
   margin-bottom: 8px;
   font-size: 22px;
-  font-weight: 800;
+  font-weight: 700;
 }
 .membership-lock__desc {
   margin-bottom: 22px;
@@ -298,7 +298,7 @@
 }
 .comments-section__count {
   font-size: 18px;
-  font-weight: 800;
+  font-weight: 700;
 }
 .comment-input {
   display: flex;

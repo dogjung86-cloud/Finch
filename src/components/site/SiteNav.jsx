@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { NAV, CHANNEL, HERO_HAS_MEDIA } from '../../data/site';
+import { NAV, CHANNEL } from '../../data/site';
 import { IconUser, IconYouTube } from './Icons';
 
 export function isNavActive(href, pathname) {
@@ -28,17 +28,9 @@ function Avatar({ user, size = 30 }) {
 export default function SiteNav({ user, isAdmin, onLoginClick, onLogout, onDeleteAccount }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const accountRef = useRef(null);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   // 페이지 이동 시 메뉴 닫기
   useEffect(() => {
@@ -73,11 +65,8 @@ export default function SiteNav({ user, isAdmin, onLoginClick, onLogout, onDelet
     };
   }, [accountOpen]);
 
-  // 홈 첫 화면에 배경 영상이 있을 때만 그 위에서 투명한 메뉴
-  const overlay = pathname === '/' && HERO_HAS_MEDIA && !scrolled && !menuOpen;
-
   return (
-    <header className={`site-nav${overlay ? ' is-overlay' : ''}${menuOpen ? ' is-open' : ''}`}>
+    <header className={`site-nav${menuOpen ? ' is-open' : ''}`}>
       <a href="#main" className="skip-link">
         본문 바로가기
       </a>

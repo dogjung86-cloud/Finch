@@ -16,25 +16,8 @@
 .collab-aside__title {
   margin-bottom: 14px;
   font-size: 17px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-.collab-kinds {
-  display: grid;
-  gap: 12px;
-  list-style: none;
-}
-.collab-kinds li {
-  display: grid;
-  gap: 1px;
-}
-.collab-kinds strong {
-  font-size: 15px;
   font-weight: 700;
-}
-.collab-kinds span {
-  font-size: 14px;
-  color: var(--text-3);
+  letter-spacing: -0.02em;
 }
 .collab-refs {
   font-size: 15px;
@@ -248,7 +231,7 @@
 }
 .collab-form__done-title {
   font-size: 26px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.03em;
 }
 .collab-form__done-text {

@@ -9,7 +9,6 @@ import RevealController from './site/RevealController';
 import LoginModal from './LoginModal';
 import DeleteAccountModal from './DeleteAccountModal';
 import { useAuth } from '../providers/AuthProvider';
-import { HERO_HAS_MEDIA } from '../data/site';
 
 // 간단한 방문자 ID (localStorage 기반)
 function getVisitorId() {
@@ -64,8 +63,6 @@ export default function LayoutShell({ children }) {
 
   // 약관 · 개인정보 페이지는 앱 웹뷰에서도 열리므로 상단 메뉴를 숨긴다 (기존 동작 유지)
   const bare = pathname === '/terms' || pathname === '/privacy';
-  // 홈에 배경 영상이 있으면 영상이 메뉴 아래까지 깔린다
-  const heroPage = pathname === '/' && HERO_HAS_MEDIA;
 
   return (
     <>
@@ -79,11 +76,7 @@ export default function LayoutShell({ children }) {
         />
       )}
 
-      <main
-        id="main"
-        className={`site-main${bare ? ' site-main--bare' : ''}${heroPage ? ' site-main--hero' : ''}`}
-        tabIndex={-1}
-      >
+      <main id="main" className={`site-main${bare ? ' site-main--bare' : ''}`} tabIndex={-1}>
         {children}
       </main>
 

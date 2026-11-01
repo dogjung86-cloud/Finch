@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import SectionHead from '../../src/components/site/SectionHead';
 import { IconArrowRight, IconYouTube } from '../../src/components/site/Icons';
-import { ABOUT, BIO, SLOGAN } from '../../src/data/profile';
+import { ABOUT, BIO } from '../../src/data/profile';
 import { CHANNEL, SITE, SOCIALS } from '../../src/data/site';
 import { BOOKS } from '../../src/data/works';
 
@@ -100,38 +100,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="section section--soft about-quote" aria-label="채널 소개글">
-        <div className="container container--narrow">
-          <blockquote className="quote" data-reveal>
-            <p className="quote__main">{SLOGAN}</p>
-            {CHANNEL.description.map((line) => (
-              <p key={line} className="quote__line">
-                {line}
-              </p>
-            ))}
-            <footer className="quote__by">유튜브 과학드림 채널 소개글 중에서</footer>
-          </blockquote>
-        </div>
-      </section>
-
-      <section className="section" aria-labelledby="about-doing-title">
-        <div className="container">
-          <SectionHead eyebrow="What I do" id="about-doing-title" title="이런 일을 해요" />
-          <ul className="doing-grid">
-            {ABOUT.doing.map((d, i) => (
-              <li key={d.key} className="doing" data-reveal style={{ '--d': `${i * 70}ms` }}>
-                <span className="doing__no">{String(i + 1).padStart(2, '0')}</span>
-                <h3 className="doing__title">{d.title}</h3>
-                <p className="doing__text">{d.text}</p>
-                <Link className="text-link" href={d.href}>
-                  {d.link} <IconArrowRight />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
       <section id="bio" className="section about-bio" aria-labelledby="about-bio-title">
         <div className="container container--narrow">
           <SectionHead
@@ -176,21 +144,6 @@ export default function AboutPage() {
               </ul>
             </details>
           </BioRow>
-        </div>
-      </section>
-
-      <section className="section" aria-labelledby="about-cta-title">
-        <div className="container">
-          <div className="cta-box" data-reveal>
-            <p className="eyebrow">Collaborate</p>
-            <h2 className="cta-box__title" id="about-cta-title">
-              강연이나 협업을 제안하고 싶다면
-            </h2>
-            <p className="cta-box__text">어떤 이야기든 편하게 보내 주세요.</p>
-            <Link href="/collaborate" className="btn btn--lg">
-              협업 문의하기 <IconArrowRight />
-            </Link>
-          </div>
         </div>
       </section>
     </>

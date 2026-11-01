@@ -16,8 +16,8 @@
   line-height: 1;
   white-space: nowrap;
   color: #fff;
-  background: var(--text);
-  border: 1px solid var(--text);
+  background: var(--teal);
+  border: 1px solid var(--teal);
   border-radius: var(--r-pill);
   cursor: pointer;
   transition:
@@ -27,8 +27,8 @@
     opacity 0.2s;
 }
 .btn:hover {
-  background: #2c2c2c;
-  border-color: #2c2c2c;
+  background: var(--teal-dark);
+  border-color: var(--teal-dark);
 }
 .btn svg {
   flex: none;
@@ -153,8 +153,8 @@
 .sec-head__title {
   margin-top: 8px;
   font-size: var(--fs-h2);
-  font-weight: 800;
-  line-height: 1.2;
+  font-weight: 700;
+  line-height: 1.25;
   letter-spacing: -0.03em;
 }
 .sec-head__desc {
@@ -164,23 +164,60 @@
 }
 
 /* ── 페이지 머리 (안쪽 페이지 공통) ── */
-.page-head {
-  padding-top: clamp(56px, 7vw, 104px);
-  padding-bottom: clamp(36px, 4.5vw, 60px);
+.page-band-wrap {
+  padding-block: clamp(16px, 2.4vw, 32px) clamp(36px, 4.6vw, 64px);
 }
-.page-head__title {
-  margin-top: 12px;
+.page-band-wrap + .section {
+  padding-top: 0;
+}
+.page-band {
+  display: grid;
+  grid-template-columns: clamp(200px, 26vw, 330px) minmax(0, 1fr);
+  align-items: center;
+  color: var(--ink);
+  background: var(--c);
+}
+.page-band__img {
+  width: 100%;
+  height: auto;
+  /* 그림 오른쪽 종이가 띠 색으로 자연스럽게 이어지게 한다 */
+  mask-image: linear-gradient(to right, #000 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, #000 90%, transparent);
+}
+.page-band__text {
+  padding: clamp(20px, 3vw, 40px) clamp(20px, 3.4vw, 48px) clamp(20px, 3vw, 40px) clamp(10px, 1.6vw, 24px);
+}
+.page-band__eyebrow {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.page-band__title {
+  margin-top: 8px;
   font-size: var(--fs-h1);
-  font-weight: 800;
-  line-height: 1.12;
+  font-weight: 700;
+  line-height: 1.18;
   letter-spacing: -0.035em;
 }
-.page-head__lead {
-  max-width: 640px;
-  margin-top: 18px;
-  font-size: clamp(16px, 1.4vw, 18px);
-  line-height: 1.75;
-  color: var(--text-2);
+.page-band__lead {
+  max-width: 34em;
+  margin-top: 12px;
+  font-size: clamp(15px, 1.3vw, 17px);
+  line-height: 1.7;
+  opacity: 0.92;
+}
+@media (max-width: 640px) {
+  .page-band {
+    grid-template-columns: 34% minmax(0, 1fr);
+  }
+  .page-band__text {
+    padding: 14px 16px 14px 6px;
+  }
+  .page-band__lead {
+    display: none;
+  }
 }
 
 /* ── 탭 (밑줄형) ── */

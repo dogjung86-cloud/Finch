@@ -23,7 +23,7 @@ export default function GamesPage() {
   return (
     <>
       <PageHead
-        eyebrow="Games"
+        chapter="games"
         title="게임으로 만나는 과학"
         lead="과학적 상상력을 더한 게임을 만듭니다. 누구나 쉽게 조작하고, 가볍게 플레이할 수 있는 게임들로 채워 나갈게요."
       />

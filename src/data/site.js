@@ -53,13 +53,3 @@ export const BUSINESS = {
   address: '경기도 시흥시 능곡번영길 30, 7층 710-4',
   email: 'sciencegive@gmail.com',
 };
-
-// 홈 첫 화면 배경 영상. 본인 사진은 About Me 페이지에서만 보여 주므로 여기에는 쓰지 않는다.
-// video 가 null 이면 흰 바탕에 문구만 크게 보이고, 영상을 넣으면 화면을 꽉 채운 영상 위에 문구가 올라간다.
-// 후보 영상: 게티이미지뱅크 2288854958 (Giant Fern leaves in the forest view from the bottom), 유튜브 ALL PASS 멤버십으로 받기
-export const HERO_MEDIA = {
-  video: null,
-  poster: null,
-};
-
-export const HERO_HAS_MEDIA = Boolean(HERO_MEDIA.video);

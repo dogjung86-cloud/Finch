@@ -1,21 +1,23 @@
 /* ==========================================================
    과학드림 디자인 시스템: 토큰 · 기본 스타일
-   방향: 밝고 심플한 에디토리얼. 흰 바탕, 검정 글자, 과학드림 주황은 포인트로만.
+   방향: 밝은 종이 바탕에 메뉴별 종이 창 그림. 글꼴은 전부 Pretendard.
    ========================================================== */
 
 :root {
-  --bg: #ffffff;
-  --bg-soft: #f6f5f2;
-  --bg-muted: #efeee9;
-  --text: #121212;
-  --text-2: #4a4a4a;
-  --text-3: #8a8a8a;
-  --line: #e7e5e0;
-  --line-strong: #d6d3cc;
+  --bg: #f7f3ea;
+  --bg-soft: #ece4d4;
+  --bg-muted: #e4dbc8;
+  --text: #1c1b18;
+  --text-2: #4d4a43;
+  --text-3: #79735f;
+  --line: #e1d9c7;
+  --line-strong: #cdc5b1;
 
-  --accent: #f05a28;
-  --accent-ink: #c8461b;
-  --accent-soft: #fdeee8;
+  --teal: #123f46;
+  --teal-dark: #0d3036;
+  --accent: #b5462c;
+  --accent-ink: #a23c25;
+  --accent-soft: #f6e4da;
 
   --f-body: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic',
     system-ui, sans-serif;
@@ -146,8 +148,7 @@ button {
   padding-top: var(--nav-h);
   outline: none;
 }
-.site-main--bare,
-.site-main--hero {
+.site-main--bare {
   padding-top: 0;
 }
 

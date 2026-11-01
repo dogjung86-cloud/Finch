@@ -1,26 +1,12 @@
-import Link from 'next/link';
 import { IconArrowUpRight } from '../site/Icons';
 
-// variant: 'full' (Works 페이지) | 'compact' (홈)
-export default function BookCard({ book, variant = 'full' }) {
+export default function BookCard({ book }) {
   const cover = (
     <span className="book__cover">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={book.cover} alt={`${book.title} 표지`} loading="lazy" decoding="async" referrerPolicy="no-referrer" />
     </span>
   );
-
-  if (variant === 'compact') {
-    return (
-      <Link href={`/works#${book.slug}`} className="book book--compact">
-        {cover}
-        <span className="book__title">{book.title}</span>
-        <span className="book__meta">
-          {book.publisher} · {book.year}
-        </span>
-      </Link>
-    );
-  }
 
   return (
     <article className="book book--full" id={book.slug}>

@@ -14,7 +14,7 @@
 .games-lab__title {
   margin-bottom: 20px;
   font-size: 20px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.03em;
 }
 .glab-grid {
@@ -46,7 +46,7 @@
 }
 .game-detail__title {
   font-size: var(--fs-h1);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.04em;
 }
@@ -161,7 +161,7 @@
 .game-guide__title {
   margin-bottom: 20px;
   font-size: var(--fs-h2);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.035em;
 }
 .game-guide__grid {
@@ -177,7 +177,7 @@
 .guide__title {
   margin-bottom: 10px;
   font-size: 17px;
-  font-weight: 800;
+  font-weight: 700;
 }
 .guide ul {
   display: grid;

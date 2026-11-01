@@ -23,6 +23,7 @@ export default async function HistoryPage() {
   return (
     <>
       <PageHead
+        chapter="article"
         eyebrow="Article · History"
         title="쓸데없이 재밌는 과학사"
         lead="100년 전 신문과 잡지 속에 묻혀 있던 엉뚱하고 재밌는 과학의 순간들을 꺼내 읽습니다."

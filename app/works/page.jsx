@@ -54,7 +54,7 @@ export default async function WorksPage() {
 
   return (
     <>
-      <PageHead eyebrow="Works" title="영상 · 책 · 출연" lead="유튜브에 올린 영상과 직접 쓴 책, 그리고 다른 채널과 방송에 출연한 영상을 모았습니다.">
+      <PageHead chapter="works" title="영상 · 책 · 출연" lead="유튜브에 올린 영상과 직접 쓴 책, 그리고 다른 채널과 방송에 출연한 영상을 모았습니다.">
         <nav className="works-nav" aria-label="Works 바로가기" data-reveal style={{ '--d': '180ms' }}>
           <a href="#youtube">유튜브</a>
           <a href="#books">책</a>
@@ -63,7 +63,7 @@ export default async function WorksPage() {
       </PageHead>
 
       {/* ── 유튜브 ── */}
-      <section id="youtube" className="section section--soft works-section" aria-labelledby="works-yt-title">
+      <section id="youtube" className="section works-section" aria-labelledby="works-yt-title">
         <div className="container">
           <div className="channel-row" data-reveal>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -94,14 +94,14 @@ export default async function WorksPage() {
                 title="최신 영상"
                 more={{ href: CHANNEL.url, label: '채널에서 전체 보기', external: true }}
               />
-              <VideoCollection videos={latest} />
+              <VideoCollection videos={latest} limit={6} />
             </>
           )}
 
           {FEATURED_VIDEOS.length > 0 && (
             <div className="works-sub">
               <SectionHead eyebrow="Popular" id={latest.length ? undefined : 'works-yt-title'} title="많이 본 영상" />
-              <VideoCollection videos={FEATURED_VIDEOS} />
+              <VideoCollection videos={FEATURED_VIDEOS} limit={3} />
             </div>
           )}
         </div>
@@ -126,7 +126,7 @@ export default async function WorksPage() {
       </section>
 
       {/* ── 출연 ── */}
-      <section id="appearances" className="section section--soft works-section" aria-labelledby="works-app-title">
+      <section id="appearances" className="section works-section" aria-labelledby="works-app-title">
         <div className="container">
           <SectionHead eyebrow="Appearances" id="works-app-title" title="출연한 영상" desc="방송과 여러 기관 채널에 출연한 영상을 기관별로 모았습니다." />
           {APPEARANCE_GROUPS.map((g) => (
