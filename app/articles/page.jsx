@@ -26,7 +26,7 @@ export default async function ArticlesPage() {
       <PageHead
         chapter="article"
         title="과학 칼럼"
-        lead="흥미로운 과학 소식을 발견하면 칼럼으로 씁니다. 요즘 과학 이야기와 쓸데없이 재밌는 과학사를 함께 모았어요."
+        lead="흥미로운 과학 소식을 발견하면 칼럼으로 씁니다."
       />
       <ArticlesHub items={items} initialSeries="all" />
     </>
