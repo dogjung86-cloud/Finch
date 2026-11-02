@@ -150,6 +150,10 @@
   .player__frame {
     aspect-ratio: 4 / 3;
   }
+  .player--tall:not(.is-pseudo-full):not(:fullscreen) .player__frame {
+    aspect-ratio: 9 / 16;
+    max-height: calc(100svh - 150px);
+  }
   .player__genre {
     display: none;
   }

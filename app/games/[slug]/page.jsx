@@ -65,7 +65,8 @@ export default async function GameDetailPage({ params }) {
 
         <GamePlayer game={game} />
         <p className="game-detail__tip">
-          로그인하면 게임 진행 상황이 저장돼요. <Link href="/games#board">게임 의견 남기기</Link>
+          {game.usesLogin ? '로그인하면 게임 진행 상황이 저장돼요.' : '기록은 이 브라우저에 저장돼요.'}{' '}
+          <Link href="/games#board">게임 의견 남기기</Link>
         </p>
 
         {game.guide?.length > 0 && (

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { IconExpand, IconShrink } from '../site/Icons';
 
-// 게임을 iframe 으로 띄우고, 로그인 세션을 postMessage 로 넘긴다.
+// 게임을 iframe 으로 띄우고, 로그인을 쓰는 게임에만 세션을 postMessage 로 넘긴다.
 // (URL 쿼리스트링은 브라우저 기록 · 서버 로그에 남으므로 쓰지 않는다)
 export default function GamePlayer({ game }) {
   const iframeRef = useRef(null);
@@ -14,6 +14,8 @@ export default function GamePlayer({ game }) {
   const origin = new URL(game.embedUrl).origin;
 
   useEffect(() => {
+    if (!game.usesLogin) return undefined;
+
     function sendAuth(session) {
       const target = iframeRef.current?.contentWindow;
       if (!target) return;
@@ -50,7 +52,7 @@ export default function GamePlayer({ game }) {
       window.removeEventListener('message', onMessage);
       subscription.unsubscribe();
     };
-  }, [origin]);
+  }, [origin, game.usesLogin]);
 
   useEffect(() => {
     const onChange = () => setFull(Boolean(document.fullscreenElement));
@@ -94,7 +96,7 @@ export default function GamePlayer({ game }) {
   return (
     <section
       ref={boxRef}
-      className={`player${pseudo ? ' is-pseudo-full' : ''}${full ? ' is-full' : ''}`}
+      className={`player${game.tallOnPhone ? ' player--tall' : ''}${pseudo ? ' is-pseudo-full' : ''}${full ? ' is-full' : ''}`}
       aria-label={`${game.title} 게임`}
     >
       <div className="player__frame">
