@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { LOGIN_RETURN_KEY } from '../lib/constants';
 
 export default function LoginModal({ onClose }) {
   useEffect(() => {
@@ -11,6 +12,11 @@ export default function LoginModal({ onClose }) {
   }, [onClose]);
 
   const handleGoogleLogin = async () => {
+    // 구글 로그인은 항상 첫 화면으로 돌아오므로, 시작한 페이지를 기억해 뒀다가 AuthProvider 가 되돌려 보낸다.
+    // 앱 웹뷰처럼 주소에 쿼리가 붙은 경우는 기존 흐름을 그대로 둔다.
+    if (!window.location.search) {
+      sessionStorage.setItem(LOGIN_RETURN_KEY, window.location.pathname + window.location.hash);
+    }
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {

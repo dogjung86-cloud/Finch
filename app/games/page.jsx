@@ -1,5 +1,7 @@
 import PageHead from '../../src/components/site/PageHead';
+import SectionHead from '../../src/components/site/SectionHead';
 import { GameFeature, GameLabCard } from '../../src/components/games/GameCards';
+import GameBoard from '../../src/components/games/GameBoard';
 import { GAMES } from '../../src/data/games';
 import { SITE } from '../../src/data/site';
 
@@ -50,6 +52,18 @@ export default function GamesPage() {
               </ul>
             </div>
           )}
+        </div>
+      </section>
+
+      <section className="section board-section" id="board" aria-labelledby="board-title">
+        <div className="container container--narrow">
+          <SectionHead
+            eyebrow="Board"
+            title="게임 의견"
+            id="board-title"
+            desc="재밌었던 점, 아쉬운 점, 버그, 다음 게임 아이디어까지 편하게 남겨 주세요."
+          />
+          <GameBoard />
         </div>
       </section>
     </>

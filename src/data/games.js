@@ -77,6 +77,12 @@ export const GAMES = [
 
 export const LIVE_GAMES = GAMES.filter((g) => g.status === 'live');
 
+// 의견 게시판의 주제. 출시한 게임은 자동으로 들어간다.
+export const BOARD_TOPICS = [
+  ...LIVE_GAMES.map((g) => ({ id: g.slug, label: g.title })),
+  { id: 'etc', label: '그 밖의 의견' },
+];
+
 export function getGame(slug) {
   return GAMES.find((g) => g.slug === slug) || null;
 }

@@ -64,7 +64,9 @@ export default async function GameDetailPage({ params }) {
         </header>
 
         <GamePlayer game={game} />
-        <p className="game-detail__tip">로그인하면 게임 진행 상황이 저장돼요.</p>
+        <p className="game-detail__tip">
+          로그인하면 게임 진행 상황이 저장돼요. <Link href="/games#board">게임 의견 남기기</Link>
+        </p>
 
         {game.guide?.length > 0 && (
           <section className="game-guide" aria-labelledby="game-guide-title">

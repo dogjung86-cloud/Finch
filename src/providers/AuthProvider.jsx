@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
-import { ADMIN_EMAIL } from '../lib/constants';
+import { ADMIN_EMAIL, LOGIN_RETURN_KEY } from '../lib/constants';
 
 const AuthContext = createContext(null);
 
@@ -44,6 +44,11 @@ export default function AuthProvider({ children }) {
         if (params.get('app') === 'flydarwin' && _event === 'SIGNED_IN') {
           const deepLink = 'com.flydarwin.app://auth?access_token=' + session.access_token + '&refresh_token=' + session.refresh_token;
           window.location.href = deepLink;
+        } else if (_event === 'SIGNED_IN') {
+          // 로그인을 시작했던 페이지로 돌아간다
+          const back = sessionStorage.getItem(LOGIN_RETURN_KEY);
+          sessionStorage.removeItem(LOGIN_RETURN_KEY);
+          if (back && back.split('#')[0] !== window.location.pathname) window.location.replace(back);
         }
       } else {
         setUser(null);

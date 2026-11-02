@@ -189,3 +189,162 @@
   line-height: 1.65;
   color: var(--text-2);
 }
+
+/* ── 의견 게시판 ── */
+.board-section {
+  padding-top: 0;
+  scroll-margin-top: var(--nav-h);
+}
+.board-form,
+.board-login {
+  padding: clamp(18px, 3vw, 28px);
+  background: var(--bg-soft);
+  border-radius: var(--r-lg);
+}
+.board-form {
+  display: grid;
+  gap: 12px;
+}
+.board-form[hidden] {
+  display: none;
+}
+.board-form textarea,
+.board-edit textarea {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 16px;
+  line-height: 1.6;
+  background: #fff;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  outline: none;
+  resize: vertical;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+.board-form textarea::placeholder {
+  color: #a5a5a5;
+}
+.board-form textarea:focus,
+.board-edit textarea:focus {
+  border-color: var(--text);
+  box-shadow: 0 0 0 3px rgba(18, 18, 18, 0.08);
+}
+.board-form__foot,
+.board-edit__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+}
+.board-form select {
+  min-height: 38px;
+  padding: 0 10px;
+  font-size: 14px;
+  background: #fff;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+}
+.board-form__note {
+  font-size: 14px;
+  color: var(--text-3);
+}
+.board-form__note b {
+  font-weight: 600;
+  color: var(--text-2);
+}
+.board-form__count {
+  margin-left: auto;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-3);
+}
+.board-login {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  font-size: 15px;
+  color: var(--text-2);
+}
+.board-tabs {
+  margin-top: clamp(32px, 4vw, 48px);
+}
+.board-status {
+  padding: 36px 0;
+  color: var(--text-3);
+}
+.board-empty {
+  margin-top: 24px;
+}
+.board-list {
+  list-style: none;
+}
+.board-post {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+}
+.board-post__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+}
+.board-post__author {
+  font-size: 15px;
+  font-weight: 700;
+}
+.board-post__date {
+  font-size: 13px;
+  color: var(--text-3);
+}
+.board-post__topic {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-ink);
+}
+.board-post__actions {
+  display: flex;
+  gap: 12px;
+  margin-left: auto;
+}
+.board-post__actions button {
+  font-size: 13px;
+  color: var(--text-3);
+  transition: color 0.2s;
+}
+.board-post__actions button:hover {
+  color: var(--text);
+}
+.board-post__body {
+  margin-top: 8px;
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--text-2);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.board-edit {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+.board-error {
+  font-size: 14px;
+  color: #d93025;
+}
+.board-post .board-error {
+  margin-top: 8px;
+}
+.board-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+.game-detail__tip a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

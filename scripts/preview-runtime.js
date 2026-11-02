@@ -154,9 +154,72 @@
     }
   }
 
+  // ── 게임 의견 게시판: 화면은 그대로 보여 주고, 저장만 하지 않는다 ──
+  function initBoard(board) {
+    const tabs = [...board.querySelectorAll('.tab')];
+    const list = board.querySelector('.board-list');
+    let current = 'all';
+    const applyTopic = () => {
+      tabs.forEach((t) => t.setAttribute('aria-pressed', String(t.dataset.topic === current)));
+      list.querySelectorAll('.board-post').forEach((p) => show(p, current === 'all' || p.dataset.topic === current));
+    };
+    tabs.forEach((t) => {
+      handled(t).addEventListener('click', () => {
+        current = t.dataset.topic;
+        applyTopic();
+      });
+    });
+
+    // 사본에서는 로그인할 수 없으므로, 로그인 버튼을 누르면 로그인한 화면을 보여 준다
+    const prompt = board.querySelector('.board-login');
+    const form = board.querySelector('[data-board-composer]');
+    if (!prompt || !form) return;
+    const textarea = form.querySelector('textarea');
+    const select = form.querySelector('select');
+    const count = form.querySelector('.board-form__count');
+    const submit = form.querySelector('button[type=submit]');
+    handled(prompt.querySelector('button')).addEventListener('click', () => {
+      show(prompt, false);
+      form.hidden = false;
+      textarea.focus();
+      toast('미리보기 사본이라 로그인한 것처럼 보여 드려요.');
+    });
+    const refresh = () => {
+      count.textContent = `${textarea.value.length} / ${textarea.maxLength}`;
+      submit.disabled = !textarea.value.trim();
+    };
+    textarea.addEventListener('input', refresh);
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const body = textarea.value.trim();
+      if (!body) return;
+      const item = list.querySelector('.board-post').cloneNode(true);
+      item.dataset.topic = select.value;
+      item.querySelector('.board-post__author').textContent = '미리보기';
+      item.querySelector('.board-post__date').textContent = '방금 전';
+      item.querySelector('.board-post__topic').textContent = select.selectedOptions[0].textContent;
+      item.querySelector('.board-post__body').textContent = body;
+      const remove = handled(document.createElement('button'));
+      remove.type = 'button';
+      remove.textContent = '삭제';
+      remove.addEventListener('click', () => item.remove());
+      const actions = document.createElement('span');
+      actions.className = 'board-post__actions';
+      actions.append(remove);
+      item.querySelector('.board-post__meta').append(actions);
+      list.prepend(item);
+      textarea.value = '';
+      refresh();
+      if (current !== 'all') current = select.value;
+      applyTopic();
+      toast('미리보기 사본이라 실제로 저장되지는 않아요.');
+    });
+  }
+
   document.querySelectorAll('.hub').forEach(initHub);
   document.querySelectorAll('.video-more button').forEach(initVideoMore);
   document.querySelectorAll('.site-nav__burger').forEach(initMobileMenu);
+  document.querySelectorAll('.board').forEach(initBoard);
   initCollab();
 
   // 여기서 흉내 내지 않은 버튼은 눌러도 반응이 없어 고장 난 것처럼 보이므로 안내한다
