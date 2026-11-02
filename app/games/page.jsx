@@ -7,7 +7,7 @@ import { SITE } from '../../src/data/site';
 
 export const metadata = {
   title: 'Games',
-  description: '과학드림이 직접 만든 캐주얼 과학 게임. 진화를 주제로 한 3D 비행 게임 Fly Darwin을 바로 플레이해 보세요.',
+  description: '과학드림이 직접 만든 캐주얼 게임. 장수거북 빌리지와 Fly Darwin을 바로 플레이해 보세요.',
   alternates: { canonical: '/games' },
   openGraph: {
     title: 'Games | 과학드림',

@@ -7,11 +7,75 @@
 // status
 //   'live'  플레이 가능
 //   'lab'   개발 중 (목록에 '실험 중' 카드로 표시)
+// usesLogin    게임이 사이트 로그인을 쓴다 (true 일 때만 로그인 세션을 게임으로 넘긴다)
+// tallOnPhone  세로 화면 게임이라 휴대폰에서 플레이 화면을 세로로 길게 잡는다
 
 export const GAMES = [
   {
+    slug: 'jangsu-village',
+    status: 'live',
+    title: '장수거북 빌리지',
+    tagline: '내 등에서 자라는 작은 마을',
+    summary:
+      '아기 장수거북이 되어 바다를 헤엄치며 자라요. 해파리를 먹고 섬과 심해를 찾아다니는 동안 내 등에서 따개비들의 마을이 자라납니다.',
+    genre: '3D 코지 · 바다 여행',
+    platforms: ['PC', '모바일'],
+    access: { type: 'free' },
+    cover: {
+      src: '/images/games/jangsu-village-cover-1600.webp',
+      srcSmall: '/images/games/jangsu-village-cover-900.webp',
+      width: 1600,
+      height: 786,
+    },
+    screenshot: '/images/games/jangsu-village-screen-1600.webp',
+    embedUrl: 'https://jangsu-village.pages.dev/',
+    accent: '#7ec8d8',
+    tallOnPhone: true,
+    highlights: ['내 등에서 자라는 마을', '섬마다 다른 일', '심해 마을', '따개비 이웃'],
+    guide: [
+      {
+        title: '어떤 게임인가요',
+        items: [
+          '장수거북 빌리지는 아기 장수거북이 되어 넓은 바다를 여행하는 게임입니다.',
+          '해파리를 먹을수록 몸이 자라고, 등 위에 이끼가 번지면서 따개비들이 이사 와 마을을 만듭니다.',
+          '상상으로 만든 게임이에요. 실제 장수거북의 생태와는 달라요.',
+        ],
+      },
+      {
+        title: '조작 방법',
+        items: [
+          'PC: W A S D 또는 방향키로 헤엄치기, 스페이스로 잠수, R로 쉬기, 끌어서 둘러보기, 휠로 가까이 멀리',
+          '모바일: 조이스틱으로 헤엄치기, 화면을 끌어 둘러보기, 두 손가락으로 가까이 멀리',
+        ],
+      },
+      {
+        title: '놀이 방법',
+        items: [
+          '🏝 섬마다 거기서만 되는 일이 있어요. 해내면 등에 건물이 생기고, 건물이 거북의 능력이 됩니다.',
+          '🐚 자랄 때마다 바다 쪽, 심해 쪽, 쉼터 쪽 가운데 어느 쪽으로 마을을 넓힐지 고를 수 있어요.',
+          '🏮 등불 소라 탑이 생기면 깊은 바다로 내려갈 수 있어요. 심해에는 또 다른 마을이 있습니다.',
+        ],
+      },
+      {
+        title: '마을 구경',
+        items: [
+          '화면을 끝까지 당기거나 마을 구경 버튼(PC는 V)을 누르면 따개비가 되어 등 위를 걸어요.',
+          '건물에 다가가면 할 일이 나옵니다.',
+        ],
+      },
+      {
+        title: '기록과 소리',
+        items: [
+          '기록은 이 브라우저에 저장돼요.',
+          '소리 버튼에서 음악과 효과음 크기를 조절할 수 있어요. 음악은 Kounine의 Wholesome Place vol.2입니다.',
+        ],
+      },
+    ],
+  },
+  {
     slug: 'fly-darwin',
     status: 'live',
+    usesLogin: true,
     title: 'Fly Darwin',
     tagline: 'Fly into the Evolution',
     summary:
