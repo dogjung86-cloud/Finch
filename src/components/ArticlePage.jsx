@@ -9,6 +9,10 @@ import { FONT_SIZES, fixLineBreaks } from '../lib/articleText';
 import { formatDate } from '../lib/format';
 import ReadProgress from './articles/ReadProgress';
 
+// 표 구조와 권한은 supabase/migrations/20261103_comments_drop_email.sql 에 있다.
+// 작성자 id, 이름, 사진과 수정 시각은 DB 가 채우므로 화면에서 보내지 않는다.
+const COMMENT_COLUMNS = 'id, user_id, user_name, user_avatar, text, created_at, updated_at';
+
 function timeAgo(dateStr) {
   const now = new Date();
   const date = new Date(dateStr);
@@ -68,7 +72,7 @@ export default function ArticlePage({ article, user, onLoginRequest }) {
     }
     const { data, error } = await supabase
       .from('comments')
-      .select('*')
+      .select(COMMENT_COLUMNS)
       .eq('article_id', article.id)
       .order('created_at', { ascending: false });
     if (!error && data) setComments(data);
@@ -87,9 +91,6 @@ export default function ArticlePage({ article, user, onLoginRequest }) {
 
     const { error } = await supabase.from('comments').insert([{
       article_id: article.id,
-      user_email: user.email,
-      user_name: user.name,
-      user_avatar: user.avatar || null,
       text: newComment.trim(),
     }]);
 
@@ -117,7 +118,7 @@ export default function ArticlePage({ article, user, onLoginRequest }) {
     if (!editText.trim()) return;
     const { error } = await supabase
       .from('comments')
-      .update({ text: editText.trim(), updated_at: new Date().toISOString() })
+      .update({ text: editText.trim() })
       .eq('id', commentId);
 
     if (!error) {
@@ -361,9 +362,9 @@ export default function ArticlePage({ article, user, onLoginRequest }) {
                           /* 보기 모드 */
                           <>
                             <p className="comment-item__text">{c.text}</p>
-                            {user && (c.user_email === user.email || user.email === ADMIN_EMAIL) && (
+                            {user && (c.user_id === user.id || user.email === ADMIN_EMAIL) && (
                               <div className="comment-item__actions">
-                                {c.user_email === user.email && (
+                                {c.user_id === user.id && (
                                   <button onClick={() => handleStartEdit(c)}>수정</button>
                                 )}
                                 <button onClick={() => handleDeleteComment(c.id)}>삭제</button>

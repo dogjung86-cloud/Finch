@@ -31,7 +31,7 @@ export default function CommentsAdmin() {
 
     let q = supabase
       .from('comments')
-      .select('id, article_id, user_email, user_name, text, created_at')
+      .select('id, article_id, user_name, text, created_at')
       .order('created_at', { ascending: false });
 
     if (period !== 'all') {
@@ -77,8 +77,7 @@ export default function CommentsAdmin() {
         const q = query.trim().toLowerCase();
         return (
           (c.text || '').toLowerCase().includes(q) ||
-          (c.user_name || '').toLowerCase().includes(q) ||
-          (c.user_email || '').toLowerCase().includes(q)
+          (c.user_name || '').toLowerCase().includes(q)
         );
       })
     : comments;
@@ -117,7 +116,7 @@ export default function CommentsAdmin() {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="본문·작성자·이메일 검색"
+            placeholder="본문·작성자 검색"
             className="admin-form__input"
             style={{ maxWidth: 280, marginLeft: 'auto' }}
           />
@@ -153,10 +152,7 @@ export default function CommentsAdmin() {
                         {articleTitleMap[c.article_id] || `#${c.article_id}`}
                       </a>
                     </td>
-                    <td>
-                      <div style={{ fontWeight: 600 }}>{c.user_name || '—'}</div>
-                      <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{c.user_email}</div>
-                    </td>
+                    <td style={{ fontWeight: 600 }}>{c.user_name || '—'}</td>
                     <td style={{ whiteSpace: 'pre-wrap', maxWidth: 460 }}>{c.text}</td>
                     <td>
                       <button
