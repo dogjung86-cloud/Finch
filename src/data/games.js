@@ -31,6 +31,7 @@ export const GAMES = [
     },
     screenshot: '/images/games/jangsu-village-screen-1600.webp',
     embedUrl: 'https://jangsu-village.pages.dev/',
+    cloudSave: true,
     previewEmbeds: {
       dev: 'https://dev.jangsu-village.pages.dev/',
       login: 'https://login.jangsu-village.pages.dev/',
@@ -72,7 +73,7 @@ export const GAMES = [
       {
         title: '기록과 소리',
         items: [
-          '기록은 이 브라우저에 저장돼요.',
+          '로그인하면 기록이 계정에도 저장되어 다른 기기에서 이어 할 수 있어요. 로그인하지 않으면 이 브라우저에만 저장돼요.',
           '소리 버튼에서 음악과 효과음 크기를 조절할 수 있어요. 음악은 Kounine의 Wholesome Place vol.2입니다.',
         ],
       },
