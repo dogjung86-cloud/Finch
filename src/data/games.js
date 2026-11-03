@@ -8,6 +8,8 @@
 //   'live'  플레이 가능
 //   'lab'   개발 중 (목록에 '실험 중' 카드로 표시)
 // usesLogin    게임이 사이트 로그인을 쓴다 (true 일 때만 로그인 세션을 게임으로 넘긴다)
+// cloudSave    게임 기록을 사이트가 대신 저장한다 (game_saves 표. 로그인 토큰은 게임으로 넘기지 않는다)
+// previewEmbeds  ?preview=이름 으로 열 공개 전 판 주소. 실제 로그인으로 시험할 때 쓴다
 // tallOnPhone  세로 화면 게임이라 휴대폰에서 플레이 화면을 세로로 길게 잡는다
 
 export const GAMES = [
@@ -29,6 +31,10 @@ export const GAMES = [
     },
     screenshot: '/images/games/jangsu-village-screen-1600.webp',
     embedUrl: 'https://jangsu-village.pages.dev/',
+    previewEmbeds: {
+      dev: 'https://dev.jangsu-village.pages.dev/',
+      login: 'https://login.jangsu-village.pages.dev/',
+    },
     accent: '#7ec8d8',
     tallOnPhone: true,
     highlights: ['내 등에서 자라는 마을', '섬마다 다른 일', '심해 마을', '따개비 이웃'],

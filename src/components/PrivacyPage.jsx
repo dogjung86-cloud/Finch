@@ -35,6 +35,11 @@ export default function PrivacyPage({ onBack }) {
                 <td>회원 식별 및 서비스 제공</td>
               </tr>
               <tr>
+                <td>로그인 후 게임 이용</td>
+                <td>게임 진행 기록 (캐릭터 이름, 성장 단계, 플레이 기록 등)</td>
+                <td>다른 기기에서 이어 하기</td>
+              </tr>
+              <tr>
                 <td>서비스 이용 시 자동 수집</td>
                 <td>접속 로그, 쿠키, 접속 IP, 브라우저 정보</td>
                 <td>서비스 분석 및 개선</td>
