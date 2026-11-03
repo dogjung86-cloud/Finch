@@ -142,6 +142,15 @@
 .player.is-pseudo-full .player__frame {
   flex: 1;
   aspect-ratio: auto;
+  margin-bottom: env(safe-area-inset-bottom);
+}
+/* 전체화면: 브라우저의 나가기(X) 단추가 왼쪽 위에 겹쳐 뜨는 기기가 있어 막대를 위로 올린다.
+   X는 막대 왼쪽 빈자리에 앉고, 게임 화면의 왼쪽 위는 가려지지 않는다 */
+.player:fullscreen .player__bar,
+.player.is-pseudo-full .player__bar {
+  order: -1;
+  padding-top: max(10px, env(safe-area-inset-top));
+  padding-left: max(64px, env(safe-area-inset-left));
 }
 @media (max-width: 600px) {
   .player {
