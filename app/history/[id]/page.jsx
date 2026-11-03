@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getHistoryById } from '../../../src/lib/content';
+import { getHistoryById, SERIES } from '../../../src/lib/content';
 import HistoryDetailClient from './HistoryDetailClient';
 
 export async function generateMetadata({ params }) {
@@ -9,7 +9,7 @@ export async function generateMetadata({ params }) {
   if (!item) return { title: '글을 찾을 수 없습니다' };
 
   return {
-    title: `${item.title} · 쓸데없이 재밌는 과학사`,
+    title: `${item.title} · ${SERIES.history.label}`,
     alternates: { canonical: `/history/${id}` },
     openGraph: {
       title: item.title,
@@ -51,7 +51,7 @@ export default async function HistoryDetailRoute({ params }) {
       '@type': 'WebPage',
       '@id': `https://www.finch.co.kr/history/${id}`,
     },
-    articleSection: '쓸데없이 재밌는 과학사',
+    articleSection: SERIES.history.label,
   };
 
   return (

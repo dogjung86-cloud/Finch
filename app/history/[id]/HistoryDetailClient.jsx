@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { FONT_SIZES, fixLineBreaks } from '../../../src/lib/articleText';
+import { SERIES } from '../../../src/lib/series';
 import ReadProgress from '../../../src/components/articles/ReadProgress';
 
 export default function HistoryDetailClient({ item }) {
@@ -50,10 +51,10 @@ export default function HistoryDetailClient({ item }) {
 
       <div className="article-page__container">
         <Link className="article-page__back" href="/history">
-          ← 과학사 목록
+          ← {SERIES.history.label} 목록
         </Link>
 
-        <p className="article-page__kicker">쓸데없이 재밌는 과학사</p>
+        <p className="article-page__kicker">{SERIES.history.label}</p>
 
         <h1 className="article-page__title">{item.title}</h1>
 

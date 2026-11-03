@@ -20,7 +20,7 @@ function readLiveCopy() {
   }
 }
 
-// kind: 'articles' (요즘 과학) | 'history' (과학사)
+// kind: 'articles' (과학 칼럼) | 'history' (일상)
 function devRows(kind) {
   if (!isDev()) return [];
   const live = readLiveCopy();

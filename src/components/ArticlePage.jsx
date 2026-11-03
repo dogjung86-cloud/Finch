@@ -7,6 +7,7 @@ import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { ADMIN_EMAIL } from '../lib/constants';
 import { FONT_SIZES, fixLineBreaks } from '../lib/articleText';
 import { formatDate } from '../lib/format';
+import { SERIES } from '../lib/series';
 import ReadProgress from './articles/ReadProgress';
 
 // 표 구조와 권한은 supabase/migrations/20261103_comments_drop_email.sql 에 있다.
@@ -174,7 +175,7 @@ export default function ArticlePage({ article, user, onLoginRequest }) {
         </Link>
 
         <p className="article-page__kicker">
-          요즘 과학{article.category && article.category !== '미분류' ? ` · ${article.category}` : ''}
+          {SERIES.column.label}{article.category && article.category !== '미분류' ? ` · ${article.category}` : ''}
         </p>
 
         {/* 제목 */}

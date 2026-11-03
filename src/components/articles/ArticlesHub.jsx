@@ -6,7 +6,7 @@ import { COLUMN_CATEGORIES, SERIES } from '../../lib/series';
 
 const PAGE = 12;
 
-// 아티클 모아보기: 시리즈 탭 + (요즘 과학일 때) 분야 필터 + 더 보기
+// 아티클 모아보기: 시리즈 탭 + (과학 칼럼일 때) 분야 필터 + 더 보기
 export default function ArticlesHub({ items, initialSeries = 'all' }) {
   const [series, setSeries] = useState(initialSeries);
   const [category, setCategory] = useState('all');
@@ -48,7 +48,7 @@ export default function ArticlesHub({ items, initialSeries = 'all' }) {
 
   return (
     // data-* 는 미리보기 사본(scripts/preview-runtime.js)이 탭과 분야 필터를 흉내 낼 때 읽는다
-    <section className="container hub" aria-label="칼럼 목록" data-initial-series={initialSeries} data-categories={categories.join(',')}>
+    <section className="container hub" aria-label="글 목록" data-initial-series={initialSeries} data-categories={categories.join(',')}>
       <div className="tabs" role="group" aria-label="시리즈">
         {tabs.map((t) => (
           <button key={t.id} type="button" className="tab" data-series={t.id} aria-pressed={series === t.id} onClick={() => pickSeries(t.id)}>

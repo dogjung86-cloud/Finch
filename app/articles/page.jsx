@@ -8,11 +8,11 @@ export const revalidate = 60;
 export const metadata = {
   title: 'Article',
   description:
-    '과학드림의 과학 칼럼. 요즘 과학 소식과 쓸데없이 재밌는 과학사 이야기를 쉽고 재밌게 풀어 씁니다.',
+    '과학드림의 과학 칼럼과 일상 기록을 모았습니다.',
   alternates: { canonical: '/articles' },
   openGraph: {
     title: 'Article | 과학드림',
-    description: '요즘 과학 이야기와 쓸데없이 재밌는 과학사',
+    description: '과학드림의 과학 칼럼과 일상 기록',
     url: `${SITE.url}/articles`,
     type: 'website',
   },
@@ -25,7 +25,7 @@ export default async function ArticlesPage() {
     <>
       <PageHead
         chapter="article"
-        title="과학 칼럼"
+        title="과학 칼럼, 기록"
         lead="흥미로운 과학 소식을 발견하면 칼럼으로 씁니다."
       />
       <ArticlesHub items={items} initialSeries="all" />

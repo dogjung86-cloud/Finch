@@ -6,12 +6,12 @@ import { SITE } from '../../src/data/site';
 export const revalidate = 60;
 
 export const metadata = {
-  title: '쓸데없이 재밌는 과학사',
-  description: '100년 전 신문과 잡지에 실렸던 엉뚱한 과학 이야기를 다시 읽습니다. 과학드림의 과학사 칼럼.',
+  title: '일상',
+  description: '과학드림의 일상 기록을 모았습니다.',
   alternates: { canonical: '/history' },
   openGraph: {
-    title: '쓸데없이 재밌는 과학사 | 과학드림',
-    description: '100년 전 신문 속 엉뚱한 과학의 순간들',
+    title: '일상 | 과학드림',
+    description: '과학드림의 일상 기록',
     url: `${SITE.url}/history`,
     type: 'website',
   },
@@ -24,9 +24,8 @@ export default async function HistoryPage() {
     <>
       <PageHead
         chapter="article"
-        eyebrow="Article · History"
-        title="쓸데없이 재밌는 과학사"
-        lead="100년 전 신문과 잡지 속에 묻혀 있던 엉뚱하고 재밌는 과학의 순간들을 꺼내 읽습니다."
+        eyebrow="Article · 일상"
+        title="일상"
       />
       <ArticlesHub items={items} initialSeries="history" />
     </>

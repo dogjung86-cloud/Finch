@@ -6,7 +6,7 @@ export const CHAPTERS = {
   about: { href: '/about', title: 'About Me', label: '소개와 약력', color: '#ae3a1e', ink: '#fbf6ec', image: '/images/chapters/about' },
   works: { href: '/works', title: 'Works', label: '영상 · 책 · 출연', color: '#093842', ink: '#fbf6ec', image: '/images/chapters/works' },
   games: { href: '/games', title: 'Games', label: '과학 게임', color: '#d18f2d', ink: '#1c1b18', image: '/images/chapters/games' },
-  article: { href: '/articles', title: 'Article', label: '과학 칼럼', color: '#515837', ink: '#fbf6ec', image: '/images/chapters/article' },
+  article: { href: '/articles', title: 'Article', label: '과학 칼럼 · 기록', color: '#515837', ink: '#fbf6ec', image: '/images/chapters/article' },
   collaborate: { href: '/collaborate', title: 'Collaborate', label: '강연 · 협업 문의', color: '#213c58', ink: '#fbf6ec', image: '/images/chapters/collaborate' },
 };
 
