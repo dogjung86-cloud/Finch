@@ -214,9 +214,9 @@ browser_evaluate: `
 
 #### 3-5. 공개/멤버십 체크
 
-기본값 유지:
-- `is_published: true` → 이미 checked (건드리지 않음)
-- `is_membership: false` → 이미 unchecked
+폼 기본값은 둘 다 해제다:
+- `is_published: true` → "공개" 체크박스를 browser_click 으로 체크
+- `is_membership: false` → 이미 unchecked (건드리지 않음)
 
 값이 다르면 해당 체크박스를 browser_click.
 

@@ -21,7 +21,7 @@ export async function generateMetadata({ params }) {
       images: article.thumbnail ? [{ url: article.thumbnail }] : [],
       type: 'article',
       siteName: '과학드림',
-      authors: [article.author || 'The Finch'],
+      authors: [article.author || '과학드림'],
     },
     twitter: {
       card: 'summary_large_image',
@@ -51,7 +51,7 @@ export default async function ArticleRoute({ params }) {
     dateModified: article.updated_at || article.created_at,
     author: {
       '@type': 'Person',
-      name: article.author || 'The Finch',
+      name: article.author || '과학드림',
     },
     publisher: {
       '@type': 'Organization',

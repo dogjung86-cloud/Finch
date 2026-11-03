@@ -1,54 +1,76 @@
 'use client';
 
-import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import { revalidatePaths } from '../lib/revalidate';
-import dynamic from 'next/dynamic';
+import {
+  BODY_IMAGE,
+  NOTHING_CHANGED,
+  THUMB_IMAGE,
+  adminErrorMessage,
+  prepareBody,
+  uploadAdminImage,
+} from '../lib/adminEditor';
+import { formatDate } from '../lib/format';
+import { SERIES } from '../lib/series';
+import { SITE } from '../data/site';
+import ArticlePreview from './admin/ArticlePreview';
+import RichTextEditor from './admin/RichTextEditor';
+import useEditorForm from './admin/useEditorForm';
+import { BODY_HINT, DraftList, EditorActions, RestoredNotice, SaveNotice } from './admin/EditorParts';
 
-const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
-import 'react-quill-new/dist/quill.snow.css';
+const BUCKET = 'article-thumbnails';
+const THUMB_UPLOAD = { ...THUMB_IMAGE, bucket: BUCKET, folder: 'thumbnails' };
+const BODY_UPLOAD = { ...BODY_IMAGE, bucket: BUCKET, folder: 'content' };
 
-/* ── 이미지 업로드 헬퍼 ── */
-async function uploadImage(file, folder = 'content') {
-  const fileExt = file.name.split('.').pop();
-  const fileName = `${folder}/${Date.now()}_${Math.random().toString(36).slice(2)}.${fileExt}`;
+const EMPTY_FORM = {
+  title: '',
+  excerpt: '',
+  full_content: '',
+  author: SITE.name,
+  category: '미분류',
+  thumbnail: '',
+  display_order: 0,
+  is_published: false,
+  is_membership: false,
+};
 
-  const { error } = await supabase.storage
-    .from('article-thumbnails')
-    .upload(fileName, file, { upsert: true });
+const formFromArticle = (article) => ({
+  title: article.title || '',
+  excerpt: article.excerpt || '',
+  full_content: article.full_content || '',
+  author: article.author || SITE.name,
+  category: article.category || '미분류',
+  thumbnail: article.thumbnail || '',
+  display_order: article.display_order || 0,
+  is_published: article.is_published ?? false,
+  is_membership: article.is_membership ?? false,
+});
 
-  if (error) throw error;
+const noticeFor = (article) => ({
+  title: article.title,
+  published: article.is_published,
+  href: `/article/${article.id}`,
+  row: article,
+});
 
-  const { data } = supabase.storage
-    .from('article-thumbnails')
-    .getPublicUrl(fileName);
-
-  return data.publicUrl;
-}
+const byDisplayOrder = (a, b) =>
+  a.display_order - b.display_order || new Date(b.created_at) - new Date(a.created_at);
 
 /* ── 관리자 기사 관리 페이지 ── */
-export default function AdminPage({ onBack }) {
+export default function AdminPage({ onBack, active }) {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [editing, setEditing] = useState(null);
-  const [formData, setFormData] = useState({
-    title: '',
-    excerpt: '',
-    full_content: '',
-    author: 'The Finch',
-    category: '미분류',
-    thumbnail: '',
-    display_order: 0,
-    is_published: true,
-    is_membership: false,
-  });
   const [uploading, setUploading] = useState(false);
+  const [bodyUploading, setBodyUploading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
+  const [previewing, setPreviewing] = useState(false);
   const [thumbDragOver, setThumbDragOver] = useState(false);
   const [selected, setSelected] = useState([]);
 
-  const quillRef = useRef(null);
+  const form = useEditorForm({ kind: 'articles', emptyForm: EMPTY_FORM, fromRow: formFromArticle });
+  const { editing, formData, error, setError, setNotice, setField } = form;
+  const closePreview = useCallback(() => setPreviewing(false), []);
 
   // ── 기사 목록 로드 ──
   const fetchArticles = async () => {
@@ -60,7 +82,7 @@ export default function AdminPage({ onBack }) {
       .order('created_at', { ascending: false });
 
     if (error) {
-      setError('기사를 불러올 수 없습니다: ' + error.message);
+      setError('기사를 불러올 수 없습니다: ' + adminErrorMessage(error));
     } else {
       setArticles(data || []);
     }
@@ -68,42 +90,8 @@ export default function AdminPage({ onBack }) {
   };
 
   useEffect(() => {
-    fetchArticles();
-  }, []);
-
-  // ── 폼 초기화 ──
-  const resetForm = () => {
-    setFormData({
-      title: '',
-      excerpt: '',
-      full_content: '',
-      author: 'The Finch',
-      category: '기획',
-      thumbnail: '',
-      display_order: 0,
-      is_published: true,
-      is_membership: false,
-    });
-    setEditing(null);
-    setError('');
-  };
-
-  // ── 수정 시작 ──
-  const startEdit = (article) => {
-    setFormData({
-      title: article.title || '',
-      excerpt: article.excerpt || '',
-      full_content: article.full_content || '',
-      author: article.author || 'The Finch',
-      category: article.category || '미분류',
-      thumbnail: article.thumbnail || '',
-      display_order: article.display_order || 0,
-      is_published: article.is_published ?? true,
-      is_membership: article.is_membership ?? false,
-    });
-    setEditing(article);
-    setError('');
-  };
+    if (active) fetchArticles();
+  }, [active]);
 
   // ── 썸네일 업로드 (파일 또는 드래그앤드롭) ──
   const handleThumbnailFile = async (file) => {
@@ -111,10 +99,9 @@ export default function AdminPage({ onBack }) {
     setUploading(true);
     setError('');
     try {
-      const url = await uploadImage(file, 'thumbnails');
-      setFormData((prev) => ({ ...prev, thumbnail: url }));
+      setField('thumbnail', await uploadAdminImage(file, THUMB_UPLOAD));
     } catch (err) {
-      setError('이미지 업로드 실패: ' + err.message);
+      setError('이미지 업로드 실패: ' + adminErrorMessage(err));
     }
     setUploading(false);
   };
@@ -130,85 +117,6 @@ export default function AdminPage({ onBack }) {
     handleThumbnailFile(file);
   };
 
-  // ── Quill 에디터 이미지 핸들러 ──
-  const imageHandler = useCallback(() => {
-    const input = document.createElement('input');
-    input.setAttribute('type', 'file');
-    input.setAttribute('accept', 'image/*');
-    input.click();
-    input.onchange = async () => {
-      const file = input.files?.[0];
-      if (!file) return;
-      try {
-        const url = await uploadImage(file);
-        const editor = quillRef.current?.getEditor();
-        if (editor) {
-          const range = editor.getSelection(true);
-          editor.insertEmbed(range.index, 'image', url);
-          editor.setSelection(range.index + 1);
-        }
-      } catch (err) {
-        setError('본문 이미지 업로드 실패: ' + err.message);
-      }
-    };
-  }, []);
-
-  // ── Quill 모듈 설정 ──
-  const modules = useMemo(() => ({
-    toolbar: {
-      container: [
-        [{ header: [1, 2, 3, false] }],
-        [{ font: [] }],
-        [{ size: ['small', false, 'large', 'huge'] }],
-        ['bold', 'italic', 'underline', 'strike'],
-        [{ color: [] }, { background: [] }],
-        [{ align: [] }],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        ['blockquote'],
-        ['link', 'image'],
-        ['clean'],
-      ],
-      handlers: {
-        image: imageHandler,
-      },
-    },
-    clipboard: { matchVisual: false },
-  }), [imageHandler]);
-
-  const formats = [
-    'header', 'font', 'size',
-    'bold', 'italic', 'underline', 'strike',
-    'color', 'background',
-    'align',
-    'list', 'bullet',
-    'blockquote',
-    'link', 'image',
-  ];
-
-  // ── 에디터에 이미지 드래그앤드롭 ──
-  const handleEditorDrop = async (e) => {
-    const files = e.dataTransfer?.files;
-    if (!files || files.length === 0) return;
-
-    const file = files[0];
-    if (!file.type.startsWith('image/')) return;
-
-    e.preventDefault();
-    e.stopPropagation();
-
-    try {
-      const url = await uploadImage(file);
-      const editor = quillRef.current?.getEditor();
-      if (editor) {
-        const range = editor.getSelection(true);
-        editor.insertEmbed(range.index, 'image', url);
-        editor.setSelection(range.index + 1);
-      }
-    } catch (err) {
-      setError('이미지 드래그앤드롭 업로드 실패: ' + err.message);
-    }
-  };
-
   // ── 저장 (생성 / 수정) ──
   const handleSave = async () => {
     if (!formData.title.trim()) {
@@ -219,53 +127,40 @@ export default function AdminPage({ onBack }) {
     setSaving(true);
     setError('');
 
-    const payload = {
-      title: formData.title,
-      excerpt: formData.excerpt,
-      full_content: formData.full_content,
-      author: 'The Finch',
-      category: formData.category,
-      thumbnail: formData.thumbnail,
-      display_order: formData.display_order,
-      is_published: formData.is_published,
-      is_membership: formData.is_membership,
-      updated_at: new Date().toISOString(),
-    };
+    try {
+      const payload = {
+        title: formData.title,
+        excerpt: formData.excerpt,
+        full_content: await prepareBody(formData.full_content, BODY_UPLOAD),
+        author: formData.author.trim() || SITE.name,
+        category: formData.category,
+        thumbnail: formData.thumbnail,
+        display_order: formData.display_order,
+        is_published: formData.is_published,
+        is_membership: formData.is_membership,
+        updated_at: new Date().toISOString(),
+      };
 
-    let result;
-    if (editing === 'new') {
-      result = await supabase.from('articles').insert([payload]).select();
-    } else {
-      result = await supabase
-        .from('articles')
-        .update(payload)
-        .eq('id', editing.id)
-        .select();
-    }
+      const { data, error: saveError } = editing === 'new'
+        ? await supabase.from('articles').insert([payload]).select()
+        : await supabase.from('articles').update(payload).eq('id', editing.id).select();
 
-    if (result.error) {
-      setError('저장 실패: ' + result.error.message);
-    } else {
-      // RLS가 비공개 기사 조회를 차단할 수 있으므로,
-      // 반환된 데이터를 로컬 상태에 직접 반영
-      const saved = result.data?.[0];
-      if (saved) {
-        if (editing === 'new') {
-          setArticles(prev => [...prev, saved].sort((a, b) =>
-            a.display_order - b.display_order || new Date(b.created_at) - new Date(a.created_at)
-          ));
-        } else {
-          setArticles(prev => prev.map(a => a.id === saved.id ? saved : a));
-        }
+      const saved = data?.[0];
+      if (saveError) {
+        setError('저장하지 못했습니다: ' + adminErrorMessage(saveError));
+      } else if (!saved) {
+        setError(NOTHING_CHANGED);
       } else {
-        // fallback: 전체 다시 조회
-        fetchArticles();
+        setArticles((prev) =>
+          editing === 'new'
+            ? [...prev, saved].sort(byDisplayOrder)
+            : prev.map((a) => (a.id === saved.id ? saved : a))
+        );
+        revalidatePaths(['/', '/articles', `/article/${saved.id}`]);
+        form.finishSave(noticeFor(saved));
       }
-      const savedId = saved?.id ?? (editing !== 'new' ? editing.id : null);
-      const paths = ['/', '/articles'];
-      if (savedId) paths.push(`/article/${savedId}`);
-      revalidatePaths(paths);
-      resetForm();
+    } catch (err) {
+      setError('저장하지 못했습니다: ' + adminErrorMessage(err));
     }
     setSaving(false);
   };
@@ -274,11 +169,16 @@ export default function AdminPage({ onBack }) {
   const handleDelete = async (id) => {
     if (!confirm('정말 이 기사를 삭제하시겠습니까?')) return;
 
-    const { error } = await supabase.from('articles').delete().eq('id', id);
+    const { data, error } = await supabase.from('articles').delete().eq('id', id).select('id');
     if (error) {
-      setError('삭제 실패: ' + error.message);
+      setError('삭제 실패: ' + adminErrorMessage(error));
+    } else if (!data?.length) {
+      setError(NOTHING_CHANGED);
     } else {
+      setError('');
+      setNotice(null);
       setArticles(prev => prev.filter(a => a.id !== id));
+      form.forgetDraft(id);
       revalidatePaths(['/', '/articles', `/article/${id}`]);
     }
   };
@@ -288,14 +188,19 @@ export default function AdminPage({ onBack }) {
     if (selected.length === 0) return;
     if (!confirm(`선택한 ${selected.length}개의 기사를 삭제하시겠습니까?`)) return;
 
-    const idsToDelete = [...selected];
-    const { error } = await supabase.from('articles').delete().in('id', idsToDelete);
+    const { data, error } = await supabase.from('articles').delete().in('id', selected).select('id');
     if (error) {
-      setError('일괄 삭제 실패: ' + error.message);
+      setError('일괄 삭제 실패: ' + adminErrorMessage(error));
+    } else if (!data?.length) {
+      setError(NOTHING_CHANGED);
     } else {
-      setArticles((prev) => prev.filter((a) => !idsToDelete.includes(a.id)));
+      const deleted = data.map((d) => d.id);
+      setError('');
+      setNotice(null);
+      setArticles((prev) => prev.filter((a) => !deleted.includes(a.id)));
       setSelected([]);
-      revalidatePaths(['/', '/articles', ...idsToDelete.map((id) => `/article/${id}`)]);
+      deleted.forEach(form.forgetDraft);
+      revalidatePaths(['/', '/articles', ...deleted.map((id) => `/article/${id}`)]);
     }
   };
 
@@ -316,18 +221,22 @@ export default function AdminPage({ onBack }) {
   // ── 공개/비공개 토글 ──
   const togglePublish = async (article) => {
     const newStatus = !article.is_published;
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('articles')
       .update({ is_published: newStatus })
-      .eq('id', article.id);
+      .eq('id', article.id)
+      .select('id');
 
     if (error) {
-      setError('상태 변경 실패: ' + error.message);
+      setError('상태 변경 실패: ' + adminErrorMessage(error));
+    } else if (!data?.length) {
+      setError(NOTHING_CHANGED);
     } else {
-      // RLS가 비공개 기사 조회를 차단할 수 있으므로 로컬 상태 직접 갱신
-      setArticles(prev => prev.map(a =>
-        a.id === article.id ? { ...a, is_published: newStatus } : a
-      ));
+      const updated = { ...article, is_published: newStatus };
+      setError('');
+      setNotice(noticeFor(updated));
+      setArticles(prev => prev.map(a => (a.id === article.id ? updated : a)));
+      revalidatePaths(['/', '/articles', `/article/${article.id}`]);
     }
   };
 
@@ -336,17 +245,17 @@ export default function AdminPage({ onBack }) {
   // ══════════════════════════════════════
   if (editing) {
     return (
-      <div className="admin-page">
+      <div className="admin-page" hidden={!active}>
         <div className="admin-page__header">
           <h1 className="admin-page__title">
             {editing === 'new' ? '새 기사 작성' : '기사 수정'}
           </h1>
-          <button className="admin-btn admin-btn--outline" onClick={resetForm}>
+          <button className="admin-btn admin-btn--outline" onClick={form.backToList}>
             ← 목록으로
           </button>
         </div>
 
-        {error && <div className="admin-error">{error}</div>}
+        <RestoredNotice restoredAt={form.restoredAt} isNew={editing === 'new'} onDiscard={form.discardRestored} />
 
         <div className="admin-form">
           {/* 제목 */}
@@ -356,19 +265,19 @@ export default function AdminPage({ onBack }) {
               className="admin-form__input"
               type="text"
               value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              onChange={(e) => setField('title', e.target.value)}
               placeholder="기사 제목을 입력하세요"
             />
           </div>
 
-          {/* 카테고리 + 순서 + 작성자 */}
+          {/* 카테고리 + 작성자 + 순서 */}
           <div className="admin-form__row">
             <div className="admin-form__field">
               <label className="admin-form__label">카테고리</label>
               <select
                 className="admin-form__select"
                 value={formData.category}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                onChange={(e) => setField('category', e.target.value)}
               >
                 <option value="미분류">미분류</option>
                 <option value="천문우주">천문우주</option>
@@ -379,14 +288,23 @@ export default function AdminPage({ onBack }) {
               </select>
             </div>
             <div className="admin-form__field">
+              <label className="admin-form__label" htmlFor="article-author-input">작성자</label>
+              <input
+                id="article-author-input"
+                className="admin-form__input"
+                type="text"
+                value={formData.author}
+                onChange={(e) => setField('author', e.target.value)}
+                placeholder={SITE.name}
+              />
+            </div>
+            <div className="admin-form__field">
               <label className="admin-form__label">표시 순서</label>
               <input
                 className="admin-form__input"
                 type="number"
                 value={formData.display_order}
-                onChange={(e) =>
-                  setFormData({ ...formData, display_order: parseInt(e.target.value) || 0 })
-                }
+                onChange={(e) => setField('display_order', parseInt(e.target.value) || 0)}
               />
             </div>
           </div>
@@ -414,7 +332,7 @@ export default function AdminPage({ onBack }) {
                   <span className="admin-form__dropzone-text">
                     {uploading ? '업로드 중...' : '이미지를 드래그하거나 클릭하여 업로드'}
                   </span>
-                  <span className="admin-form__dropzone-hint">JPG, PNG, WebP (최대 5MB)</span>
+                  <span className="admin-form__dropzone-hint">JPG, PNG, WebP. 올릴 때 자동으로 줄어듭니다.</span>
                 </div>
               )}
               <input
@@ -432,7 +350,7 @@ export default function AdminPage({ onBack }) {
                 className="admin-form__input"
                 type="text"
                 value={formData.thumbnail}
-                onChange={(e) => setFormData({ ...formData, thumbnail: e.target.value })}
+                onChange={(e) => setField('thumbnail', e.target.value)}
                 placeholder="https://..."
               />
             </div>
@@ -444,7 +362,7 @@ export default function AdminPage({ onBack }) {
             <textarea
               className="admin-form__textarea admin-form__textarea--short"
               value={formData.excerpt}
-              onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
+              onChange={(e) => setField('excerpt', e.target.value)}
               placeholder="기사의 간략한 요약을 입력하세요"
               rows={3}
             />
@@ -453,24 +371,15 @@ export default function AdminPage({ onBack }) {
           {/* 본문 - 리치 텍스트 에디터 */}
           <div className="admin-form__field">
             <label className="admin-form__label">본문</label>
-            <p className="admin-form__hint" style={{ marginBottom: '8px' }}>
-              툴바에서 글꼴, 크기, 색상, 정렬을 설정하고, 이미지 버튼이나 드래그앤드롭으로 이미지를 삽입하세요.
-            </p>
-            <div
-              className="admin-editor-wrap"
-              onDrop={handleEditorDrop}
-              onDragOver={(e) => e.preventDefault()}
-            >
-              <ReactQuill
-                ref={quillRef}
-                theme="snow"
-                value={formData.full_content}
-                onChange={(val) => setFormData({ ...formData, full_content: val })}
-                modules={modules}
-                formats={formats}
-                placeholder="기사 본문을 작성하세요..."
-              />
-            </div>
+            <p className="admin-form__hint" style={{ marginBottom: '8px' }}>{BODY_HINT}</p>
+            <RichTextEditor
+              value={formData.full_content}
+              onChange={(val, source) => form.setBody('full_content', val, source)}
+              placeholder="기사 본문을 작성하세요..."
+              image={BODY_UPLOAD}
+              onError={setError}
+              onUploadingChange={setBodyUploading}
+            />
           </div>
 
           {/* 공개 여부 + 멤버십 */}
@@ -479,11 +388,9 @@ export default function AdminPage({ onBack }) {
               <input
                 type="checkbox"
                 checked={formData.is_published}
-                onChange={(e) =>
-                  setFormData({ ...formData, is_published: e.target.checked })
-                }
+                onChange={(e) => setField('is_published', e.target.checked)}
               />
-              공개 (체크 해제 시 비공개)
+              공개 (체크하면 저장과 동시에 독자에게 보입니다)
             </label>
           </div>
           <div className="admin-form__field">
@@ -491,28 +398,38 @@ export default function AdminPage({ onBack }) {
               <input
                 type="checkbox"
                 checked={formData.is_membership}
-                onChange={(e) =>
-                  setFormData({ ...formData, is_membership: e.target.checked })
-                }
+                onChange={(e) => setField('is_membership', e.target.checked)}
               />
               🔒 멤버십 전용 기사 (일반 사용자에게 본문 잠금)
             </label>
           </div>
 
           {/* 저장 버튼 */}
-          <div className="admin-form__actions">
-            <button
-              className="admin-btn admin-btn--primary"
-              onClick={handleSave}
-              disabled={saving}
-            >
-              {saving ? '저장 중...' : editing === 'new' ? '기사 작성' : '수정 완료'}
-            </button>
-            <button className="admin-btn admin-btn--outline" onClick={resetForm}>
-              취소
-            </button>
-          </div>
+          <EditorActions
+            error={error}
+            draftState={form.draftState}
+            saving={saving}
+            busy={uploading || bodyUploading}
+            isPublished={formData.is_published}
+            saveLabel={editing === 'new' ? '기사 작성' : '수정 완료'}
+            onSave={handleSave}
+            onPreview={() => setPreviewing(true)}
+            onCancel={form.cancel}
+          />
         </div>
+
+        {previewing && (
+          <ArticlePreview
+            kicker={`${SERIES.column.label}${formData.category !== '미분류' ? ` · ${formData.category}` : ''}`}
+            title={formData.title}
+            author={formData.author.trim() || SITE.name}
+            date={formatDate(editing === 'new' ? new Date() : editing.created_at)}
+            thumbnail={formData.thumbnail}
+            html={formData.full_content}
+            note={formData.is_membership ? '멤버십 전용으로 체크되어 있어 독자에게는 앞부분과 잠금 안내만 보입니다. 아래는 전체 글입니다.' : ''}
+            onClose={closePreview}
+          />
+        )}
       </div>
     );
   }
@@ -520,6 +437,8 @@ export default function AdminPage({ onBack }) {
   // ══════════════════════════════════════
   // 렌더링: 기사 목록
   // ══════════════════════════════════════
+  if (!active) return null;
+
   return (
     <div className="admin-page">
       <div className="admin-page__header">
@@ -527,7 +446,7 @@ export default function AdminPage({ onBack }) {
         <div className="admin-page__header-actions">
           <button
             className="admin-btn admin-btn--primary"
-            onClick={() => { setEditing('new'); setError(''); }}
+            onClick={() => form.open('new')}
           >
             + 새 기사 작성
           </button>
@@ -537,92 +456,102 @@ export default function AdminPage({ onBack }) {
         </div>
       </div>
 
-      {error && <div className="admin-error">{error}</div>}
+      {error && <div className="admin-error" role="alert">{error}</div>}
+      <SaveNotice notice={form.notice} onPublish={() => togglePublish(form.notice.row)} />
 
       {loading ? (
         <div className="admin-loading">기사를 불러오는 중...</div>
-      ) : articles.length === 0 ? (
-        <div className="admin-empty">
-          <p>등록된 기사가 없습니다.</p>
-          <button
-            className="admin-btn admin-btn--primary"
-            onClick={() => setEditing('new')}
-          >
-            첫 기사를 작성하세요
-          </button>
-        </div>
       ) : (
         <>
-        {selected.length > 0 && (
-          <div className="admin-bulk-bar">
-            <span>{selected.length}개 선택됨</span>
-            <button className="admin-btn admin-btn--small admin-btn--danger" onClick={handleBulkDelete}>
-              선택 삭제
+        <DraftList
+          drafts={form.drafts}
+          onResume={(draft) => form.resumeDraft(draft, articles)}
+          onDiscard={form.discardDraft}
+        />
+        {articles.length === 0 ? (
+          <div className="admin-empty">
+            <p>등록된 기사가 없습니다.</p>
+            <button
+              className="admin-btn admin-btn--primary"
+              onClick={() => form.open('new')}
+            >
+              첫 기사를 작성하세요
             </button>
           </div>
-        )}
-        <div className="admin-table-wrap">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th style={{width: '40px'}}>
-                  <input
-                    type="checkbox"
-                    checked={articles.length > 0 && selected.length === articles.length}
-                    onChange={toggleSelectAll}
-                  />
-                </th>
-                <th>순서</th>
-                <th>제목</th>
-                <th>작성자</th>
-                <th>상태</th>
-                <th>작성일</th>
-                <th>관리</th>
-              </tr>
-            </thead>
-            <tbody>
-              {articles.map((a) => (
-                <tr key={a.id} className={!a.is_published ? 'admin-table__row--draft' : ''}>
-                  <td>
+        ) : (
+          <>
+          {selected.length > 0 && (
+            <div className="admin-bulk-bar">
+              <span>{selected.length}개 선택됨</span>
+              <button className="admin-btn admin-btn--small admin-btn--danger" onClick={handleBulkDelete}>
+                선택 삭제
+              </button>
+            </div>
+          )}
+          <div className="admin-table-wrap">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th style={{width: '40px'}}>
                     <input
                       type="checkbox"
-                      checked={selected.includes(a.id)}
-                      onChange={() => toggleSelect(a.id)}
+                      checked={articles.length > 0 && selected.length === articles.length}
+                      onChange={toggleSelectAll}
                     />
-                  </td>
-                  <td>{a.display_order}</td>
-                  <td className="admin-table__title-cell">{a.title}</td>
-                  <td>{a.author}</td>
-                  <td>
-                    <button
-                      className={`admin-status ${a.is_published ? 'admin-status--published' : 'admin-status--draft'}`}
-                      onClick={() => togglePublish(a)}
-                    >
-                      {a.is_published ? '공개' : '비공개'}
-                    </button>
-                  </td>
-                  <td>{new Date(a.created_at).toLocaleDateString('ko-KR')}</td>
-                  <td>
-                    <div className="admin-table__actions">
-                      <button
-                        className="admin-btn admin-btn--small admin-btn--outline"
-                        onClick={() => startEdit(a)}
-                      >
-                        수정
-                      </button>
-                      <button
-                        className="admin-btn admin-btn--small admin-btn--danger"
-                        onClick={() => handleDelete(a.id)}
-                      >
-                        삭제
-                      </button>
-                    </div>
-                  </td>
+                  </th>
+                  <th>순서</th>
+                  <th>제목</th>
+                  <th>작성자</th>
+                  <th>상태</th>
+                  <th>작성일</th>
+                  <th>관리</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {articles.map((a) => (
+                  <tr key={a.id} className={!a.is_published ? 'admin-table__row--draft' : ''}>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={selected.includes(a.id)}
+                        onChange={() => toggleSelect(a.id)}
+                      />
+                    </td>
+                    <td>{a.display_order}</td>
+                    <td className="admin-table__title-cell">{a.title}</td>
+                    <td>{a.author}</td>
+                    <td>
+                      <button
+                        className={`admin-status ${a.is_published ? 'admin-status--published' : 'admin-status--draft'}`}
+                        onClick={() => togglePublish(a)}
+                      >
+                        {a.is_published ? '공개' : '비공개'}
+                      </button>
+                    </td>
+                    <td>{new Date(a.created_at).toLocaleDateString('ko-KR')}</td>
+                    <td>
+                      <div className="admin-table__actions">
+                        <button
+                          className="admin-btn admin-btn--small admin-btn--outline"
+                          onClick={() => form.open(a)}
+                        >
+                          수정
+                        </button>
+                        <button
+                          className="admin-btn admin-btn--small admin-btn--danger"
+                          onClick={() => handleDelete(a.id)}
+                        >
+                          삭제
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          </>
+        )}
         </>
       )}
     </div>

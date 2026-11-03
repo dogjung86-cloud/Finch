@@ -65,6 +65,18 @@ browser_evaluate:
   sel.dispatchEvent(new Event('change', { bubbles: true }));
 ```
 
+#### 2-3-1. 작성자 입력
+
+입력칸 기본값은 과학드림이다. 자동 등록 글은 지금까지처럼 The Finch 로 넣는다.
+
+```javascript
+browser_evaluate:
+  const authorInput = document.querySelector('#article-author-input');
+  const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
+  setter.call(authorInput, 'The Finch');
+  authorInput.dispatchEvent(new Event('input', { bubbles: true }));
+```
+
 #### 2-4. 표시 순서 입력 (슬롯 번호)
 
 ```javascript
@@ -207,8 +219,8 @@ browser_evaluate:
   quill.clipboard.dangerouslyPasteHTML(0, finalHtml, 'user');
 ```
 
-#### 2-10. 공개 체크박스 확인
-- `is_published: true` 이면 기본 체크 상태 → 확인만
+#### 2-10. 공개 체크박스
+- 기본값은 해제(비공개)다. `is_published: true` 이면 "공개" 체크박스를 눌러 체크한다
 - `is_membership: false` 이면 기본 해제 상태 → 확인만
 
 #### 2-11. 저장

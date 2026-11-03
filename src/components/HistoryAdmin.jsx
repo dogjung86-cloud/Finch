@@ -1,126 +1,63 @@
 'use client';
 
-import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import { revalidatePaths } from '../lib/revalidate';
-import dynamic from 'next/dynamic';
+import {
+  BODY_IMAGE,
+  NOTHING_CHANGED,
+  THUMB_IMAGE,
+  adminErrorMessage,
+  prepareBody,
+  uploadAdminImage,
+} from '../lib/adminEditor';
+import { SERIES } from '../lib/series';
+import ArticlePreview from './admin/ArticlePreview';
+import RichTextEditor from './admin/RichTextEditor';
+import useEditorForm from './admin/useEditorForm';
+import { BODY_HINT, DraftList, EditorActions, RestoredNotice, SaveNotice } from './admin/EditorParts';
 
-const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
-import 'react-quill-new/dist/quill.snow.css';
-
-/* ── 이미지 업로드 헬퍼 ── */
 const HISTORY_BUCKET = 'finch-100-years-ago';
+const THUMB_UPLOAD = { ...THUMB_IMAGE, bucket: HISTORY_BUCKET, folder: 'history' };
+const BODY_UPLOAD = { ...BODY_IMAGE, bucket: HISTORY_BUCKET, folder: 'history' };
 
-async function uploadImage(file, folder = 'history') {
-  const fileExt = file.name.split('.').pop();
-  const fileName = `${folder}/${Date.now()}_${Math.random().toString(36).slice(2)}.${fileExt}`;
+const EMPTY_FORM = {
+  title: '',
+  content: '',
+  thumbnail: '',
+  thumbnail_position: '50% 50%',
+  is_published: false,
+  is_membership: false,
+};
 
-  const { error } = await supabase.storage
-    .from(HISTORY_BUCKET)
-    .upload(fileName, file, { upsert: true });
+const formFromItem = (item) => ({
+  title: item.title || '',
+  content: item.content || '',
+  thumbnail: item.thumbnail || '',
+  thumbnail_position: item.thumbnail_position || '50% 50%',
+  is_published: item.is_published ?? false,
+  is_membership: item.is_membership ?? false,
+});
 
-  if (error) throw error;
+const noticeFor = (item) => ({
+  title: item.title,
+  published: item.is_published,
+  href: `/history/${item.id}`,
+  row: item,
+});
 
-  const { data } = supabase.storage
-    .from(HISTORY_BUCKET)
-    .getPublicUrl(fileName);
-
-  return data.publicUrl;
-}
-
-export default function HistoryAdmin({ onBack }) {
+export default function HistoryAdmin({ onBack, active }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [editing, setEditing] = useState(null);
-  const [formData, setFormData] = useState({
-    title: '',
-    content: '',
-    thumbnail: '',
-    thumbnail_position: '50% 50%',
-    is_published: true,
-    is_membership: false,
-  });
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState('');
+  const [bodyUploading, setBodyUploading] = useState(false);
+  const [previewing, setPreviewing] = useState(false);
   const [thumbDragOver, setThumbDragOver] = useState(false);
-  const quillRef = useRef(null);
 
-  // ── Quill 이미지 핸들러 ──
-  const imageHandler = useCallback(() => {
-    const input = document.createElement('input');
-    input.setAttribute('type', 'file');
-    input.setAttribute('accept', 'image/*');
-    input.click();
-    input.onchange = async () => {
-      const file = input.files?.[0];
-      if (!file) return;
-      try {
-        const url = await uploadImage(file);
-        const editor = quillRef.current?.getEditor();
-        if (editor) {
-          const range = editor.getSelection(true);
-          editor.insertEmbed(range.index, 'image', url);
-          editor.setSelection(range.index + 1);
-        }
-      } catch (err) {
-        setError('본문 이미지 업로드 실패: ' + err.message);
-      }
-    };
-  }, []);
-
-  // ── Quill 모듈 설정 ──
-  const modules = useMemo(() => ({
-    toolbar: {
-      container: [
-        [{ header: [1, 2, 3, false] }],
-        [{ font: [] }],
-        [{ size: ['small', false, 'large', 'huge'] }],
-        ['bold', 'italic', 'underline', 'strike'],
-        [{ color: [] }, { background: [] }],
-        [{ align: [] }],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        ['blockquote'],
-        ['link', 'image'],
-        ['clean'],
-      ],
-      handlers: {
-        image: imageHandler,
-      },
-    },
-    clipboard: { matchVisual: false },
-  }), [imageHandler]);
-
-  const formats = [
-    'header', 'font', 'size',
-    'bold', 'italic', 'underline', 'strike',
-    'color', 'background',
-    'align',
-    'list', 'bullet',
-    'blockquote',
-    'link', 'image',
-  ];
-
-  // ── 에디터에 이미지 드래그앤드롭 ──
-  const handleEditorDrop = async (e) => {
-    const files = e.dataTransfer?.files;
-    if (!files || files.length === 0) return;
-    const file = files[0];
-    if (!file.type.startsWith('image/')) return;
-    e.preventDefault();
-    e.stopPropagation();
-    try {
-      const url = await uploadImage(file);
-      const editor = quillRef.current?.getEditor();
-      if (editor) {
-        const range = editor.getSelection(true);
-        editor.insertEmbed(range.index, 'image', url);
-        editor.setSelection(range.index + 1);
-      }
-    } catch (err) {
-      setError('이미지 업로드 실패: ' + err.message);
-    }
-  };
+  const form = useEditorForm({ kind: 'history', emptyForm: EMPTY_FORM, fromRow: formFromItem });
+  const { editing, formData, error, setError, setNotice, setField } = form;
+  const closePreview = useCallback(() => setPreviewing(false), []);
 
   // ── 목록 로드 ──
   const fetchItems = async () => {
@@ -131,7 +68,7 @@ export default function HistoryAdmin({ onBack }) {
       .order('created_at', { ascending: false });
 
     if (error) {
-      setError('불러오기 실패: ' + error.message);
+      setError('불러오기 실패: ' + adminErrorMessage(error));
     } else {
       setItems(data || []);
     }
@@ -139,36 +76,8 @@ export default function HistoryAdmin({ onBack }) {
   };
 
   useEffect(() => {
-    fetchItems();
-  }, []);
-
-  // ── 폼 초기화 ──
-  const resetForm = () => {
-    setFormData({
-      title: '',
-      content: '',
-      thumbnail: '',
-      thumbnail_position: '50% 50%',
-      is_published: true,
-      is_membership: false,
-    });
-    setEditing(null);
-    setError('');
-  };
-
-  // ── 수정 시작 ──
-  const startEdit = (item) => {
-    setFormData({
-      title: item.title || '',
-      content: item.content || '',
-      thumbnail: item.thumbnail || '',
-      thumbnail_position: item.thumbnail_position || '50% 50%',
-      is_published: item.is_published ?? true,
-      is_membership: item.is_membership ?? false,
-    });
-    setEditing(item);
-    setError('');
-  };
+    if (active) fetchItems();
+  }, [active]);
 
   // ── 썸네일 업로드 ──
   const handleThumbnailFile = async (file) => {
@@ -176,11 +85,12 @@ export default function HistoryAdmin({ onBack }) {
     setUploading(true);
     setError('');
     try {
-      const url = await uploadImage(file);
+      const url = await uploadAdminImage(file, THUMB_UPLOAD);
+      setField('thumbnail', url);
       // 새 이미지가 올라오면 포커스 포인트는 중앙으로 초기화
-      setFormData((prev) => ({ ...prev, thumbnail: url, thumbnail_position: '50% 50%' }));
+      setField('thumbnail_position', '50% 50%');
     } catch (err) {
-      setError('이미지 업로드 실패: ' + err.message);
+      setError('이미지 업로드 실패: ' + adminErrorMessage(err));
     }
     setUploading(false);
   };
@@ -191,7 +101,7 @@ export default function HistoryAdmin({ onBack }) {
     const rect = rectEl.getBoundingClientRect();
     const x = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
     const y = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100));
-    setFormData((prev) => ({ ...prev, thumbnail_position: `${x.toFixed(1)}% ${y.toFixed(1)}%` }));
+    setField('thumbnail_position', `${x.toFixed(1)}% ${y.toFixed(1)}%`);
   };
   const handleFocusPointerDown = (e) => {
     if (!formData.thumbnail) return;
@@ -213,7 +123,7 @@ export default function HistoryAdmin({ onBack }) {
   };
   const resetFocusPoint = (e) => {
     e.stopPropagation();
-    setFormData((prev) => ({ ...prev, thumbnail_position: '50% 50%' }));
+    setField('thumbnail_position', '50% 50%');
   };
   const triggerThumbReplace = (e) => {
     e.stopPropagation();
@@ -244,35 +154,32 @@ export default function HistoryAdmin({ onBack }) {
     setSaving(true);
     setError('');
 
-    const payload = {
-      title: formData.title,
-      content: formData.content,
-      thumbnail: formData.thumbnail,
-      thumbnail_position: formData.thumbnail_position || '50% 50%',
-      is_published: formData.is_published,
-      is_membership: formData.is_membership,
-    };
+    try {
+      const payload = {
+        title: formData.title,
+        content: await prepareBody(formData.content, BODY_UPLOAD),
+        thumbnail: formData.thumbnail,
+        thumbnail_position: formData.thumbnail_position || '50% 50%',
+        is_published: formData.is_published,
+        is_membership: formData.is_membership,
+      };
 
-    let result;
-    if (editing === 'new') {
-      result = await supabase.from('history_science').insert([payload]).select();
-    } else {
-      result = await supabase
-        .from('history_science')
-        .update(payload)
-        .eq('id', editing.id)
-        .select();
-    }
+      const { data, error: saveError } = editing === 'new'
+        ? await supabase.from('history_science').insert([payload]).select()
+        : await supabase.from('history_science').update(payload).eq('id', editing.id).select();
 
-    if (result.error) {
-      setError('저장 실패: ' + result.error.message);
-    } else {
-      const savedId = result.data?.[0]?.id ?? (editing !== 'new' ? editing.id : null);
-      const paths = ['/', '/history'];
-      if (savedId) paths.push(`/history/${savedId}`);
-      revalidatePaths(paths);
-      fetchItems();
-      resetForm();
+      const saved = data?.[0];
+      if (saveError) {
+        setError('저장하지 못했습니다: ' + adminErrorMessage(saveError));
+      } else if (!saved) {
+        setError(NOTHING_CHANGED);
+      } else {
+        revalidatePaths(['/', '/history', `/history/${saved.id}`]);
+        fetchItems();
+        form.finishSave(noticeFor(saved));
+      }
+    } catch (err) {
+      setError('저장하지 못했습니다: ' + adminErrorMessage(err));
     }
     setSaving(false);
   };
@@ -280,12 +187,39 @@ export default function HistoryAdmin({ onBack }) {
   // ── 삭제 ──
   const handleDelete = async (id) => {
     if (!confirm('정말 삭제하시겠습니까?')) return;
-    const { error } = await supabase.from('history_science').delete().eq('id', id);
+    const { data, error } = await supabase.from('history_science').delete().eq('id', id).select('id');
     if (error) {
-      setError('삭제 실패: ' + error.message);
+      setError('삭제 실패: ' + adminErrorMessage(error));
+    } else if (!data?.length) {
+      setError(NOTHING_CHANGED);
     } else {
+      setError('');
+      setNotice(null);
       setItems((prev) => prev.filter((i) => i.id !== id));
+      form.forgetDraft(id);
       revalidatePaths(['/', '/history', `/history/${id}`]);
+    }
+  };
+
+  // ── 공개/비공개 토글 ──
+  const togglePublish = async (item) => {
+    const newStatus = !item.is_published;
+    const { data, error } = await supabase
+      .from('history_science')
+      .update({ is_published: newStatus })
+      .eq('id', item.id)
+      .select('id');
+
+    if (error) {
+      setError('상태 변경 실패: ' + adminErrorMessage(error));
+    } else if (!data?.length) {
+      setError(NOTHING_CHANGED);
+    } else {
+      const updated = { ...item, is_published: newStatus };
+      setError('');
+      setNotice(noticeFor(updated));
+      setItems((prev) => prev.map((i) => (i.id === item.id ? updated : i)));
+      revalidatePaths(['/', '/history', `/history/${item.id}`]);
     }
   };
 
@@ -294,17 +228,17 @@ export default function HistoryAdmin({ onBack }) {
   // ══════════════════════
   if (editing) {
     return (
-      <div className="admin-page">
+      <div className="admin-page" hidden={!active}>
         <div className="admin-page__header">
           <h1 className="admin-page__title">
             {editing === 'new' ? '100년 전 과학 작성' : '100년 전 과학 수정'}
           </h1>
-          <button className="admin-btn admin-btn--outline" onClick={resetForm}>
+          <button className="admin-btn admin-btn--outline" onClick={form.backToList}>
             ← 목록으로
           </button>
         </div>
 
-        {error && <div className="admin-error">{error}</div>}
+        <RestoredNotice restoredAt={form.restoredAt} isNew={editing === 'new'} onDiscard={form.discardRestored} />
 
         <div className="admin-form">
           <div className="admin-form__field">
@@ -313,7 +247,7 @@ export default function HistoryAdmin({ onBack }) {
               className="admin-form__input"
               type="text"
               value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              onChange={(e) => setField('title', e.target.value)}
               placeholder="예: 슈뢰딩거, 파동방정식으로 양자역학의 새 장을 열다"
             />
           </div>
@@ -378,7 +312,7 @@ export default function HistoryAdmin({ onBack }) {
                   <span className="admin-form__dropzone-text">
                     {uploading ? '업로드 중...' : '이미지를 드래그하거나 클릭하여 업로드'}
                   </span>
-                  <span className="admin-form__dropzone-hint">JPG, PNG, WebP (최대 5MB)</span>
+                  <span className="admin-form__dropzone-hint">JPG, PNG, WebP. 올릴 때 자동으로 줄어듭니다.</span>
                 </div>
               )}
               <input
@@ -396,7 +330,7 @@ export default function HistoryAdmin({ onBack }) {
                 className="admin-form__input"
                 type="text"
                 value={formData.thumbnail}
-                onChange={(e) => setFormData({ ...formData, thumbnail: e.target.value })}
+                onChange={(e) => setField('thumbnail', e.target.value)}
                 placeholder="https://..."
               />
             </div>
@@ -404,17 +338,15 @@ export default function HistoryAdmin({ onBack }) {
 
           <div className="admin-form__field">
             <label className="admin-form__label">본문</label>
-            <div onDrop={handleEditorDrop} onDragOver={(e) => e.preventDefault()}>
-              <ReactQuill
-                ref={quillRef}
-                theme="snow"
-                value={formData.content}
-                onChange={(val) => setFormData((prev) => ({ ...prev, content: val }))}
-                modules={modules}
-                formats={formats}
-                placeholder="100년 전 과학 이야기를 작성하세요..."
-              />
-            </div>
+            <p className="admin-form__hint" style={{ marginBottom: '8px' }}>{BODY_HINT}</p>
+            <RichTextEditor
+              value={formData.content}
+              onChange={(val, source) => form.setBody('content', val, source)}
+              placeholder="100년 전 과학 이야기를 작성하세요..."
+              image={BODY_UPLOAD}
+              onError={setError}
+              onUploadingChange={setBodyUploading}
+            />
           </div>
 
           <div className="admin-form__field">
@@ -422,9 +354,9 @@ export default function HistoryAdmin({ onBack }) {
               <input
                 type="checkbox"
                 checked={formData.is_published}
-                onChange={(e) => setFormData({ ...formData, is_published: e.target.checked })}
+                onChange={(e) => setField('is_published', e.target.checked)}
               />
-              공개 (체크 해제 시 비공개)
+              공개 (체크하면 저장과 동시에 독자에게 보입니다)
             </label>
           </div>
           <div className="admin-form__field">
@@ -432,25 +364,37 @@ export default function HistoryAdmin({ onBack }) {
               <input
                 type="checkbox"
                 checked={formData.is_membership}
-                onChange={(e) => setFormData({ ...formData, is_membership: e.target.checked })}
+                onChange={(e) => setField('is_membership', e.target.checked)}
               />
               🔒 멤버십 전용 (일반 사용자에게 본문 잠금)
             </label>
           </div>
 
-          <div className="admin-form__actions">
-            <button
-              className="admin-btn admin-btn--primary"
-              onClick={handleSave}
-              disabled={saving}
-            >
-              {saving ? '저장 중...' : editing === 'new' ? '작성' : '수정 완료'}
-            </button>
-            <button className="admin-btn admin-btn--outline" onClick={resetForm}>
-              취소
-            </button>
-          </div>
+          <EditorActions
+            error={error}
+            draftState={form.draftState}
+            saving={saving}
+            busy={uploading || bodyUploading}
+            isPublished={formData.is_published}
+            saveLabel={editing === 'new' ? '작성' : '수정 완료'}
+            onSave={handleSave}
+            onPreview={() => setPreviewing(true)}
+            onCancel={form.cancel}
+          />
         </div>
+
+        {previewing && (
+          <ArticlePreview
+            kicker={SERIES.history.label}
+            title={formData.title}
+            author={editing === 'new' ? null : editing.source}
+            date={editing === 'new' ? null : editing.date_original}
+            thumbnail={formData.thumbnail}
+            html={formData.content}
+            note={formData.is_membership ? '일상 글은 멤버십 체크와 상관없이 독자에게 전체가 보입니다.' : ''}
+            onClose={closePreview}
+          />
+        )}
       </div>
     );
   }
@@ -458,6 +402,8 @@ export default function HistoryAdmin({ onBack }) {
   // ══════════════════════
   // 목록
   // ══════════════════════
+  if (!active) return null;
+
   return (
     <div className="admin-page">
       <div className="admin-page__header">
@@ -465,7 +411,7 @@ export default function HistoryAdmin({ onBack }) {
         <div className="admin-page__header-actions">
           <button
             className="admin-btn admin-btn--primary"
-            onClick={() => { setEditing('new'); setError(''); }}
+            onClick={() => form.open('new')}
           >
             + 새 항목 작성
           </button>
@@ -475,57 +421,70 @@ export default function HistoryAdmin({ onBack }) {
         </div>
       </div>
 
-      {error && <div className="admin-error">{error}</div>}
+      {error && <div className="admin-error" role="alert">{error}</div>}
+      <SaveNotice notice={form.notice} onPublish={() => togglePublish(form.notice.row)} />
 
       {loading ? (
         <div className="admin-loading">불러오는 중...</div>
-      ) : items.length === 0 ? (
-        <div className="admin-empty">
-          <p>등록된 항목이 없습니다.</p>
-          <button className="admin-btn admin-btn--primary" onClick={() => setEditing('new')}>
-            첫 항목을 작성하세요
-          </button>
-        </div>
       ) : (
-        <div className="admin-table-wrap">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>제목</th>
-                <th>상태</th>
-                <th>관리</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => (
-                <tr key={item.id} className={!item.is_published ? 'admin-table__row--draft' : ''}>
-                  <td className="admin-table__title-cell">{item.title}</td>
-                  <td>
-                    <span className={`admin-status ${item.is_published ? 'admin-status--published' : 'admin-status--draft'}`}>
-                      {item.is_published ? '공개' : '비공개'}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="admin-table__actions">
-                      <button
-                        className="admin-btn admin-btn--small admin-btn--outline"
-                        onClick={() => startEdit(item)}
-                      >
-                        수정
-                      </button>
-                      <button
-                        className="admin-btn admin-btn--small admin-btn--danger"
-                        onClick={() => handleDelete(item.id)}
-                      >
-                        삭제
-                      </button>
-                    </div>
-                  </td>
+        <>
+        <DraftList
+          drafts={form.drafts}
+          onResume={(draft) => form.resumeDraft(draft, items)}
+          onDiscard={form.discardDraft}
+        />
+        {items.length === 0 ? (
+          <div className="admin-empty">
+            <p>등록된 항목이 없습니다.</p>
+            <button className="admin-btn admin-btn--primary" onClick={() => form.open('new')}>
+              첫 항목을 작성하세요
+            </button>
+          </div>
+        ) : (
+          <div className="admin-table-wrap">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>제목</th>
+                  <th>상태</th>
+                  <th>관리</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {items.map((item) => (
+                  <tr key={item.id} className={!item.is_published ? 'admin-table__row--draft' : ''}>
+                    <td className="admin-table__title-cell">{item.title}</td>
+                    <td>
+                      <button
+                        className={`admin-status ${item.is_published ? 'admin-status--published' : 'admin-status--draft'}`}
+                        onClick={() => togglePublish(item)}
+                      >
+                        {item.is_published ? '공개' : '비공개'}
+                      </button>
+                    </td>
+                    <td>
+                      <div className="admin-table__actions">
+                        <button
+                          className="admin-btn admin-btn--small admin-btn--outline"
+                          onClick={() => form.open(item)}
+                        >
+                          수정
+                        </button>
+                        <button
+                          className="admin-btn admin-btn--small admin-btn--danger"
+                          onClick={() => handleDelete(item.id)}
+                        >
+                          삭제
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        </>
       )}
     </div>
   );
