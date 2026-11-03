@@ -13,6 +13,28 @@ import ReadProgress from './articles/ReadProgress';
 // 표 구조와 권한은 supabase/migrations/20261103_comments_drop_email.sql 에 있다.
 // 작성자 id, 이름, 사진과 수정 시각은 DB 가 채우므로 화면에서 보내지 않는다.
 const COMMENT_COLUMNS = 'id, user_id, user_name, user_avatar, text, created_at, updated_at';
+const COMMENT_MAX_LENGTH = 1000; // 20261103_comments_limits.sql 의 check 와 같게
+const COMMENT_TOO_LONG = `댓글은 ${COMMENT_MAX_LENGTH}자까지 쓸 수 있어요.`;
+const NEW_COMMENT = 'new'; // 안내 문구를 어디에 보여 줄지 가리키는 값. 수정과 삭제는 댓글 id 를 쓴다
+
+function commentErrorMessage(error) {
+  console.error('comments write error:', error);
+  if (error.message?.includes('too_many_comments')) {
+    return '댓글을 너무 빠르게 올리고 있어요. 10분쯤 뒤에 다시 올려 주세요.';
+  }
+  if (error.message?.includes('comments_text_length')) return COMMENT_TOO_LONG;
+  return '저장하지 못했어요. 잠시 뒤에 다시 시도해 주세요.';
+}
+
+// maxLength 에 닿으면 브라우저가 말없이 입력을 막으므로 글자 수와 함께 알려 준다
+function CommentLength({ length }) {
+  return (
+    <span className="comment-length">
+      {length >= COMMENT_MAX_LENGTH && <span className="comment-length__full" role="alert">{COMMENT_TOO_LONG}</span>}
+      {length} / {COMMENT_MAX_LENGTH}
+    </span>
+  );
+}
 
 function timeAgo(dateStr) {
   const now = new Date();
@@ -35,6 +57,7 @@ export default function ArticlePage({ article, user, onLoginRequest }) {
   const [submitting, setSubmitting] = useState(false);
   const [fontSizeIdx, setFontSizeIdx] = useState(1);
   const [inputFocused, setInputFocused] = useState(false);
+  const [commentError, setCommentError] = useState(null); // { target, message }
   const viewCounted = useRef(false);
   const editRef = useRef(null);
   const newCommentRef = useRef(null);
@@ -89,13 +112,16 @@ export default function ArticlePage({ article, user, onLoginRequest }) {
     e.preventDefault();
     if (!newComment.trim() || submitting) return;
     setSubmitting(true);
+    setCommentError(null);
 
     const { error } = await supabase.from('comments').insert([{
       article_id: article.id,
       text: newComment.trim(),
     }]);
 
-    if (!error) {
+    if (error) {
+      setCommentError({ target: NEW_COMMENT, message: commentErrorMessage(error) });
+    } else {
       setNewComment('');
       setInputFocused(false);
       await loadComments();
@@ -105,43 +131,57 @@ export default function ArticlePage({ article, user, onLoginRequest }) {
 
   // 댓글 수정
   const handleStartEdit = (comment) => {
+    setCommentError(null);
     setEditingId(comment.id);
     setEditText(comment.text);
     setTimeout(() => editRef.current?.focus(), 50);
   };
 
   const handleCancelEdit = () => {
+    setCommentError(null);
     setEditingId(null);
     setEditText('');
   };
 
   const handleSaveEdit = async (commentId) => {
     if (!editText.trim()) return;
-    const { error } = await supabase
+    setCommentError(null);
+    // 권한이 없으면 오류 없이 0건만 바뀌므로, 바뀐 행을 돌려받아 확인한다
+    const { data, error } = await supabase
       .from('comments')
       .update({ text: editText.trim() })
-      .eq('id', commentId);
+      .eq('id', commentId)
+      .select('id');
 
-    if (!error) {
-      setEditingId(null);
-      setEditText('');
-      await loadComments();
+    if (error || data.length === 0) {
+      setCommentError({ target: commentId, message: commentErrorMessage(error || { message: 'not_updated' }) });
+      return;
     }
+    setEditingId(null);
+    setEditText('');
+    await loadComments();
   };
 
   // 댓글 삭제
   const handleDeleteComment = async (commentId) => {
-    const { error } = await supabase
+    setCommentError(null);
+    // 권한이 없으면 오류 없이 0건만 지워지므로, 지워진 행을 돌려받아 확인한다
+    const { data, error } = await supabase
       .from('comments')
       .delete()
-      .eq('id', commentId);
-    if (!error) {
-      setComments((prev) => prev.filter((c) => c.id !== commentId));
+      .eq('id', commentId)
+      .select('id');
+    if (error || data.length === 0) {
+      console.error('comments delete error:', error || 'not_deleted');
+      setCommentError({ target: commentId, message: '삭제하지 못했어요. 잠시 뒤에 다시 시도해 주세요.' });
+      return;
     }
+    setComments((prev) => prev.filter((c) => c.id !== commentId));
   };
 
   // 입력 취소
   const handleCancelNew = () => {
+    setCommentError(null);
     setNewComment('');
     setInputFocused(false);
     newCommentRef.current?.blur();
@@ -276,12 +316,19 @@ export default function ArticlePage({ article, user, onLoginRequest }) {
                       value={newComment}
                       onChange={(e) => setNewComment(e.target.value)}
                       onFocus={() => setInputFocused(true)}
+                      maxLength={COMMENT_MAX_LENGTH}
                       placeholder="댓글 추가..."
                       rows={1}
                     />
                     <div className="comment-input__underline" />
+                    {commentError?.target === NEW_COMMENT && (
+                      <p className="comment-error" role="alert">
+                        {commentError.message}
+                      </p>
+                    )}
                     {inputFocused && (
                       <div className="comment-input__actions">
+                        <CommentLength length={newComment.length} />
                         <button
                           type="button"
                           className="comment-input__cancel"
@@ -343,10 +390,12 @@ export default function ArticlePage({ article, user, onLoginRequest }) {
                               className="comment-edit__textarea"
                               value={editText}
                               onChange={(e) => setEditText(e.target.value)}
+                              maxLength={COMMENT_MAX_LENGTH}
                               rows={2}
                             />
                             <div className="comment-edit__underline" />
                             <div className="comment-edit__actions">
+                              <CommentLength length={editText.length} />
                               <button className="comment-edit__cancel" onClick={handleCancelEdit}>
                                 취소
                               </button>
@@ -372,6 +421,12 @@ export default function ArticlePage({ article, user, onLoginRequest }) {
                               </div>
                             )}
                           </>
+                        )}
+
+                        {commentError?.target === c.id && (
+                          <p className="comment-error" role="alert">
+                            {commentError.message}
+                          </p>
                         )}
                       </div>
                     </div>

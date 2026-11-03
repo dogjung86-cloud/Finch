@@ -376,6 +376,22 @@
   gap: 8px;
   margin-top: 10px;
 }
+.comment-length {
+  margin-right: auto;
+  align-self: center;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-3);
+}
+.comment-length__full {
+  margin-right: 8px;
+  color: #d93025;
+}
+.comment-error {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #d93025;
+}
 .comment-input__cancel,
 .comment-edit__cancel,
 .comment-input__submit,
