@@ -339,6 +339,16 @@
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+.board-pin {
+  align-self: center;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  border-radius: var(--r-pill);
+}
 .board-edit {
   display: grid;
   gap: 10px;
@@ -350,6 +360,100 @@
 }
 .board-post .board-error {
   margin-top: 8px;
+}
+.board-error--list {
+  margin-top: 16px;
+}
+.board-thread {
+  margin-top: 12px;
+}
+.board-thread__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-3);
+  transition: color 0.2s;
+}
+.board-thread__toggle:hover {
+  color: var(--text);
+}
+.board-thread__toggle::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 0.2s var(--ease);
+}
+.board-thread__toggle[aria-expanded='true']::after {
+  transform: translateY(1px) rotate(-135deg);
+}
+.board-thread__body {
+  display: grid;
+  gap: 18px;
+  margin-top: 12px;
+  padding-left: 16px;
+  border-left: 2px solid var(--line);
+}
+.board-thread__body[hidden] {
+  display: none;
+}
+.board-thread__body > .board-edit {
+  margin-top: 0;
+}
+.board-comments,
+.board-replies {
+  display: grid;
+  list-style: none;
+}
+.board-comments {
+  gap: 18px;
+}
+.board-replies {
+  gap: 14px;
+  margin-top: 12px;
+  padding-left: 14px;
+  border-left: 2px solid var(--line);
+}
+.board-replies .board-edit {
+  margin-top: 0;
+}
+.board-comment .board-post__author {
+  font-size: 14px;
+}
+.board-comment .board-post__date {
+  font-size: 12px;
+}
+.board-comment__body {
+  margin-top: 4px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-2);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.board-comment__reply {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-3);
+  transition: color 0.2s;
+}
+.board-comment__reply:hover {
+  color: var(--text);
+}
+.board-thread__login {
+  font-size: 14px;
+  color: var(--text-3);
+}
+.board-thread__login button {
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .board-more {
   display: flex;

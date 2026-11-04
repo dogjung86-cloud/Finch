@@ -170,6 +170,14 @@
       });
     });
 
+    board.querySelectorAll('.board-thread__toggle').forEach((t) => {
+      handled(t).addEventListener('click', () => {
+        const body = document.getElementById(t.getAttribute('aria-controls'));
+        body.hidden = !body.hidden;
+        t.setAttribute('aria-expanded', String(!body.hidden));
+      });
+    });
+
     // 사본에서는 로그인할 수 없으므로, 로그인 버튼을 누르면 로그인한 화면을 보여 준다
     const prompt = board.querySelector('.board-login');
     const form = board.querySelector('[data-board-composer]');
@@ -194,6 +202,8 @@
       const body = textarea.value.trim();
       if (!body) return;
       const item = list.querySelector('.board-post').cloneNode(true);
+      item.querySelector('.board-pin')?.remove();
+      item.querySelector('.board-thread')?.remove();
       item.dataset.topic = select.value;
       item.querySelector('.board-post__author').textContent = '미리보기';
       item.querySelector('.board-post__date').textContent = '방금 전';

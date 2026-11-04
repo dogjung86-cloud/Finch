@@ -2,16 +2,16 @@
 
 import { useEffect, useState } from 'react';
 import { supabase, isSupabaseConfigured } from '../../lib/supabase';
-import { timeAgo } from '../../lib/format';
 import { BOARD_TOPICS } from '../../data/games';
 import { useAuth } from '../../providers/AuthProvider';
+import BoardComments, { fetchComments } from './BoardComments';
+import { BoardItem, MAX_LENGTH, pinnedFirst, writeErrorMessage } from './boardParts';
 
 // Games 탭 의견 게시판. 표 구조와 권한은 supabase/migrations/20261102_game_posts.sql 에 있다.
 // 작성자 id 와 이름은 DB 가 로그인 토큰에서 채우므로 화면에서 보내지 않는다.
 
 const PAGE_SIZE = 20;
-const MAX_LENGTH = 1000; // 마이그레이션의 check 와 같게
-const COLUMNS = 'id, game_slug, user_id, author_name, body, created_at, updated_at';
+const COLUMNS = 'id, game_slug, user_id, author_name, body, pinned_at, created_at, updated_at';
 const ALL_TOPICS = 'all';
 const TOPIC_LABELS = Object.fromEntries(BOARD_TOPICS.map((t) => [t.id, t.label]));
 
@@ -25,7 +25,8 @@ const SAMPLE_POSTS = isPreview
         game_slug: 'fly-darwin',
         author_name: '샘플 작성자 1',
         body: '보스전이 생각보다 어려운데 재밌어요. 분노 모드에 들어가면 손에 땀이 납니다.',
-        created_at: hoursAgo(2),
+        pinned_at: hoursAgo(1),
+        created_at: hoursAgo(30),
         updated_at: null,
       },
       {
@@ -33,6 +34,7 @@ const SAMPLE_POSTS = isPreview
         game_slug: 'fly-darwin',
         author_name: '샘플 작성자 2',
         body: '핀치새까지 진화하는 데 한참 걸렸어요.\n모바일에서 드래그 감도를 조절할 수 있으면 좋겠습니다.',
+        pinned_at: null,
         created_at: hoursAgo(26),
         updated_at: hoursAgo(20),
       },
@@ -41,7 +43,52 @@ const SAMPLE_POSTS = isPreview
         game_slug: 'etc',
         author_name: '샘플 작성자 3',
         body: '다음 게임은 공룡 시대가 배경이면 좋겠어요!',
+        pinned_at: null,
         created_at: hoursAgo(80),
+        updated_at: null,
+      },
+    ]
+  : [];
+const SAMPLE_COMMENTS = isPreview
+  ? [
+      {
+        id: 'sample-c1',
+        post_id: 'sample-1',
+        parent_id: null,
+        author_name: '샘플 작성자 2',
+        body: '분노 모드에서는 화면 가장자리로 피하면 조금 쉬워져요.',
+        pinned_at: hoursAgo(2),
+        created_at: hoursAgo(20),
+        updated_at: null,
+      },
+      {
+        id: 'sample-c2',
+        post_id: 'sample-1',
+        parent_id: 'sample-c1',
+        author_name: '샘플 작성자 1',
+        body: '오, 해 볼게요. 고마워요!',
+        pinned_at: null,
+        created_at: hoursAgo(18),
+        updated_at: null,
+      },
+      {
+        id: 'sample-c3',
+        post_id: 'sample-1',
+        parent_id: null,
+        author_name: '샘플 작성자 3',
+        body: '저도 여기서 한참 막혔어요.',
+        pinned_at: null,
+        created_at: hoursAgo(10),
+        updated_at: null,
+      },
+      {
+        id: 'sample-c4',
+        post_id: 'sample-2',
+        parent_id: null,
+        author_name: '샘플 작성자 3',
+        body: '드래그 감도 조절은 저도 필요해요.',
+        pinned_at: null,
+        created_at: hoursAgo(12),
         updated_at: null,
       },
     ]
@@ -55,6 +102,7 @@ async function fetchPosts(topic, offset) {
   let query = supabase
     .from('game_posts')
     .select(COLUMNS, { count: 'exact' })
+    .order('pinned_at', { ascending: false, nullsFirst: false })
     .order('created_at', { ascending: false })
     .range(offset, offset + PAGE_SIZE - 1);
   if (topic !== ALL_TOPICS) query = query.eq('game_slug', topic);
@@ -66,12 +114,12 @@ async function fetchPosts(topic, offset) {
   return { rows: data, total: count ?? data.length, failed: false };
 }
 
-function writeErrorMessage(error) {
-  console.error('game_posts write error:', error);
-  if (error.message?.includes('too_many_posts')) {
-    return '글을 너무 빠르게 올리고 있어요. 10분쯤 뒤에 다시 올려 주세요.';
-  }
-  return '저장하지 못했어요. 잠시 뒤에 다시 시도해 주세요.';
+// 목록의 댓글 수를 바로 보여 주고 고정 댓글을 펼쳐 두려고 의견과 댓글을 함께 받는다
+async function fetchPage(topic, offset) {
+  const page = await fetchPosts(topic, offset);
+  if (!isSupabaseConfigured) return { ...page, comments: SAMPLE_COMMENTS, commentsFailed: false };
+  const { rows, failed } = await fetchComments(page.rows.map((p) => p.id));
+  return { ...page, comments: rows, commentsFailed: failed };
 }
 
 function Composer({ userName, topic, onPosted, hidden }) {
@@ -142,118 +190,13 @@ function Composer({ userName, topic, onPosted, hidden }) {
   );
 }
 
-function PostItem({ post, canEdit, canDelete, onUpdated, onDeleted }) {
-  const [editing, setEditing] = useState(false);
-  const [text, setText] = useState(post.body);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState('');
-
-  const startEdit = () => {
-    setText(post.body);
-    setError('');
-    setEditing(true);
-  };
-
-  const handleSave = async (e) => {
-    e.preventDefault();
-    const body = text.trim();
-    if (!body || busy) return;
-    setBusy(true);
-    setError('');
-    const { data, error: updateError } = await supabase
-      .from('game_posts')
-      .update({ body })
-      .eq('id', post.id)
-      .select(COLUMNS)
-      .single();
-    setBusy(false);
-    if (updateError) {
-      setError(writeErrorMessage(updateError));
-      return;
-    }
-    setEditing(false);
-    onUpdated(data);
-  };
-
-  const handleDelete = async () => {
-    if (busy || !window.confirm('이 의견을 삭제할까요?')) return;
-    setBusy(true);
-    setError('');
-    // 권한이 없으면 오류 없이 0건만 지워지므로, 지워진 행을 돌려받아 확인한다
-    const { data, error: deleteError } = await supabase.from('game_posts').delete().eq('id', post.id).select('id');
-    setBusy(false);
-    if (deleteError || data.length === 0) {
-      setError(writeErrorMessage(deleteError || { message: 'not_deleted' }));
-      return;
-    }
-    onDeleted(post.id);
-  };
-
-  return (
-    <li className="board-post" data-topic={post.game_slug}>
-      <div className="board-post__meta">
-        <span className="board-post__author">{post.author_name}</span>
-        <time className="board-post__date" dateTime={post.created_at}>
-          {timeAgo(post.created_at)}
-          {post.updated_at && ' (수정됨)'}
-        </time>
-        {TOPIC_LABELS[post.game_slug] && <span className="board-post__topic">{TOPIC_LABELS[post.game_slug]}</span>}
-        {!editing && (canEdit || canDelete) && (
-          <span className="board-post__actions">
-            {canEdit && (
-              <button type="button" onClick={startEdit}>
-                수정
-              </button>
-            )}
-            {canDelete && (
-              <button type="button" onClick={handleDelete} disabled={busy}>
-                삭제
-              </button>
-            )}
-          </span>
-        )}
-      </div>
-
-      {editing ? (
-        <form className="board-edit" onSubmit={handleSave}>
-          <textarea
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            maxLength={MAX_LENGTH}
-            rows={3}
-            aria-label="의견 수정"
-            autoFocus
-          />
-          <div className="board-edit__foot">
-            <span className="board-form__count">
-              {text.length} / {MAX_LENGTH}
-            </span>
-            <button type="button" className="btn btn--sm btn--outline" onClick={() => setEditing(false)}>
-              취소
-            </button>
-            <button type="submit" className="btn btn--sm" disabled={!text.trim() || busy}>
-              {busy ? '저장 중...' : '저장'}
-            </button>
-          </div>
-        </form>
-      ) : (
-        <p className="board-post__body">{post.body}</p>
-      )}
-
-      {error && (
-        <p className="board-error" role="alert">
-          {error}
-        </p>
-      )}
-    </li>
-  );
-}
-
 export default function GameBoard() {
   const { user, isAdmin, setShowLoginModal } = useAuth();
   const [topic, setTopic] = useState(ALL_TOPICS);
   const [posts, setPosts] = useState([]);
   const [total, setTotal] = useState(0);
+  const [comments, setComments] = useState([]);
+  const [commentsFailed, setCommentsFailed] = useState(false);
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -261,11 +204,13 @@ export default function GameBoard() {
   useEffect(() => {
     let stale = false;
     setLoading(true);
-    fetchPosts(topic, 0).then(({ rows, total: count, failed: didFail }) => {
+    fetchPage(topic, 0).then((page) => {
       if (stale) return;
-      setPosts(rows);
-      setTotal(count);
-      setFailed(didFail);
+      setPosts(page.rows);
+      setTotal(page.total);
+      setComments(page.comments);
+      setCommentsFailed(page.commentsFailed);
+      setFailed(page.failed);
       setLoading(false);
     });
     return () => {
@@ -275,12 +220,14 @@ export default function GameBoard() {
 
   const handleMore = async () => {
     setLoadingMore(true);
-    const { rows, total: count, failed: didFail } = await fetchPosts(topic, posts.length);
+    const page = await fetchPage(topic, posts.length);
     setLoadingMore(false);
-    if (didFail) return;
+    if (page.failed) return;
     // 그사이 새 글이 올라오면 같은 글이 다시 올 수 있어 걸러 낸다
-    setPosts((prev) => [...prev, ...rows.filter((r) => !prev.some((p) => p.id === r.id))]);
-    setTotal(count);
+    setPosts((prev) => [...prev, ...page.rows.filter((r) => !prev.some((p) => p.id === r.id))]);
+    setComments((prev) => [...prev, ...page.comments.filter((r) => !prev.some((c) => c.id === r.id))]);
+    setCommentsFailed((prev) => prev || page.commentsFailed);
+    setTotal(page.total);
   };
 
   const handlePosted = (post) => {
@@ -299,7 +246,21 @@ export default function GameBoard() {
 
   const handleDeleted = (id) => {
     setPosts((prev) => prev.filter((p) => p.id !== id));
+    setComments((prev) => prev.filter((c) => c.post_id !== id));
     setTotal((n) => Math.max(0, n - 1));
+  };
+
+  const handleCommentAdded = (comment) => {
+    setComments((prev) => [...prev, comment]);
+  };
+
+  const handleCommentUpdated = (comment) => {
+    setComments((prev) => prev.map((c) => (c.id === comment.id ? comment : c)));
+  };
+
+  // 댓글을 지우면 그 대댓글도 DB 에서 함께 지워진다
+  const handleCommentDeleted = (id) => {
+    setComments((prev) => prev.filter((c) => c.id !== id && c.parent_id !== id));
   };
 
   const isMine = (post) => Boolean(user) && user.id === post.user_id;
@@ -351,17 +312,46 @@ export default function GameBoard() {
         <p className="empty board-empty">아직 올라온 의견이 없어요. 첫 의견을 남겨 주세요.</p>
       ) : (
         <>
+          {commentsFailed && (
+            <p className="board-error board-error--list" role="alert">
+              댓글을 불러오지 못했어요. 잠시 뒤에 다시 들어와 주세요.
+            </p>
+          )}
           <ul className="board-list">
-            {posts.map((post) => (
-              <PostItem
-                key={post.id}
-                post={post}
-                canEdit={isMine(post)}
-                canDelete={isMine(post) || isAdmin}
-                onUpdated={handleUpdated}
-                onDeleted={handleDeleted}
-              />
-            ))}
+            {pinnedFirst(posts).map((post) => {
+              const postComments = comments.filter((c) => c.post_id === post.id);
+              return (
+                <li key={post.id} className="board-post" data-topic={post.game_slug}>
+                  <BoardItem
+                    item={post}
+                    table="game_posts"
+                    columns={COLUMNS}
+                    pinFunction="set_game_post_pinned"
+                    label="의견"
+                    deleteNotice={postComments.length > 0 ? `댓글 ${postComments.length}개도 함께 지워집니다.` : ''}
+                    canEdit={isMine(post)}
+                    canDelete={isMine(post) || isAdmin}
+                    canPin={isAdmin}
+                    meta={TOPIC_LABELS[post.game_slug] && <span className="board-post__topic">{TOPIC_LABELS[post.game_slug]}</span>}
+                    bodyClassName="board-post__body"
+                    onUpdated={handleUpdated}
+                    onDeleted={handleDeleted}
+                  />
+                  {!commentsFailed && (
+                    <BoardComments
+                      postId={post.id}
+                      comments={postComments}
+                      user={user}
+                      isAdmin={isAdmin}
+                      onLogin={handleLogin}
+                      onAdded={handleCommentAdded}
+                      onUpdated={handleCommentUpdated}
+                      onDeleted={handleCommentDeleted}
+                    />
+                  )}
+                </li>
+              );
+            })}
           </ul>
           {posts.length < total && (
             <div className="board-more">
