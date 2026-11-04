@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { timeAgo } from '../../lib/format';
+import { blockedLanguageMessage } from '../../lib/blockedLanguage';
 
 // 의견과 댓글이 함께 쓰는 부품. 표 구조와 권한은 supabase/migrations/20261104_game_post_comments.sql 에 있다.
 
@@ -21,11 +22,8 @@ export function writeErrorMessage(error) {
   if (message.includes('too_many_comments')) {
     return '댓글을 너무 빠르게 올리고 있어요. 10분쯤 뒤에 다시 올려 주세요.';
   }
-  if (message.includes('blocked_language')) {
-    // 걸린 부분을 알려 주어야 잘못 걸렸을 때 고칠 수 있다
-    const part = error.details ? ` ("${error.details}")` : '';
-    return `욕설이나 음란한 표현으로 보이는 부분${part}이 있어 올리지 못했어요. 고쳐서 다시 올려 주세요.`;
-  }
+  const blocked = blockedLanguageMessage(error);
+  if (blocked) return blocked;
   // 쓰는 사이에 의견이나 댓글이 지워졌을 때
   if (message.includes('invalid_parent') || error.code === '23503') {
     return '답하려던 글이 지워져서 올리지 못했어요. 새로고침해 주세요.';

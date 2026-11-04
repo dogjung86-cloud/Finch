@@ -8,6 +8,7 @@ import { ADMIN_EMAIL } from '../lib/constants';
 import { FONT_SIZES, fixLineBreaks } from '../lib/articleText';
 import { formatDate } from '../lib/format';
 import { SERIES } from '../lib/series';
+import { blockedLanguageMessage } from '../lib/blockedLanguage';
 import ReadProgress from './articles/ReadProgress';
 
 // 표 구조와 권한은 supabase/migrations/20261103_comments_drop_email.sql 에 있다.
@@ -23,7 +24,7 @@ function commentErrorMessage(error) {
     return '댓글을 너무 빠르게 올리고 있어요. 10분쯤 뒤에 다시 올려 주세요.';
   }
   if (error.message?.includes('comments_text_length')) return COMMENT_TOO_LONG;
-  return '저장하지 못했어요. 잠시 뒤에 다시 시도해 주세요.';
+  return blockedLanguageMessage(error) || '저장하지 못했어요. 잠시 뒤에 다시 시도해 주세요.';
 }
 
 // maxLength 에 닿으면 브라우저가 말없이 입력을 막으므로 글자 수와 함께 알려 준다
