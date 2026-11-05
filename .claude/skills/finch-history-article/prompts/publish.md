@@ -25,13 +25,15 @@ mcp__playwright__browser_navigate: https://finch.co.kr/admin
 mcp__playwright__browser_snapshot
 ```
 
-로그인 체크: 탭 버튼 "100년 전 과학" 텍스트 visible 여부로 판단. 없으면 사용자에게 재로그인 요청.
+로그인 체크: 탭 버튼 "일상 기록" 텍스트 visible 여부로 판단. 없으면 사용자에게 재로그인 요청.
 
-### 2. "100년 전 과학" 탭 클릭
+### 2. "일상 기록" 탭 클릭
+
+관리자 탭 이름이 2026-11-06 에 "100년 전 과학"에서 "일상 기록"으로 바뀌었다. 표는 그대로 `history_science` 다.
 
 ```
-mcp__playwright__browser_click: button.admin-tabs__btn (텍스트 "100년 전 과학")
-mcp__playwright__browser_wait_for: 텍스트 "100년 전 과학 관리"
+mcp__playwright__browser_click: button.admin-tabs__btn (텍스트 "일상 기록")
+mcp__playwright__browser_wait_for: 텍스트 "+ 새 항목 작성"
 ```
 
 ### 3. 각 슬롯 등록 (0 → 5 순차)
@@ -41,7 +43,7 @@ mcp__playwright__browser_wait_for: 텍스트 "100년 전 과학 관리"
 #### 3-1. "+ 새 항목 작성" 클릭
 ```
 browser_click: button (텍스트 "+ 새 항목 작성")
-browser_wait_for: 텍스트 "100년 전 과학 작성"
+browser_wait_for: 텍스트 "일상 기록 작성"
 ```
 
 #### 3-2. 제목 입력
@@ -224,7 +226,7 @@ browser_evaluate: `
 
 ```
 browser_click: button (텍스트 "작성")
-browser_wait_for: 텍스트 "100년 전 과학 관리" (목록 페이지로 복귀)
+browser_wait_for: 텍스트 "+ 새 항목 작성" (목록 페이지로 복귀)
 ```
 
 저장 실패(admin-error 출현) 시:
@@ -257,7 +259,7 @@ browser_evaluate: `
 ### 5. 완료 리포트
 
 ```
-완료: "100년 전 과학" 탭에 6편 등록 성공
+완료: "일상 기록" 탭에 6편 등록 성공
 
 슬롯 0: {제목} ✓
 슬롯 1: {제목} ✓

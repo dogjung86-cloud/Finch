@@ -1,13 +1,13 @@
 ---
 name: finch-history-article
-description: finch.co.kr admin "100년 전 과학" 탭에 과학드림 스타일 기사 6편을 자동 등록하는 4단계 파이프라인. Nautilus 로컬 아카이브(G:\내 드라이브\Nautilus\History(노틸러스)\articles)에서 6편 선택 → 서브에이전트 병렬 재작성(학술 논문 기반) → 이미지 다운로드 → Playwright로 썸네일·본문 이미지를 UI 업로드 플로우로 등록. 트리거: "/finch-history-article", "100년 전 과학 기사 자동 등록", "과학사 기사 써줘"
+description: finch.co.kr admin "일상 기록"(옛 이름 "100년 전 과학") 탭에 과학드림 스타일 기사 6편을 자동 등록하는 4단계 파이프라인. Nautilus 로컬 아카이브(G:\내 드라이브\Nautilus\History(노틸러스)\articles)에서 6편 선택 → 서브에이전트 병렬 재작성(학술 논문 기반) → 이미지 다운로드 → Playwright로 썸네일·본문 이미지를 UI 업로드 플로우로 등록. 트리거: "/finch-history-article", "100년 전 과학 기사 자동 등록", "과학사 기사 써줘"
 ---
 
 # Finch History Article Automation Skill
 
 ## 무엇을 하는가
 
-finch.co.kr 관리자 페이지의 **"100년 전 과학" 탭** (Supabase `history_science` 테이블)에
+finch.co.kr 관리자 페이지의 **"일상 기록" 탭** (옛 이름 "100년 전 과학", Supabase `history_science` 테이블)에
 **과학드림 스타일**의 과학사 기사 6편을 자동으로 등록한다.
 
 - **소스**: `G:\내 드라이브\Nautilus\History(노틸러스)\articles\` — 각 폴더에 `article.md` + `metadata.json` 이미 스크래핑 완료 (172편)
@@ -56,7 +56,7 @@ HistoryAdmin 폼이 보내는 값만 채운다:
 
 ### 단계 4: 발행 (Playwright UI 업로드 플로우)
 Playwright MCP로 admin 화면을 실제 조작:
-1. `/admin` 이동 → "100년 전 과학" 탭 클릭
+1. `/admin` 이동 → "일상 기록" 탭 클릭
 2. "+ 새 항목 작성" 클릭
 3. 제목 입력
 4. **썸네일**: `<input id="history-thumb-input" type="file">` 에 `browser_file_upload`로 로컬 파일 업로드 → Supabase 업로드 자동 완료

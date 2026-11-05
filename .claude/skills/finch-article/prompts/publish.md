@@ -32,7 +32,7 @@ mcp__playwright__browser_snapshot (화면 확인)
 
 로그인 체크: "새 기사 작성" 버튼 존재 여부로 판단. 없으면 사용자에게 재로그인 요청.
 
-**기본 탭이 일반 기사 탭인지 확인**: HistoryAdmin 탭("100년 전 과학")이 아니라 일반 AdminPage("기사 관리")여야 함.
+**기본 탭이 일반 기사 탭인지 확인**: HistoryAdmin 탭("일상 기록")이 아니라 일반 AdminPage("과학 기사")여야 함.
 
 ### 2. 각 슬롯 등록 (0 → 7 순차)
 
@@ -227,7 +227,7 @@ browser_evaluate:
 
 ```
 browser_click: "기사 작성" 버튼 (정확 텍스트 매치)
-browser_wait_for: "기사 관리" 텍스트 출현 (목록 페이지 복귀)
+browser_wait_for: "+ 새 기사 작성" 텍스트 출현 (목록 페이지 복귀)
 ```
 
 #### 2-12. 검증
