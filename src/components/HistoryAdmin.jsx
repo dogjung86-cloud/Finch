@@ -231,7 +231,7 @@ export default function HistoryAdmin({ onBack, active }) {
       <div className="admin-page" hidden={!active}>
         <div className="admin-page__header">
           <h1 className="admin-page__title">
-            {editing === 'new' ? '100년 전 과학 작성' : '100년 전 과학 수정'}
+            {`${SERIES.history.adminLabel} ${editing === 'new' ? '작성' : '수정'}`}
           </h1>
           <button className="admin-btn admin-btn--outline" onClick={form.backToList}>
             ← 목록으로
@@ -248,7 +248,7 @@ export default function HistoryAdmin({ onBack, active }) {
               type="text"
               value={formData.title}
               onChange={(e) => setField('title', e.target.value)}
-              placeholder="예: 슈뢰딩거, 파동방정식으로 양자역학의 새 장을 열다"
+              placeholder="제목을 입력하세요"
             />
           </div>
 
@@ -342,7 +342,7 @@ export default function HistoryAdmin({ onBack, active }) {
             <RichTextEditor
               value={formData.content}
               onChange={(val, source) => form.setBody('content', val, source)}
-              placeholder="100년 전 과학 이야기를 작성하세요..."
+              placeholder="일상 기록을 작성하세요..."
               image={BODY_UPLOAD}
               onError={setError}
               onUploadingChange={setBodyUploading}
@@ -407,7 +407,7 @@ export default function HistoryAdmin({ onBack, active }) {
   return (
     <div className="admin-page">
       <div className="admin-page__header">
-        <h1 className="admin-page__title">100년 전 과학 관리</h1>
+        <h1 className="admin-page__title">{SERIES.history.adminLabel}</h1>
         <div className="admin-page__header-actions">
           <button
             className="admin-btn admin-btn--primary"

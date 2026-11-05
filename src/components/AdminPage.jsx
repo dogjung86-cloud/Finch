@@ -57,7 +57,7 @@ const noticeFor = (article) => ({
 const byDisplayOrder = (a, b) =>
   a.display_order - b.display_order || new Date(b.created_at) - new Date(a.created_at);
 
-/* ── 관리자 기사 관리 페이지 ── */
+/* ── 관리자 과학 기사 탭 ── */
 export default function AdminPage({ onBack, active }) {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -442,7 +442,7 @@ export default function AdminPage({ onBack, active }) {
   return (
     <div className="admin-page">
       <div className="admin-page__header">
-        <h1 className="admin-page__title">기사 관리</h1>
+        <h1 className="admin-page__title">{SERIES.column.adminLabel}</h1>
         <div className="admin-page__header-actions">
           <button
             className="admin-btn admin-btn--primary"

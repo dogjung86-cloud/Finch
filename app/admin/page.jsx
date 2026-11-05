@@ -9,6 +9,7 @@ import StatsAdmin from '../../src/components/StatsAdmin';
 import CommentsAdmin from '../../src/components/CommentsAdmin';
 import { useAuth } from '../../src/providers/AuthProvider';
 import { hasDrafts } from '../../src/lib/adminEditor';
+import { SERIES } from '../../src/lib/series';
 
 export default function Admin() {
   const router = useRouter();
@@ -84,13 +85,13 @@ export default function Admin() {
           className={`admin-tabs__btn ${tab === 'articles' ? 'admin-tabs__btn--active' : ''}`}
           onClick={() => setTab('articles')}
         >
-          기사 관리
+          {SERIES.column.adminLabel}
         </button>
         <button
           className={`admin-tabs__btn ${tab === 'history' ? 'admin-tabs__btn--active' : ''}`}
           onClick={() => setTab('history')}
         >
-          100년 전 과학
+          {SERIES.history.adminLabel}
         </button>
         <button
           className={`admin-tabs__btn ${tab === 'stats' ? 'admin-tabs__btn--active' : ''}`}
