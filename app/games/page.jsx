@@ -2,8 +2,11 @@ import PageHead from '../../src/components/site/PageHead';
 import SectionHead from '../../src/components/site/SectionHead';
 import { GameFeature, GameLabCard } from '../../src/components/games/GameCards';
 import GameBoard from '../../src/components/games/GameBoard';
-import { GAMES } from '../../src/data/games';
+import { GAMES, LIVE_GAMES } from '../../src/data/games';
 import { SITE } from '../../src/data/site';
+
+// 카카오톡 같은 공유 미리보기에는 목록 맨 앞, 가장 최근에 올린 게임의 표지를 쓴다
+const featured = LIVE_GAMES[0];
 
 export const metadata = {
   title: 'Games',
@@ -14,7 +17,7 @@ export const metadata = {
     description: '과학적 상상력을 더한 캐주얼 게임',
     url: `${SITE.url}/games`,
     type: 'website',
-    images: [{ url: '/images/games/fly-darwin-cover-1600.webp', width: 1600, height: 786, alt: 'Fly Darwin' }],
+    images: [{ url: featured.cover.src, width: featured.cover.width, height: featured.cover.height, alt: featured.title }],
   },
 };
 
