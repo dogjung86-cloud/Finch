@@ -5,8 +5,11 @@ import Link from 'next/link';
 import { FONT_SIZES, fixLineBreaks } from '../../../src/lib/articleText';
 import { SERIES } from '../../../src/lib/series';
 import ReadProgress from '../../../src/components/articles/ReadProgress';
+import Comments from '../../../src/components/articles/Comments';
+import { useAuth } from '../../../src/providers/AuthProvider';
 
 export default function HistoryDetailClient({ item }) {
+  const { user, setShowLoginModal } = useAuth();
   const [fontSizeIdx, setFontSizeIdx] = useState(1);
 
   const cycleFontSize = () => {
@@ -91,6 +94,15 @@ export default function HistoryDetailClient({ item }) {
             )}
           </div>
         )}
+
+        <hr className="article-page__divider" />
+
+        <Comments
+          series="history"
+          postId={item.id}
+          user={user}
+          onLoginRequest={() => setShowLoginModal(true)}
+        />
       </div>
     </div>
   );

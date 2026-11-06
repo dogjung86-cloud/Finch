@@ -2,6 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { SERIES } from '../lib/series';
+
+// 댓글은 칼럼 기사(article_id)나 일상 글(history_id) 가운데 하나에 달린다 (20261106_comments_history.sql)
+const postOf = (c) => (c.history_id
+  ? { id: c.history_id, href: `/history/${c.history_id}`, label: SERIES.history.label }
+  : { id: c.article_id, href: `/article/${c.article_id}`, label: null });
+
+const uniqueIds = (rows, key) => [...new Set(rows.map((r) => r[key]).filter(Boolean))];
 
 function formatDate(iso) {
   const d = new Date(iso);
@@ -17,7 +25,7 @@ function formatDate(iso) {
 
 export default function CommentsAdmin() {
   const [comments, setComments] = useState([]);
-  const [articleTitleMap, setArticleTitleMap] = useState({});
+  const [titleMap, setTitleMap] = useState({});
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState('30d');
   const [query, setQuery] = useState('');
@@ -31,7 +39,7 @@ export default function CommentsAdmin() {
 
     let q = supabase
       .from('comments')
-      .select('id, article_id, user_name, text, created_at')
+      .select('id, article_id, history_id, user_name, text, created_at')
       .order('created_at', { ascending: false });
 
     if (period !== 'all') {
@@ -48,17 +56,18 @@ export default function CommentsAdmin() {
       return;
     }
 
-    const ids = [...new Set((data || []).map((c) => c.article_id).filter(Boolean))];
-    if (ids.length > 0) {
-      const { data: arts } = await supabase.from('articles').select('id, title').in('id', ids);
-      const map = {};
-      (arts || []).forEach((a) => { map[a.id] = a.title; });
-      setArticleTitleMap(map);
-    } else {
-      setArticleTitleMap({});
-    }
+    const rows = data || [];
+    const articleIds = uniqueIds(rows, 'article_id');
+    const historyIds = uniqueIds(rows, 'history_id');
+    const [arts, hist] = await Promise.all([
+      articleIds.length > 0 ? supabase.from('articles').select('id, title').in('id', articleIds) : { data: [] },
+      historyIds.length > 0 ? supabase.from('history_science').select('id, title').in('id', historyIds) : { data: [] },
+    ]);
+    const map = {};
+    [...(arts.data || []), ...(hist.data || [])].forEach((p) => { map[p.id] = p.title; });
+    setTitleMap(map);
 
-    setComments(data || []);
+    setComments(rows);
     setLoading(false);
   };
 
@@ -132,38 +141,44 @@ export default function CommentsAdmin() {
               <thead>
                 <tr>
                   <th style={{ whiteSpace: 'nowrap' }}>작성시각</th>
-                  <th>기사</th>
+                  <th>글</th>
                   <th>작성자</th>
                   <th>내용</th>
                   <th style={{ width: 80 }}>작업</th>
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((c) => (
-                  <tr key={c.id}>
-                    <td style={{ whiteSpace: 'nowrap', fontSize: 13 }}>{formatDate(c.created_at)}</td>
-                    <td>
-                      <a
-                        href={`/article/${c.article_id}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        style={{ color: 'var(--text-primary)', textDecoration: 'underline' }}
-                      >
-                        {articleTitleMap[c.article_id] || `#${c.article_id}`}
-                      </a>
-                    </td>
-                    <td style={{ fontWeight: 600 }}>{c.user_name || '—'}</td>
-                    <td style={{ whiteSpace: 'pre-wrap', maxWidth: 460 }}>{c.text}</td>
-                    <td>
-                      <button
-                        className="admin-btn admin-btn--small admin-btn--danger"
-                        onClick={() => handleDelete(c.id)}
-                      >
-                        삭제
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {filtered.map((c) => {
+                  const post = postOf(c);
+                  return (
+                    <tr key={c.id}>
+                      <td style={{ whiteSpace: 'nowrap', fontSize: 13 }}>{formatDate(c.created_at)}</td>
+                      <td>
+                        {post.label && (
+                          <span style={{ color: 'var(--text-muted)', fontSize: 13, marginRight: 6 }}>{post.label}</span>
+                        )}
+                        <a
+                          href={post.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{ color: 'var(--text-primary)', textDecoration: 'underline' }}
+                        >
+                          {titleMap[post.id] || `#${post.id}`}
+                        </a>
+                      </td>
+                      <td style={{ fontWeight: 600 }}>{c.user_name || '—'}</td>
+                      <td style={{ whiteSpace: 'pre-wrap', maxWidth: 460 }}>{c.text}</td>
+                      <td>
+                        <button
+                          className="admin-btn admin-btn--small admin-btn--danger"
+                          onClick={() => handleDelete(c.id)}
+                        >
+                          삭제
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
