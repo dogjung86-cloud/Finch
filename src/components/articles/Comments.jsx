@@ -13,7 +13,8 @@ import { blockedLanguageMessage } from '../../lib/blockedLanguage';
 // 대댓글은 게임 의견 댓글처럼 한 단계까지이고, 대댓글에 답하면 같은 줄에 이름을 붙여 이어 쓴다.
 // 작성자 id, 이름, 사진과 수정 시각은 DB 가 채우므로 화면에서 보내지 않는다.
 const TARGET_COLUMN = { column: 'article_id', history: 'history_id' }; // 키는 src/lib/series.js 의 시리즈 id
-const COMMENT_COLUMNS = 'id, parent_id, user_id, user_name, user_avatar, text, created_at, updated_at';
+// hidden_word: 숨김 금칙어에 걸린 부분. 이런 댓글은 DB 가 쓴 사람과 관리자에게만 돌려준다 (20261106_board_hidden_words.sql)
+const COMMENT_COLUMNS = 'id, parent_id, user_id, user_name, user_avatar, text, hidden_word, created_at, updated_at';
 const COMMENT_MAX_LENGTH = 1000; // 20261103_comments_limits.sql 의 check 와 같게
 const COMMENT_TOO_LONG = `댓글은 ${COMMENT_MAX_LENGTH}자까지 쓸 수 있어요.`;
 const NEW_COMMENT = 'new'; // 안내 문구를 어디에 보여 줄지 가리키는 값. 수정과 삭제는 댓글 id 를 쓴다
@@ -61,6 +62,7 @@ const byOldest = (a, b) => new Date(a.created_at) - new Date(b.created_at);
 // series: 'column' 이면 칼럼 기사, 'history' 면 일상 글. postId: 그 글의 id
 export default function Comments({ series, postId, user, onLoginRequest }) {
   const targetColumn = TARGET_COLUMN[series];
+  const isAdmin = Boolean(user) && user.email === ADMIN_EMAIL;
   const [comments, setComments] = useState([]); // 맨 위 댓글과 대댓글을 함께, 새 글부터
   const [newComment, setNewComment] = useState('');
   const [editingId, setEditingId] = useState(null);
@@ -227,7 +229,7 @@ export default function Comments({ series, postId, user, onLoginRequest }) {
     const isReply = Boolean(c.parent_id);
     const avatarSize = isReply ? 28 : 40;
     const canEdit = user && c.user_id === user.id;
-    const canDelete = user && (c.user_id === user.id || user.email === ADMIN_EMAIL);
+    const canDelete = user && (c.user_id === user.id || isAdmin);
     return (
       <div key={c.id} className={`comment-item${isReply ? ' comment-item--reply' : ''}`}>
         <div className="comment-item__avatar">
@@ -244,6 +246,10 @@ export default function Comments({ series, postId, user, onLoginRequest }) {
               {timeAgo(c.created_at)}
               {c.updated_at !== c.created_at && ' (수정됨)'}
             </span>
+            {/* 쓴 사람에게는 표시하지 않는다. 관리자에게만 걸린 말과 함께 알린다 */}
+            {isAdmin && c.hidden_word && (
+              <span className="comment-item__hidden" title={`걸린 말: ${c.hidden_word}`}>(금칙어 포함된 댓글)</span>
+            )}
           </div>
 
           {editingId === c.id ? (

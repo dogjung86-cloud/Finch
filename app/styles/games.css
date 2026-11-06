@@ -349,6 +349,13 @@
   background: var(--accent-soft);
   border-radius: var(--r-pill);
 }
+/* 숨김 금칙어에 걸린 글. 관리자에게만 보인다 */
+.board-hidden {
+  align-self: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #d93025;
+}
 .board-edit {
   display: grid;
   gap: 10px;

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { timeAgo } from '../../lib/format';
 import { blockedLanguageMessage } from '../../lib/blockedLanguage';
+import { useAuth } from '../../providers/AuthProvider';
 
 // 의견과 댓글이 함께 쓰는 부품. 표 구조와 권한은 supabase/migrations/20261104_game_post_comments.sql 에 있다.
 
@@ -109,6 +110,7 @@ export function BoardItem({
   onDeleted,
   children,
 }) {
+  const { isAdmin } = useAuth();
   const [editing, setEditing] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -168,6 +170,10 @@ export function BoardItem({
           {timeAgo(item.created_at)}
           {item.updated_at && ' (수정됨)'}
         </time>
+        {/* 숨김 금칙어에 걸린 글. 쓴 사람에게는 표시하지 않고 관리자에게만 걸린 말과 함께 알린다 */}
+        {isAdmin && item.hidden_word && (
+          <span className="board-hidden" title={`걸린 말: ${item.hidden_word}`}>(금칙어 포함된 {label})</span>
+        )}
         {meta}
         {!editing && (canEdit || canDelete || canPin) && (
           <span className="board-post__actions">

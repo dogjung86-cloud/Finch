@@ -8,7 +8,7 @@ import { BoardItem, BodyForm, pinnedFirst } from './boardParts';
 // 대댓글은 한 단계까지이고, 대댓글에 답하면 같은 줄에 이름을 붙여 이어 쓴다.
 // 작성자 id 와 이름은 DB 가 로그인 토큰에서 채우므로 화면에서 보내지 않는다.
 
-const COLUMNS = 'id, post_id, parent_id, user_id, author_name, body, pinned_at, created_at, updated_at';
+const COLUMNS = 'id, post_id, parent_id, user_id, author_name, body, hidden_word, pinned_at, created_at, updated_at';
 
 export async function fetchComments(postIds) {
   if (postIds.length === 0) return { rows: [], failed: false };

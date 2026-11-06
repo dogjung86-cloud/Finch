@@ -474,6 +474,12 @@
   font-size: 12px;
   color: var(--text-3);
 }
+/* 숨김 금칙어에 걸린 댓글. 관리자에게만 보인다 */
+.comment-item__hidden {
+  font-size: 12px;
+  font-weight: 700;
+  color: #d93025;
+}
 .comment-item__text {
   font-size: 15px;
   line-height: 1.65;

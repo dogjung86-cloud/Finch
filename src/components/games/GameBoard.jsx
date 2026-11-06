@@ -11,7 +11,8 @@ import { BoardItem, MAX_LENGTH, pinnedFirst, writeErrorMessage } from './boardPa
 // 작성자 id 와 이름은 DB 가 로그인 토큰에서 채우므로 화면에서 보내지 않는다.
 
 const PAGE_SIZE = 20;
-const COLUMNS = 'id, game_slug, user_id, author_name, body, pinned_at, created_at, updated_at';
+// hidden_word: 숨김 금칙어에 걸린 부분. 이런 의견은 DB 가 쓴 사람과 관리자에게만 돌려준다 (20261106_board_hidden_words.sql)
+const COLUMNS = 'id, game_slug, user_id, author_name, body, hidden_word, pinned_at, created_at, updated_at';
 const ALL_TOPICS = 'all';
 const TOPIC_LABELS = Object.fromEntries(BOARD_TOPICS.map((t) => [t.id, t.label]));
 
