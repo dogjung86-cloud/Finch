@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getHistoryById, SERIES } from '../../../src/lib/content';
 import HistoryDetailClient from './HistoryDetailClient';
+import { OG_IMAGE } from '../../../src/data/site';
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -13,7 +14,7 @@ export async function generateMetadata({ params }) {
     alternates: { canonical: `/history/${id}` },
     openGraph: {
       title: item.title,
-      images: item.thumbnail ? [{ url: item.thumbnail }] : [],
+      images: item.thumbnail ? [{ url: item.thumbnail }] : [OG_IMAGE],
       type: 'article',
       siteName: '과학드림',
     },

@@ -2,7 +2,7 @@ import PageHead from '../../src/components/site/PageHead';
 import CollabForm from '../../src/components/collab/CollabForm';
 import CopyEmail from '../../src/components/collab/CopyEmail';
 import { COLLAB_REFERENCES } from '../../src/data/collab';
-import { SITE } from '../../src/data/site';
+import { OG_IMAGE, SITE } from '../../src/data/site';
 
 export const metadata = {
   title: 'Collaborate',
@@ -13,6 +13,7 @@ export const metadata = {
     description: '강연, 방송 출연, 콘텐츠 협업, 자문, 출판 제안을 기다립니다.',
     url: `${SITE.url}/collaborate`,
     type: 'website',
+    images: [OG_IMAGE],
   },
 };
 

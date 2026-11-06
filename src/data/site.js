@@ -11,6 +11,12 @@ export const SITE = {
     '유튜브 과학드림 김정훈의 홈페이지. 영상과 책, 출연작, 직접 만든 과학 게임, 과학 칼럼을 한곳에 모았습니다. 강연과 협업 제안도 여기서 받습니다.',
 };
 
+// 공유 미리보기(카카오톡, 페이스북 등)의 기본 그림: 홈 화면처럼 '과학드림 · 과학은 세상을 보는 창'.
+// 그림을 바꿀 때는 파일 이름도 바꾼다. 카카오톡은 같은 주소의 그림을 오래 기억해서,
+// 이름이 같으면 예전 그림이 계속 뜬다 (예전 og-image.jpg 자리에 '과학 매거진 Finch' 그림이 남아 있었다).
+// 페이지에서 openGraph 를 따로 쓰면 이 기본값이 사라지므로, 그런 페이지는 images 에 이 값을 직접 넣는다.
+export const OG_IMAGE = { url: '/og-sciencedream.jpg', width: 1200, height: 630, alt: '과학드림' };
+
 export const CHANNEL = {
   // RSS 로 최신 영상을 불러올 때 쓰는 채널 ID (UC 로 시작)
   id: 'UCIk1-yPCTnFuzfgu4gyfWqw',

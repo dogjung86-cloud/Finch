@@ -5,7 +5,7 @@ import BookCard from '../../src/components/works/BookCard';
 import { IconYouTube, IconArrowUpRight } from '../../src/components/site/Icons';
 import { getLatestVideos } from '../../src/lib/youtube';
 import { APPEARANCES, APPEARANCE_GROUPS, BOOKS, FEATURED_VIDEOS } from '../../src/data/works';
-import { CHANNEL, SITE } from '../../src/data/site';
+import { CHANNEL, OG_IMAGE, SITE } from '../../src/data/site';
 
 export const revalidate = 3600;
 
@@ -18,6 +18,7 @@ export const metadata = {
     description: '과학드림의 영상, 책, 출연작 모음',
     url: `${SITE.url}/works`,
     type: 'website',
+    images: [OG_IMAGE],
   },
 };
 

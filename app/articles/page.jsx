@@ -1,7 +1,7 @@
 import PageHead from '../../src/components/site/PageHead';
 import ArticlesHub from '../../src/components/articles/ArticlesHub';
 import { getAllColumns, getHistoryItems, sortByDateDesc } from '../../src/lib/content';
-import { SITE } from '../../src/data/site';
+import { OG_IMAGE, SITE } from '../../src/data/site';
 
 export const revalidate = 60;
 
@@ -15,6 +15,7 @@ export const metadata = {
     description: '과학드림의 과학 칼럼과 일상 기록',
     url: `${SITE.url}/articles`,
     type: 'website',
+    images: [OG_IMAGE],
   },
 };
 

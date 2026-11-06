@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getColumnById } from '../../../src/lib/content';
 import ArticlePageClient from './ArticlePageClient';
+import { OG_IMAGE } from '../../../src/data/site';
 
 // ── 동적 메타데이터 (SEO 핵심!) ──
 export async function generateMetadata({ params }) {
@@ -18,7 +19,7 @@ export async function generateMetadata({ params }) {
     openGraph: {
       title: article.title,
       description: article.excerpt || '',
-      images: article.thumbnail ? [{ url: article.thumbnail }] : [],
+      images: article.thumbnail ? [{ url: article.thumbnail }] : [OG_IMAGE],
       type: 'article',
       siteName: '과학드림',
       authors: [article.author || '과학드림'],
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }) {
       card: 'summary_large_image',
       title: article.title,
       description: article.excerpt || '',
-      images: article.thumbnail ? [article.thumbnail] : [],
+      images: article.thumbnail ? [article.thumbnail] : [OG_IMAGE.url],
     },
   };
 }

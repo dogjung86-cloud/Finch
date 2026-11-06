@@ -10,7 +10,7 @@ import './styles/collaborate.css';
 import './styles/article.css';
 import AuthProvider from '../src/providers/AuthProvider';
 import LayoutShell from '../src/components/LayoutShell';
-import { SITE } from '../src/data/site';
+import { OG_IMAGE, SITE } from '../src/data/site';
 
 const TITLE = '과학드림 | 과학은 세상을 보는 창';
 
@@ -43,13 +43,13 @@ export const metadata = {
     siteName: '과학드림',
     type: 'website',
     locale: 'ko_KR',
-    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: '과학드림' }],
+    images: [OG_IMAGE],
   },
   twitter: {
     card: 'summary_large_image',
     title: TITLE,
     description: SITE.description,
-    images: ['/og-image.jpg'],
+    images: [OG_IMAGE.url],
   },
   verification: {
     // Google Search Console: DNS TXT 방식으로 확인 완료 (메타태그 불필요)

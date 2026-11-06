@@ -2,7 +2,7 @@ import Link from 'next/link';
 import SectionHead from '../../src/components/site/SectionHead';
 import { IconArrowRight, IconYouTube } from '../../src/components/site/Icons';
 import { ABOUT, BIO } from '../../src/data/profile';
-import { CHANNEL, SITE, SOCIALS } from '../../src/data/site';
+import { CHANNEL, OG_IMAGE, SITE, SOCIALS } from '../../src/data/site';
 import { BOOKS } from '../../src/data/works';
 
 export const metadata = {
@@ -14,6 +14,7 @@ export const metadata = {
     description: '유튜브 과학드림을 만드는 김정훈을 소개합니다.',
     url: `${SITE.url}/about`,
     type: 'profile',
+    images: [OG_IMAGE],
   },
 };
 
