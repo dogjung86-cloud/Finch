@@ -500,6 +500,34 @@
   margin-top: 4px;
 }
 
+/* 대댓글: 맨 위 댓글 본문 줄에 맞춰 들여 쓰고, 구분선은 댓글 묶음마다 하나만 긋는다 */
+.comment-thread {
+  border-bottom: 1px solid var(--line);
+}
+.comment-thread .comment-item {
+  border-bottom: 0;
+}
+.comment-replies {
+  margin: -8px 0 12px 54px; /* 아바타 40px + 간격 14px */
+}
+.comment-item--reply {
+  gap: 10px;
+  padding: 8px 0;
+}
+.comment-item--reply .comment-item__avatar {
+  width: 28px;
+  height: 28px;
+  font-size: 12px;
+}
+.comment-reply-form {
+  margin: 6px 0 4px 38px; /* 답글 아바타 28px + 간격 10px */
+}
+@media (max-width: 768px) {
+  .comment-replies {
+    margin-left: 28px;
+  }
+}
+
 /* ── 모바일 본문 가독성 (기존 규칙 유지) ── */
 @media (max-width: 768px) {
   .article-page__container {

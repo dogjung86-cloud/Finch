@@ -39,7 +39,7 @@ export default function CommentsAdmin() {
 
     let q = supabase
       .from('comments')
-      .select('id, article_id, history_id, user_name, text, created_at')
+      .select('id, article_id, history_id, parent_id, user_name, text, created_at')
       .order('created_at', { ascending: false });
 
     if (period !== 'all') {
@@ -72,13 +72,16 @@ export default function CommentsAdmin() {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('이 댓글을 삭제하시겠습니까?')) return;
+    // 맨 위 댓글을 지우면 DB 가 그 답글도 함께 지운다 (20261106_comments_replies.sql)
+    const replyCount = comments.filter((c) => c.parent_id === id).length;
+    const notice = replyCount > 0 ? `\n답글 ${replyCount}개도 함께 지워집니다.` : '';
+    if (!confirm(`이 댓글을 삭제하시겠습니까?${notice}`)) return;
     const { error } = await supabase.from('comments').delete().eq('id', id);
     if (error) {
       alert('삭제 실패: ' + error.message);
       return;
     }
-    setComments((prev) => prev.filter((c) => c.id !== id));
+    setComments((prev) => prev.filter((c) => c.id !== id && c.parent_id !== id));
   };
 
   const filtered = query.trim()
@@ -167,7 +170,12 @@ export default function CommentsAdmin() {
                         </a>
                       </td>
                       <td style={{ fontWeight: 600 }}>{c.user_name || '—'}</td>
-                      <td style={{ whiteSpace: 'pre-wrap', maxWidth: 460 }}>{c.text}</td>
+                      <td style={{ whiteSpace: 'pre-wrap', maxWidth: 460 }}>
+                        {c.parent_id && (
+                          <span style={{ color: 'var(--text-muted)', fontSize: 13, marginRight: 6 }}>↳ 답글</span>
+                        )}
+                        {c.text}
+                      </td>
                       <td>
                         <button
                           className="admin-btn admin-btn--small admin-btn--danger"
