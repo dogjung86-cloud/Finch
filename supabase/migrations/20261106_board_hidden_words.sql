@@ -29,6 +29,9 @@ revoke all on public.board_hidden_words from anon, authenticated;
 
 insert into public.board_hidden_words (pattern) values
   ('표절'),
+  -- 띄어 쓴 표 절(표 절이네요). 붙여 쓴 '표 절'은 위 규칙이 글 정리에서 잡는다.
+  -- '표'가 따로 떨어진 낱말일 때만 걸어서 '투표 절차'는 통과한다 (2026-11-06 추가)
+  ('(?:^|\s)표\s+절'),
   -- 베끼기, 베끼다, 베끼는, 베껴, 베꼈다, 베낀
   ('베끼|베껴|베꼈|베낀'),
   -- pbs, pbs eons
