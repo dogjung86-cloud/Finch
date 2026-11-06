@@ -195,7 +195,6 @@ export const APPEARANCE_GROUPS = [
 
 // 그 밖의 다른 채널 · 방송 출연 (최신순). 제목은 원래 영상 제목 그대로.
 export const APPEARANCES = [
-  { id: 'GwI945efCt4', title: 'NRF 기초공감 X 과학드림 [ 기초연구 Dream ] 8편 - 버려진 CPU 속에서 순금을 찾아낸다고? 💻✨', channel: 'NRF한국연구재단', date: '2026-09-03' },
   { id: 'ZCYIa_pMgkw', title: '폐이불을 탐내는 회사 SK케미칼', channel: 'SK케미칼', date: '2026-05-14' },
   { id: '1cc8tbiE5pA', title: '[KIMST X 과학드림] 위험천만한 북극의 극한을 이기는 기술 🤖📡 ｜ 극한지 협동이동체 시스템', channel: '해양수산과학기술진흥원', date: '2026-03-06' },
   { id: 'S80y7easzSA', title: '[수산수다2🐟] 김에 대해 알아두면 쓸모 있는 신비한 잡학사전', channel: '수협 공식 유튜브 채널', date: '2026-01-19' },
